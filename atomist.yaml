@@ -1,0 +1,174 @@
+#
+#  Copyright © 2020 Atomist, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+skill:
+  name: atomist/kubernetes-pod-health-skill
+  title: Kubernetes Pod Health Monitor
+  version: 0.1.0
+  author: Atomist
+  description: Report when a pod in a Kubernetes cluster is not healthy
+  documentation: |-
+    In coordination with the k8vent utility, report when containers in
+    pods in Kubernetes clusters are not healthy.
+  category:
+    - CHAT_OPS
+  license: Apache-2.0
+  homepage: https://github.com/atomist-skills/kubernetes-pod-health-skill
+  repository: https://github.com/atomist-skills/kubernetes-pod-health-skill.git
+  icon: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cGF0aCBkPSJNMTUuOS40NzZhMi4xNCAyLjE0IDAgMCAwLS44MjMuMjE4TDMuOTMyIDYuMDFjLS41ODIuMjc3LTEuMDA1LjgwNC0xLjE1IDEuNDMyTC4wNTQgMTkuMzczYy0uMTMuNTYtLjAyNSAxLjE0Ny4zIDEuNjI3cS4wNTcuMDg3LjEyLjE2OGw3LjcgOS41NzRjLjQwNy41IDEuMDE4Ljc4NyAxLjY2Mi43ODRoMTIuMzVjLjY0Ni4wMDEgMS4yNTgtLjMgMS42NjQtLjc5M2w3LjY5Ni05LjU3NmMuNDA0LS41LjU1NS0xLjE2LjQtMS43ODZMMjkuMiA3LjQzYy0uMTQ1LS42MjgtLjU3LTEuMTU1LTEuMTUtMS40MzJMMTYuOTIzLjY5NUEyLjE0IDIuMTQgMCAwIDAgMTUuODkuNDc2eiIgZmlsbD0iIzMyNmNlNSIvPjxwYXRoIGQ9Ik0xNi4wMDIgNC41NDJjLS4zODQuMDI3LS42NzUuMzU2LS42NTUuNzR2LjE4OGMuMDE4LjIxMy4wNS40MjQuMDkyLjYzM2E2LjIyIDYuMjIgMCAwIDEgLjA2NiAxLjIxYy0uMDM4LjEzMy0uMTE0LjI1My0uMjE4LjM0NWwtLjAxNS4yODJjLS40MDUuMDM0LS44MDcuMDk2LTEuMjAzLjE4Ni0xLjY2Ni4zNzYtMy4xODMgMS4yNC00LjM1NCAyLjQ4NWwtLjI0LS4xN2MtLjEzMi4wNC0uMjc0LjAyNS0uMzk1LS4wNGE2LjIyIDYuMjIgMCAwIDEtLjg5Ny0uODEgNS41NSA1LjU1IDAgMCAwLS40MzctLjQ2NWwtLjE0OC0uMTE4Yy0uMTMyLS4xMDYtLjI5NC0uMTY3LS40NjMtLjE3NWEuNjQuNjQgMCAwIDAtLjUzMS4yMzZjLS4yMjYuMzE3LS4xNTIuNzU2LjE2NC45ODNsLjEzOC4xMWE1LjU1IDUuNTUgMCAwIDAgLjU1Mi4zMjNjLjM1NC4xOTcuNjg4LjQyOC45OTguN2EuNzQuNzQgMCAwIDEgLjEzMy4zODRsLjIxOC4yYy0xLjE3NyAxLjc2Ni0xLjY2IDMuOTA1LTEuMzU4IDYuMDA2bC0uMjguMDhjLS4wNzMuMTE2LS4xNy4yMTUtLjI4Ni4yODhhNi4yMiA2LjIyIDAgMCAxLTEuMTk0LjE5NyA1LjU3IDUuNTcgMCAwIDAtLjY0LjA1bC0uMTc3LjA0aC0uMDJhLjY3LjY3IDAgMCAwLS4zODcgMS4xMzIuNjcuNjcgMCAwIDAgLjY4NC4xNjVoLjAxM2wuMTgtLjAyYy4yMDMtLjA2LjQwMy0uMTM0LjU5OC0uMjE4LjM3NS0uMTUuNzY0LS4yNjUgMS4xNjItLjM0LjEzOC4wMDguMjcuMDU1LjM4Mi4xMzVsLjMtLjA1Yy42NSAyLjAxNyAyLjAxNiAzLjcyNiAzLjg0IDQuODAzbC0uMTIyLjI1NWMuMDU2LjExNy4wNzcuMjQ3LjA2LjM3Ni0uMTY1LjM4Mi0uMzY3Ljc0OC0uNjAzIDEuMDkyYTUuNTggNS41OCAwIDAgMC0uMzU4LjUzM2wtLjA4NS4xOGEuNjcuNjcgMCAwIDAgLjY1IDEuMDAxLjY3LjY3IDAgMCAwIC41NTMtLjQzMmwuMDgzLS4xN2MuMDc2LS4yLjE0LS40MDQuMTkyLS42MS4xNzctLjQzNy4yNzMtLjkwNi41MTUtMS4xOTZhLjU0LjU0IDAgMCAxIC4yODYtLjE0bC4xNS0uMjczYTguNjIgOC42MiAwIDAgMCA2LjE0Ni4wMTVsLjEzMy4yNTVjLjEzNi4wMi4yNTguMDk1LjM0LjIwNS4xODguMzU4LjM0LjczMy40NTYgMS4xMmE1LjU3IDUuNTcgMCAwIDAgLjE5NC42MTFsLjA4My4xN2EuNjcuNjcgMCAwIDAgMS4xODcuMTMxLjY3LjY3IDAgMCAwIC4wMTYtLjcwMWwtLjA4Ny0uMThhNS41NSA1LjU1IDAgMCAwLS4zNTgtLjUzMWMtLjIzLS4zMzItLjQyOC0uNjg2LS42LTEuMDU3YS41Mi41MiAwIDAgMSAuMDY4LS40IDIuMjkgMi4yOSAwIDAgMS0uMTExLS4yNjljMS44Mi0xLjA4NSAzLjE4LTIuOCAzLjgyMy00LjgybC4yODQuMDVjLjEwMi0uMDkzLjIzNi0uMTQyLjM3My0uMTM4LjM5Ny4wNzYuNzg2LjIgMS4xNjIuMzQuMTk1LjA5LjM5NS4xNjYuNTk4LjIzLjA0OC4wMTMuMTE4LjAyNC4xNzIuMDM3aC4wMTNhLjY3LjY3IDAgMCAwIC44NDEtLjg1MS42Ny42NyAwIDAgMC0uNTQ0LS40NDZsLS4xOTQtLjA0NmE1LjU3IDUuNTcgMCAwIDAtLjY0LS4wNWMtLjQwNC0uMDI2LS44MDQtLjA5Mi0xLjE5NC0uMTk3LS4xMi0uMDY3LS4yMi0uMTY3LS4yODgtLjI4OGwtLjI3LS4wOGE4LjY1IDguNjUgMCAwIDAtMS4zODYtNS45OTNsLjIzNi0uMjE4Yy0uMDEtLjEzNy4wMzUtLjI3My4xMjQtLjM3OC4zMDctLjI2NC42NC0uNDk3Ljk5LS42OTZhNS41NyA1LjU3IDAgMCAwIC41NTItLjMyM2wuMTQ2LS4xMThhLjY3LjY3IDAgMCAwLS4xMzMtMS4yMDIuNjcuNjcgMCAwIDAtLjY5Ni4xNjFsLS4xNDguMTE4YTUuNTcgNS41NyAwIDAgMC0uNDM3LjQ2NWMtLjI2NC4zMDItLjU1Ni41NzctLjg3My44MjNhLjc0Ljc0IDAgMCAxLS40MDQuMDQ0bC0uMjUzLjE4Yy0xLjQ2LTEuNTMtMy40MjctMi40OC01LjUzNS0yLjY3IDAtLjEtLjAxMy0uMjUtLjAxNS0uMjk3LS4xMTMtLjA3OC0uMTkyLS4xOTctLjIxOC0uMzMyYTYuMjMgNi4yMyAwIDAgMSAuMDc2LTEuMjA3Yy4wNDMtLjIxLjA3My0uNDIuMDkyLS42MzN2LS4yYy4wMi0uMzg0LS4yNy0uNzEzLS42NTUtLjc0em0tLjgzNCA1LjE2NmwtLjIgMy40OTNoLS4wMTVjLS4wMS4yMTYtLjEzNy40LS4zMzIuNTA0cy0uNDI2LjA3My0uNi0uMDU0bC0yLjg2NS0yLjAzYTYuODYgNi44NiAwIDAgMSAzLjMwMy0xLjc5OWMuMjM0LS4wNS40Ny0uMDg4LjcwNy0uMTE0em0xLjY2OCAwYzEuNTA1LjE4NyAyLjkwNi44NjMgMy45OSAxLjkyNGwtMi44MzggMi4wMTdjLS4xNzUuMTQtLjQxNS4xNjgtLjYxOC4wNzJzLS4zMzMtLjMtLjMzNi0uNTI0em0tNi43MiAzLjIyN2wyLjYyIDIuMzM4di4wMTVjLjE2My4xNDIuMjM0LjM2My4xODYuNTc0cy0uMjEuMzc4LS40MTcuNDM1di4wMWwtMy4zNjIuOTY3YTYuODYgNi44NiAwIDAgMSAuOTc0LTQuMzR6bTExLjc1MyAwYy43OTYgMS4yOTUgMS4xNDggMi44MTQgMS4wMDIgNC4zMjdsLTMuMzY3LS45N3YtLjAxM2MtLjIxLS4wNTctLjM3LS4yMjQtLjQxNy0uNDM1cy4wMjMtLjQzLjE4Ni0uNTc0bDIuNi0yLjMyN3ptLTYuNDA0IDIuNTJoMS4wNzJsLjY1NS44MzItLjIzOCAxLjA0LS45NjMuNDYzLS45NjUtLjQ2My0uMjI3LTEuMDR6bTMuNDM0IDIuODM4Yy4wNDUtLjAwNS4xLS4wMDUuMTM1IDBsMy40NjcuNTg1Yy0uNSAxLjQ0LTEuNDg3IDIuNjctMi43NzUgMy40OTNsLTEuMzQtMy4yNDRhLjU5LjU5IDAgMCAxIC41MDktLjgxOXptLTUuODIzLjAxNWMuMTk2LjAwMy4zNzcuMTA0LjQ4NC4yNjhzLjEyNC4zNy4wNDcuNTV2LjAxM2wtMS4zMzIgMy4yMThDMTEgMjEuNTQgMTAuMDMyIDIwLjMyNSA5LjUxNyAxOC45bDMuNDM3LS41ODNjLjAzOC0uMDA0LjA3Ny0uMDA0LjExNiAwem0yLjkwNCAxLjRhLjU5LjU5IDAgMCAxIC41MzcuMzA4aC4wMTNsMS42OTQgMy4wNTctLjY3Ny4yYy0xLjI0Ni4yODUtMi41NDcuMjE4LTMuNzU4LS4xOTRsMS43LTMuMDU3Yy4xMDMtLjE4LjI5My0uMjkuNS0uMjk1eiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9Ii4wNTUiLz48L3N2Zz4=
+
+  package:
+    - use: atomist/package-sdm-skill/package
+      parameters:
+        main: node_modules/@atomist/skill/lib/function.js
+        dependencies: keep
+
+  runtime:
+    memory: 256
+    name: nodejs10
+    entry_point: entryPoint
+
+parameters:
+  - string_array:
+      name: channels
+      display_name: Chat channels to send alerts to
+      description: |-
+        Specify the chat channels where alerts should be sent
+      minRequired: 1
+      required: true
+  - boolean:
+      name: crashLoopBackOff
+      display_name: Alert when pod container in crash loop back off?
+      description: |-
+        Select if you want to get alerts if a container in a pod is
+        repeatedly crashing.
+      defaultValue: true
+      required: true
+  - boolean:
+      name: imagePullBackOff
+      display_name: Alert when pod container in image pull back off?
+      description: |-
+        Select if you want to get alerts if the node is unable to pull
+        the Docker image of a container in a pod.
+      defaultValue: true
+      required: true
+  - int:
+      name: initContainerFailureCount
+      display_name: Alert when pod init container fails more than this
+      description: |-
+        Set this to the number of init container failures you want to
+        ignore before sending an alert.
+      defaultValue: 2
+      minimum: 0
+      required: true
+  - int:
+      name: intervalMilliseconds
+      display_name: Minimum interval in milliseconds between alerts for a condition
+      description: |-
+        Set this to the minimum number of milliseconds between
+        receiving alerts for specific pod container.  The default is
+        to receive at most one alert per pod per day.
+      defaultValue: 86400000
+      minimum: 60000
+      required: true
+  - int:
+      name: maxRestarts
+      display_name: Alert if pod container restarts exceeds this value
+      description: |-
+        Set this to the maximum number of pod container restarts to
+        allow before sending an alert.  Set to `0` to disable this
+        alert.
+      defaultValue: 10
+      minimum: 0
+      required: true
+  - int:
+      name: notReadyDelayMilliseconds
+      display_name: Alert if pod container is not ready after this number of milliseconds
+      description: |-
+        Set this to the number milliseconds to wait after a container
+        starts before before sending an alert if the container is not
+        yet ready.  Set to `0` to disable this alert.
+      defaultValue: 600000
+      minimum: 0
+      required: true
+  - int:
+      name: notScheduledDelayMilliseconds
+      display_name: Alert if pod is not scheduled after this number of milliseconds
+      description: |-
+        Set this to the number milliseconds to wait after a pod is
+        created before sending an alert if the pod is not yet
+        scheduled.  Set to `0` to disable this alert.
+      defaultValue: 600000
+      minimum: 0
+      required: true
+  - int:
+      name: restartsPerDay
+      display_name: Alert if pod container restart rate exceeds this rate
+      description: |-
+        Set this to the number of restarts per day to allow before
+        sending an alert.  Set to `0` to disable this alert.
+      defaultValue: 1
+      minimum: 0
+      required: true
+  - string:
+      name: clusterIncludeRegExp
+      display_name: Only alert on pods in namespaces matching this regular expression
+      description: |-
+        If provided, only pods in Kubernetes clusters matching the
+        regular expression will be reported on.  If not provided, all
+        clusters not matching the exclude cluster parameter will be
+        reported on.  If you want match a single cluster, you can just
+        provide that environment of the k8vent running in that
+        cluster.  If you want to match multiple clusters, you can
+        provide a regular expression using the alternation operator,
+        e.g., `^(one-cluster|another-cluster|etc)$`.
+      required: false
+  - string:
+      name: clusterExcludeRegExp
+      display_name: Only alert on pods in namespaces _not_ matching this regular expression
+      description: |-
+        If provided, only pods in Kubernetes clusters _not_ matching
+        the regular expression will be reported on.  If you want
+        exclude a single cluster, you can just provide the environment
+        of the k8vent running in that cluster.  If you want to exclude
+        multiple clusters, you can provide a regular expression
+        using the alternation operator, e.g.,
+        `^(one-cluster|another-cluster|etc)$`.
+      required: false
+  - string:
+      name: namespaceIncludeRegExp
+      display_name: Only alert on pods in namespaces matching this regular expression
+      description: |-
+        If provided, only pods in namespaces matching the regular
+        expression will be reported on.  If not provided, all
+        namespaces not matching the exclude namespace parameter will
+        be reported on.  If you want match a single namespace, you can
+        just provide that namespace.  If you want to match multiple
+        namespaces, you can provide a regular expression using the
+        alternation operator, e.g., `^(one-namespace|another-namespace|etc)$`.
+      required: false
+  - string:
+      name: namespaceExcludeRegExp
+      display_name: Only alert on pods in namespaces _not_ matching this regular expression
+      description: |-
+        If provided, only pods in namespaces _not_ matching the
+        regular expression will be reported on.  If you want exclude a
+        single namespace, you can just provide that namespace.  If you
+        want to exclude multiple namespaces, you can provide a regular
+        expression using the alternation operator, e.g.,
+        `^(one-namespace|another-namespace|etc)$`.
+      defaultValue: "^kube-"
+      required: false

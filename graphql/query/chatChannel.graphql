@@ -1,0 +1,9 @@
+query ChatChannel($channels: [String!]!) {
+  ChatChannel(names: $channels) {
+    archived
+    channelId
+    id
+    name
+    provider
+  }
+}
