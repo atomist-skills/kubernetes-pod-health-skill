@@ -64,21 +64,23 @@ parameters:
       required: true
   - int:
       name: initContainerFailureCount
-      display_name: Alert when pod init container fails more than this
+      display_name: Alert when pod init container fails more than this many times
       description: |-
         Set this to the number of init container failures you want to
         ignore before sending an alert.
       defaultValue: 2
+      placeHolder: 2
       minimum: 0
       required: true
   - int:
       name: intervalMilliseconds
-      display_name: Minimum interval in milliseconds between alerts for a condition
+      display_name: Minimum interval in milliseconds between alerts for a pod/container
       description: |-
         Set this to the minimum number of milliseconds between
         receiving alerts for specific pod container.  The default is
         to receive at most one alert per pod per day.
       defaultValue: 86400000
+      placeHolder: 86400000
       minimum: 60000
       required: true
   - int:
@@ -89,6 +91,7 @@ parameters:
         allow before sending an alert.  Set to `0` to disable this
         alert.
       defaultValue: 10
+      placeHolder: 10
       minimum: 0
       required: true
   - int:
@@ -99,6 +102,7 @@ parameters:
         starts before before sending an alert if the container is not
         yet ready.  Set to `0` to disable this alert.
       defaultValue: 600000
+      placeHolder: 600000
       minimum: 0
       required: true
   - int:
@@ -109,6 +113,7 @@ parameters:
         created before sending an alert if the pod is not yet
         scheduled.  Set to `0` to disable this alert.
       defaultValue: 600000
+      placeHolder: 600000
       minimum: 0
       required: true
   - int:
@@ -117,12 +122,13 @@ parameters:
       description: |-
         Set this to the number of restarts per day to allow before
         sending an alert.  Set to `0` to disable this alert.
-      defaultValue: 1
+      defaultValue: 2
+      placeHolder: 2
       minimum: 0
       required: true
   - string:
       name: clusterIncludeRegExp
-      display_name: Only alert on pods in namespaces matching this regular expression
+      display_name: Only alert on pods in Kubernetes clusters matching this regular expression
       description: |-
         If provided, only pods in Kubernetes clusters matching the
         regular expression will be reported on.  If not provided, all
@@ -135,7 +141,7 @@ parameters:
       required: false
   - string:
       name: clusterExcludeRegExp
-      display_name: Only alert on pods in namespaces _not_ matching this regular expression
+      display_name: Only alert on pods in Kubernetes clusters _not_ matching this regular expression
       description: |-
         If provided, only pods in Kubernetes clusters _not_ matching
         the regular expression will be reported on.  If you want
@@ -167,5 +173,5 @@ parameters:
         want to exclude multiple namespaces, you can provide a regular
         expression using the alternation operator, e.g.,
         `^(one-namespace|another-namespace|etc)$`.
-      defaultValue: "^kube-"
+      placeHolder: "^kube-"
       required: false
