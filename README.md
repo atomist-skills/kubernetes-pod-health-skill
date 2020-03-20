@@ -26,6 +26,8 @@ when a pod is not healthy.
 
 You must have deployed [k8vent][] to at least one Kubernetes cluster.
 
+[k8vent]: https://github.com/atomist/k8vent
+
 ### Slack
 
 This skill will send a notification message to the configured Slack
