@@ -26,6 +26,7 @@
   "directories": {
     "test": "test"
   },
+  "main": "node_modules/@atomist/skill/lib/function.js",
   "scripts": {
     "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
     "build": "run-s compile test lint doc",
