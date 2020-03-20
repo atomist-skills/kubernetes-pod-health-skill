@@ -68,7 +68,7 @@ parameters:
       description: |-
         Set this to the number of init container failures you want to
         ignore before sending an alert.
-      defaultValue: 2
+      #defaultValue: 2
       placeHolder: 2
       minimum: 0
       required: true
@@ -79,7 +79,7 @@ parameters:
         Set this to the minimum number of milliseconds between
         receiving alerts for specific pod container.  The default is
         to receive at most one alert per pod per day.
-      defaultValue: 86400000
+      #defaultValue: 86400000
       placeHolder: 86400000
       minimum: 60000
       required: true
@@ -90,7 +90,7 @@ parameters:
         Set this to the maximum number of pod container restarts to
         allow before sending an alert.  Set to `0` to disable this
         alert.
-      defaultValue: 10
+      #defaultValue: 10
       placeHolder: 10
       minimum: 0
       required: true
@@ -101,7 +101,7 @@ parameters:
         Set this to the number milliseconds to wait after a container
         starts before before sending an alert if the container is not
         yet ready.  Set to `0` to disable this alert.
-      defaultValue: 600000
+      #defaultValue: 600000
       placeHolder: 600000
       minimum: 0
       required: true
@@ -112,7 +112,7 @@ parameters:
         Set this to the number milliseconds to wait after a pod is
         created before sending an alert if the pod is not yet
         scheduled.  Set to `0` to disable this alert.
-      defaultValue: 600000
+      #defaultValue: 600000
       placeHolder: 600000
       minimum: 0
       required: true
@@ -122,7 +122,7 @@ parameters:
       description: |-
         Set this to the number of restarts per day to allow before
         sending an alert.  Set to `0` to disable this alert.
-      defaultValue: 2
+      #defaultValue: 2
       placeHolder: 2
       minimum: 0
       required: true
