@@ -73,15 +73,15 @@ parameters:
       minimum: 0
       required: true
   - int:
-      name: intervalMilliseconds
-      display_name: Minimum interval in milliseconds between alerts for a pod/container
+      name: intervalMinutes
+      display_name: Minimum interval in minutes between alerts for a pod/container
       description: |-
-        Set this to the minimum number of milliseconds between
-        receiving alerts for specific pod container.  The default is
-        to receive at most one alert per pod per day.
-      #defaultValue: 86400000
-      placeHolder: 86400000
-      minimum: 60000
+        Set this to the minimum number of minutes between receiving
+        alerts for specific pod container.  The default is to receive
+        at most one alert per pod per day.
+      #defaultValue: 1440
+      placeHolder: 1440
+      minimum: 1
       required: true
   - int:
       name: maxRestarts
@@ -95,25 +95,25 @@ parameters:
       minimum: 0
       required: true
   - int:
-      name: notReadyDelayMilliseconds
-      display_name: Alert if pod container is not ready after this number of milliseconds
+      name: notReadyDelaySeconds
+      display_name: Alert if pod container is not ready after this number of seconds
       description: |-
-        Set this to the number milliseconds to wait after a container
+        Set this to the number seconds to wait after a container
         starts before before sending an alert if the container is not
         yet ready.  Set to `0` to disable this alert.
-      #defaultValue: 600000
-      placeHolder: 600000
+      #defaultValue: 600
+      placeHolder: 600
       minimum: 0
       required: true
   - int:
-      name: notScheduledDelayMilliseconds
-      display_name: Alert if pod is not scheduled after this number of milliseconds
+      name: notScheduledDelaySeconds
+      display_name: Alert if pod is not scheduled after this number of seconds
       description: |-
-        Set this to the number milliseconds to wait after a pod is
-        created before sending an alert if the pod is not yet
-        scheduled.  Set to `0` to disable this alert.
-      #defaultValue: 600000
-      placeHolder: 600000
+        Set this to the number seconds to wait after a pod is created
+        before sending an alert if the pod is not yet scheduled.  Set
+        to `0` to disable this alert.
+      #defaultValue: 600
+      placeHolder: 600
       minimum: 0
       required: true
   - int:

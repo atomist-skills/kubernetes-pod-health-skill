@@ -70,14 +70,14 @@ export interface K8sPodStateConfiguration {
     imagePullBackOff: boolean;
     /** Alert when init container fails more times than this, set to `0` to disable. */
     initContainerFailureCount: number;
-    /** How often to alert a given condition, in milliseconds. */
-    intervalMilliseconds: number;
+    /** How often to alert a given condition, in minutes. */
+    intervalMinutes: number;
     /** Alert if pod container restarts exceeds this value, set to `0` to disable. */
     maxRestarts: number;
-    /** Alert when containers are not ready after this number of milliseconds, set to `0` to disable. */
-    notReadyDelayMilliseconds: number;
-    /** Alert when pod has not been scheduled after this number of milliseconds, set to `0` to disable. */
-    notScheduledDelayMilliseconds: number;
+    /** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
+    notReadyDelaySeconds: number;
+    /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
+    notScheduledDelaySeconds: number;
     /** Rate of container restarts to alert on, set to `0` to disable. */
     restartsPerDay: number;
     /**
@@ -127,7 +127,7 @@ function podUnscheduled(pa: PodArgs): PodContainer {
         id: podId(pa.pod),
         slug: podSlug(pa.pod),
     };
-    if (pa.parameters.notScheduledDelayMilliseconds < 1) {
+    if (pa.parameters.notScheduledDelaySeconds < 1) {
         return p;
     }
     if (!pa.pod.timestamp) {
@@ -138,8 +138,8 @@ function podUnscheduled(pa: PodArgs): PodContainer {
         return p;
     }
     const podCreationTime = new Date(pa.pod.timestamp).getTime();
-    const podAgeMilliseconds = pa.now - podCreationTime;
-    if (podAgeMilliseconds > pa.parameters.notScheduledDelayMilliseconds) {
+    const podAgeSeconds = (pa.now - podCreationTime) / 1000;
+    if (podAgeSeconds > pa.parameters.notScheduledDelaySeconds) {
         p.error = ucFirst(`${podSlug(pa.pod)} has not been scheduled: \`${unscheduled.message}\``);
     }
     return p;
@@ -196,7 +196,7 @@ function containerCrashLoopBackOff(ca: ContainerArgs): string | undefined {
 
 /** Detect if container is in not ready. */
 function containerNotReady(ca: ContainerArgs): string | undefined {
-    if (ca.parameters.notReadyDelayMilliseconds < 1) {
+    if (ca.parameters.notReadyDelaySeconds < 1) {
         return undefined;
     }
     if (ca.container.state?.waiting) {
@@ -208,8 +208,8 @@ function containerNotReady(ca: ContainerArgs): string | undefined {
     if (ca.container.ready !== false) {
         return undefined;
     }
-    const podDurationMilliseconds = ca.now - new Date(ca.status.startTime).getTime();
-    if (podDurationMilliseconds > ca.parameters.notReadyDelayMilliseconds) {
+    const podDurationSeconds = (ca.now - new Date(ca.status.startTime).getTime()) / 1000;
+    if (podDurationSeconds > ca.parameters.notReadyDelaySeconds) {
         return `${containerSlug(ca.pod, ca.container)} is not ready`;
     }
     return undefined;
@@ -327,7 +327,7 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
             for (const container of podContainers) {
                 const options: MessageOptions = {
                     id: container.id,
-                    ttl: parameters.intervalMilliseconds,
+                    ttl: parameters.intervalMinutes * 60 * 1000,
                 };
                 let message: string;
                 if (!container.error) {
