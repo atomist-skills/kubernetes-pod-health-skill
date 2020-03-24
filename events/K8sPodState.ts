@@ -202,6 +202,9 @@ function containerNotReady(ca: ContainerArgs): string | undefined {
     if (ca.container.state?.waiting) {
         return undefined;
     }
+    if (!ca.container.state?.running) {
+        return undefined;
+    }
     if (!ca.status.startTime) {
         return undefined;
     }

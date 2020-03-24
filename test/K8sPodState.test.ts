@@ -49,9 +49,9 @@ describe("K8sPodState", () => {
                             notReadyDelaySeconds: 600,
                             notScheduledDelaySeconds: 600,
                             restartsPerDay: 1,
-                            clusterIncludeRegExp: "demo",
+                            clusterIncludeRegExp: "demo|production",
                             clusterExcludeRegExp: "^k9s-",
-                            namespaceIncludeRegExp: "^(production|staging)$",
+                            namespaceIncludeRegExp: "production|staging",
                             namespaceExcludeRegExp: "^kube-",
                         },
                     },
@@ -1171,6 +1171,81 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
                         id: "k8s-internal-demo:production:unhealthy:unhealthy",
+                        post: "update_only",
+                        ttl: 86400000,
+                    },
+                },
+            ];
+            assert.deepStrictEqual(s, es);
+            const el: string[] = [];
+            assert.deepStrictEqual(l, el);
+        });
+
+        it("ignores a pod being replaced", async () => {
+            const age = ageString(new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000));
+            const d = {
+                K8Pod: [
+                    {
+                        baseName: "dood-7d4b7588bd",
+                        name: "dood-7d4b7588bd-vptds",
+                        resourceVersion: 277272607,
+                        phase: "Running",
+                        containers: [
+                            {
+                                stateReason: "Error",
+                                ready: false,
+                                name: "dood",
+                                restartCount: 0,
+                                resourceVersion: 277272607,
+                                state: "terminated",
+                                containerID: "docker://48829a6b5b2d1ea2f3427a88c0303172a03849d249781a1ea2762515b32e3d98",
+                                image: {
+                                    commits: [
+                                        {
+                                            repo: {
+                                                name: "dood",
+                                                owner: "atomist",
+                                            },
+                                            sha: "82ced23dd5bb25fe4505536e28f5a1c692ecb814",
+                                        },
+                                    ],
+                                },
+                                environment: "k8s-internal-staging",
+                                imageName: "atomist/dood:0.1.3-20200323102421",
+                                timestamp: age,
+                            },
+                        ],
+                        environment: "k8s-internal-production",
+                        timestamp: age,
+                        statusJSON: `{"phase":"Running","conditions":[{"type":"Initialized","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"},{"type":"Ready","status":"False","lastProbeTime":null,"lastTransitionTime":"${age}","reason":"ContainersNotReady","message":"containers with unready status: [dood]"},{"type":"ContainersReady","status":"False","lastProbeTime":null,"lastTransitionTime":"${age}","reason":"ContainersNotReady","message":"containers with unready status: [dood]"},{"type":"PodScheduled","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"}],"hostIP":"10.121.36.46","podIP":"10.56.11.217","startTime":"${age}","containerStatuses":[{"name":"dood","state":{"terminated":{"exitCode":143,"reason":"Error","startedAt":"${age}","finishedAt":"${age}","containerID":"docker://6a2c75f5b101172812f7e90aecc92a4e3d75d91bda7bcac05d396abc4dca9184"}},"lastState":{},"ready":false,"restartCount":0,"image":"atomist/dood:0.1.3-20200323102421","imageID":"docker-pullable://docker.io/atomist/dood@sha256:36f2ddd2110904c70bb02d2350f482fc325aecd64dc672b4ed777f76fbd592ad","containerID":"docker://6a2c75f5b101172812f7e90aecc92a4e3d75d91bda7bcac05d396abc4dca9184"}],"qosClass":"Burstable"}`,
+                        namespace: "api-production",
+                    },
+                ],
+            };
+            const s: Sent[] = [];
+            const l: string[] = [];
+            const c = generateContext(d, s, l);
+            const r = await handler(c);
+            const e = {
+                code: 0,
+                reason: "All pods healthy",
+            };
+            assert.deepStrictEqual(r, e);
+            const es = [
+                {
+                    destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
+                    message: "Pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production recovered",
+                    options: {
+                        id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds",
+                        post: "update_only",
+                        ttl: 86400000,
+                    },
+                },
+                {
+                    destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
+                    message: "Container dood (atomist/dood:0.1.3-20200323102421) of pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production recovered",
+                    options: {
+                        id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds:dood",
                         post: "update_only",
                         ttl: 86400000,
                     },
