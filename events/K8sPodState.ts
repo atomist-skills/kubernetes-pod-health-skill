@@ -260,7 +260,7 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
     for (const configuration of ctx.configuration) {
         const parameters = configuration.parameters;
         const parameterChannels = parameters.channels;
-        const chatChannelResponse = await ctx.graphql.query<ChatChannelQuery>("ChatChannel", { channels: parameterChannels });
+        const chatChannelResponse = await ctx.graphql.query<ChatChannelQuery>("chatChannel.graphql", { channels: parameterChannels });
         const channels = chatChannelResponse.ChatChannel.filter(c => !c.archived).map(c => c.name);
         const users: string[] = [];
         const destination = { channels, users };

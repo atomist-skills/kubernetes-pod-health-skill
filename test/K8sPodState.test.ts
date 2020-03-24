@@ -59,7 +59,7 @@ describe("K8sPodState", () => {
                 data,
                 graphql: {
                     query: async (q: string, p: Record<string, any>): Promise<any> => {
-                        assert(q === "ChatChannel");
+                        assert(q === "chatChannel.graphql");
                         assert.deepStrictEqual(p, { channels: ["prod-alerts", "managers", "devs"] });
                         return {
                             ChatChannel: [
