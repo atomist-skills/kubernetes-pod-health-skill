@@ -28,7 +28,7 @@ import {
 } from "./types";
 
 /** Create string for Kubernetes pod. */
-function podSlug(pod: K8Pod): string {
+function podSlug(pod: K8Pod) {
     return `pod ${pod.namespace}/${pod.name} in Kubernetes cluster ${pod.environment}`;
 }
 
