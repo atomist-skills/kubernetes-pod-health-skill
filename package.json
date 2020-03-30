@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200320104827"
+    "@atomist/skill": "0.1.0-master.20200327164819"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.4.0",
