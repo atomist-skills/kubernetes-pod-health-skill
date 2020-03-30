@@ -15,6 +15,7 @@
  */
 
 import { EventHandler } from "@atomist/skill/lib/handler";
+import { info } from "@atomist/skill/lib/log";
 import { MessageOptions } from "@atomist/skill/lib/message";
 import {
     ContainerStatus,
@@ -258,6 +259,9 @@ function containerRestartRate(ca: ContainerArgs): string | undefined {
 
 /** Process K8Pod event and send alerts. */
 export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfiguration> = async ctx => {
+    for (const pod of ctx.data.K8Pod) {
+        info(`Pod ${podSlug(pod)}  status: ${pod.statusJSON}`);
+    }
     const now = new Date().getTime();
     const reasons: string[] = [];
     for (const configuration of ctx.configuration) {

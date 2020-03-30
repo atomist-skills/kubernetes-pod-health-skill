@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
+import * as log from "@atomist/skill/lib/log";
 import * as assert from "power-assert";
 import { handler } from "../events/K8sPodState";
 
 describe("K8sPodState", () => {
 
     describe("handler", () => {
+
+        let originalLogInfo: any;
+        before(() => {
+            originalLogInfo = Object.getOwnPropertyDescriptor(log, "info");
+            Object.defineProperty(log, "info", { value: () => { return; } });
+        });
+        after(() => {
+            Object.defineProperty(log, "info", originalLogInfo);
+        });
 
         interface Destination {
             channels: string[];
