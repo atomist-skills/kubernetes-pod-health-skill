@@ -260,7 +260,7 @@ function containerRestartRate(ca: ContainerArgs): string | undefined {
 /** Process K8Pod event and send alerts. */
 export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfiguration> = async ctx => {
     for (const pod of ctx.data.K8Pod) {
-        info(`Pod ${podSlug(pod)}  status: ${pod.statusJSON}`);
+        info(`${ucFirst(podSlug(pod))} status: ${pod.statusJSON}`);
     }
     const now = new Date().getTime();
     const reasons: string[] = [];
