@@ -357,8 +357,16 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
         }
     }
 
-    return {
-        code: reasons.length,
-        reason: (reasons.length > 0) ? reasons.join("; ") : "All pods healthy",
-    };
+    if (reasons.length > 0) {
+        return {
+            code: reasons.length,
+            reason: reasons.join("; "),
+        };
+    } else {
+        return {
+            code: 0,
+            reason: "All pods healthy",
+            visibility: "hidden",
+        };
+    }
 };

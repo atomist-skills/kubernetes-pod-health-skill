@@ -161,6 +161,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es = [
@@ -237,6 +238,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es: Sent[] = [];
@@ -285,6 +287,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es: Sent[] = [];
@@ -333,6 +336,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es: Sent[] = [];
@@ -381,6 +385,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es: Sent[] = [];
@@ -455,6 +460,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es = [
@@ -663,6 +669,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es = [
@@ -815,6 +822,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es = [
@@ -969,6 +977,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es = [
@@ -1155,6 +1164,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es = [
@@ -1239,6 +1249,7 @@ describe("K8sPodState", () => {
             const e = {
                 code: 0,
                 reason: "All pods healthy",
+                visibility: "hidden",
             };
             assert.deepStrictEqual(r, e);
             const es = [
