@@ -44,7 +44,7 @@ parameters:
       display_name: Chat channels to send alerts to
       description: |-
         Specify the chat channels where alerts should be sent
-      minRequired: 1
+      min_required: 1
       required: true
   - boolean:
       name: crashLoopBackOff
@@ -52,7 +52,7 @@ parameters:
       description: |-
         Select if you want to get alerts if a container in a pod is
         repeatedly crashing.
-      defaultValue: true
+      default_value: true
       required: true
   - boolean:
       name: imagePullBackOff
@@ -60,7 +60,7 @@ parameters:
       description: |-
         Select if you want to get alerts if the node is unable to pull
         the Docker image of a container in a pod.
-      defaultValue: true
+      default_value: true
       required: true
   - int:
       name: initContainerFailureCount
@@ -68,8 +68,8 @@ parameters:
       description: |-
         Set this to the number of init container failures you want to
         ignore before sending an alert.
-      defaultValue: 2
-      placeHolder: 2
+      default_value: 2
+      place_holder: 2
       minimum: 0
       required: true
   - int:
@@ -79,8 +79,8 @@ parameters:
         Set this to the minimum number of minutes between receiving
         alerts for specific pod container.  The default is to receive
         at most one alert per pod per day.
-      defaultValue: 1440
-      placeHolder: 1440
+      default_value: 1440
+      place_holder: 1440
       minimum: 1
       required: true
   - int:
@@ -90,8 +90,8 @@ parameters:
         Set this to the maximum number of pod container restarts to
         allow before sending an alert.  Set to `0` to disable this
         alert.
-      defaultValue: 10
-      placeHolder: 10
+      default_value: 10
+      place_holder: 10
       minimum: 0
       required: true
   - int:
@@ -101,8 +101,8 @@ parameters:
         Set this to the number seconds to wait after a container
         starts before before sending an alert if the container is not
         yet ready.  Set to `0` to disable this alert.
-      defaultValue: 600
-      placeHolder: 600
+      default_value: 600
+      place_holder: 600
       minimum: 0
       required: true
   - int:
@@ -112,8 +112,8 @@ parameters:
         Set this to the number seconds to wait after a pod is created
         before sending an alert if the pod is not yet scheduled.  Set
         to `0` to disable this alert.
-      defaultValue: 600
-      placeHolder: 600
+      default_value: 600
+      place_holder: 600
       minimum: 0
       required: true
   - float:
@@ -122,8 +122,8 @@ parameters:
       description: |-
         Set this to the number of restarts per day to allow before
         sending an alert.  Set to `0` to disable this alert.
-      defaultValue: 2.0
-      placeHolder: 2.0
+      default_value: 2.0
+      place_holder: 2.0
       minimum: 0.0
       required: true
   - string:
@@ -173,5 +173,6 @@ parameters:
         want to exclude multiple namespaces, you can provide a regular
         expression using the alternation operator, e.g.,
         `^(one-namespace|another-namespace|etc)$`.
-      placeHolder: "^kube-"
+      default_value: "^kube-"
+      place_holder: "^kube-"
       required: false
