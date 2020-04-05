@@ -246,7 +246,7 @@ function containerRestartRate(ca: ContainerArgs): string | undefined {
         return undefined;
     }
     const podDurationDays = (ca.now - new Date(ca.status.startTime).getTime()) / 1000 / 60 / 60 / 24;
-    const minAge = 0.1;
+    const minAge = 0.5;
     if (podDurationDays < minAge) {
         return undefined;
     }
