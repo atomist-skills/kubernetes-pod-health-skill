@@ -99,6 +99,9 @@ describe("K8sPodState", () => {
                     },
                 },
                 message: {
+                    delete: async (destination: Destination, options?: any): Promise<void> => {
+                        sent.push({ message: "DELETE", destination, options });
+                    },
                     send: async (message: string, destination: Destination, options?: any): Promise<any> => {
                         sent.push({ message, destination, options });
                     },
@@ -1264,11 +1267,9 @@ describe("K8sPodState", () => {
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
-                    message: "Container dood (atomist/dood:0.1.3-20200323102421) of pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production recovered",
+                    message: "DELETE",
                     options: {
                         id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds:dood",
-                        post: "update_only",
-                        ttl: 86400000,
                     },
                 },
             ];

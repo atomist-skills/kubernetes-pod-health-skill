@@ -203,9 +203,6 @@ function containerNotReady(ca: ContainerArgs): string | undefined {
     if (ca.container.state?.waiting) {
         return undefined;
     }
-    if (!ca.container.state?.running) {
-        return undefined;
-    }
     if (!ca.status.startTime) {
         return undefined;
     }
@@ -213,8 +210,12 @@ function containerNotReady(ca: ContainerArgs): string | undefined {
         return undefined;
     }
     const podDurationSeconds = (ca.now - new Date(ca.status.startTime).getTime()) / 1000;
-    if (podDurationSeconds > ca.parameters.notReadyDelaySeconds) {
-        return `${containerSlug(ca.pod, ca.container)} is not ready`;
+    if (ca.container.state?.terminated) {
+        return "DELETE";
+    } else if (ca.container.state?.running) {
+        if (podDurationSeconds > ca.parameters.notReadyDelaySeconds) {
+            return `${containerSlug(ca.pod, ca.container)} is not ready`;
+        }
     }
     return undefined;
 }
@@ -315,9 +316,9 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                     const checks = [
                         containerImagePullBackOff,
                         containerCrashLoopBackOff,
-                        containerNotReady,
                         containerMaxRestart,
                         containerRestartRate,
+                        containerNotReady,
                     ];
                     for (const check of checks) {
                         const error = check({ now, parameters, pod, status, container });
@@ -337,19 +338,28 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                     ttl: parameters.intervalMinutes * 60 * 1000,
                 };
                 let message: string;
-                if (!container.error) {
-                    options.post = "update_only";
-                    message = `${ucFirst(container.slug)} recovered`;
-                } else {
-                    message = container.error;
-                }
-                try {
-                    await ctx.message.send(message, destination, options);
-                    if (container.error) {
-                        await ctx.audit.log(container.error);
+                if (container.error === "DELETE") {
+                    container.error = undefined;
+                    try {
+                        await ctx.message.delete(destination, { id: container.id });
+                    } catch (e) {
+                        await ctx.audit.log(`Failed to delete message ${options.id}: ${e.message}`);
                     }
-                } catch (e) {
-                    await ctx.audit.log(`Failed to send message ${options.id}: ${e.message}`);
+                } else {
+                    if (!container.error) {
+                        options.post = "update_only";
+                        message = `${ucFirst(container.slug)} recovered`;
+                    } else {
+                        message = container.error;
+                    }
+                    try {
+                        await ctx.message.send(message, destination, options);
+                        if (container.error) {
+                            await ctx.audit.log(container.error);
+                        }
+                    } catch (e) {
+                        await ctx.audit.log(`Failed to send message ${options.id}: ${e.message}`);
+                    }
                 }
             }
 

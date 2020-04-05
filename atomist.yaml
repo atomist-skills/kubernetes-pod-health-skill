@@ -98,7 +98,7 @@ parameters:
       name: notReadyDelaySeconds
       display_name: Alert if pod container is not ready after this number of seconds
       description: |-
-        Set this to the number seconds to wait after a container
+        Set this to the number seconds to wait after a running container
         starts before before sending an alert if the container is not
         yet ready.  Set to `0` to disable this alert.
       default_value: 600
