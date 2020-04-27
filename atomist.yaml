@@ -46,6 +46,17 @@ parameters:
         Specify the chat channels where alerts should be sent
       min_required: 1
       required: true
+  - int:
+      name: intervalMinutes
+      display_name: Minimum interval in minutes between alerts for a pod/container
+      description: |-
+        Set this to the minimum number of minutes between receiving
+        alerts for specific pod container.  The default is to receive
+        at most one alert per pod per day.
+      default_value: 1440
+      place_holder: 1440
+      minimum: 1
+      required: true
   - boolean:
       name: crashLoopBackOff
       display_name: Alert when pod container in crash loop back off?
@@ -79,17 +90,6 @@ parameters:
       default_value: 2
       place_holder: 2
       minimum: 0
-      required: true
-  - int:
-      name: intervalMinutes
-      display_name: Minimum interval in minutes between alerts for a pod/container
-      description: |-
-        Set this to the minimum number of minutes between receiving
-        alerts for specific pod container.  The default is to receive
-        at most one alert per pod per day.
-      default_value: 1440
-      place_holder: 1440
-      minimum: 1
       required: true
   - int:
       name: maxRestarts
