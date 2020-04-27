@@ -7,6 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/kubernetes-pod-health-skill/tree/HEAD)
 
-### Fixed
+### Added
 
 -   Add check for OOMKilled status. [#4](https://github.com/atomist-skills/kubernetes-pod-health-skill/issues/4)
