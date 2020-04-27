@@ -79,6 +79,8 @@ export interface K8sPodStateConfiguration {
     notReadyDelaySeconds: number;
     /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
     notScheduledDelaySeconds: number;
+    /** Alert when container has been OOMKilled. */
+    oomKilled: boolean;
     /** Rate of container restarts to alert on, set to `0` to disable. */
     restartsPerDay: number;
     /**
@@ -191,6 +193,20 @@ function containerCrashLoopBackOff(ca: ContainerArgs): string | undefined {
     }
     if (ca.container.state.waiting.reason === "CrashLoopBackOff") {
         return `${containerSlug(ca.pod, ca.container)} is in CrashLoopBackOff: \`${ca.container.state.waiting.message}\``;
+    }
+    return undefined;
+}
+
+/** Detect if container has been OOMKilled. */
+function containerOomKilled(ca: ContainerArgs): string | undefined {
+    if (!ca.parameters.oomKilled) {
+        return undefined;
+    }
+    if (!ca.container.state?.terminated) {
+        return undefined;
+    }
+    if (ca.container.state.terminated.reason === "OOMKilled") {
+        return `${containerSlug(ca.pod, ca.container)} has been OOMKilled: \`${ca.container.state.terminated.exitCode}\``;
     }
     return undefined;
 }
@@ -316,6 +332,7 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                     const checks = [
                         containerImagePullBackOff,
                         containerCrashLoopBackOff,
+                        containerOomKilled,
                         containerMaxRestart,
                         containerRestartRate,
                         containerNotReady,

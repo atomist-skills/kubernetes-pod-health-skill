@@ -58,6 +58,7 @@ describe("K8sPodState", () => {
                             maxRestarts: 10,
                             notReadyDelaySeconds: 600,
                             notScheduledDelaySeconds: 600,
+                            oomKilled: true,
                             restartsPerDay: 1,
                             clusterIncludeRegExp: "demo|production",
                             clusterExcludeRegExp: "^k9s-",
@@ -590,6 +591,56 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
                         id: "k8s-internal-demo:production:image-pull-backoff:nothing",
+                        ttl: 86400000,
+                    },
+                },
+            ];
+            assert.deepStrictEqual(s, es);
+            const el = [em];
+            assert.deepStrictEqual(l, el);
+        });
+
+        it("detects OOMKilled", async () => {
+            const d = {
+                K8Pod: [
+                    {
+                        baseName: "oom-kill",
+                        name: "oom-kill",
+                        resourceVersion: 158112300,
+                        phase: "Failed",
+                        containers: [] as any[],
+                        environment: "k8s-internal-demo",
+                        timestamp: "2020-03-19T14:27:41Z",
+                        statusJSON: `{"conditions":[{"lastProbeTime":null,"lastTransitionTime":"2020-04-24T20:46:48Z","status":"True","type":"Initialized"},{"lastProbeTime":null,"lastTransitionTime":"2020-04-24T20:50:21Z","message":"containers with unready status: [kaniko]","reason":"ContainersNotReady","status":"False","type":"Ready"},{"lastProbeTime":null,"lastTransitionTime":"2020-04-24T20:50:21Z","message":"containers with unready status: [kaniko]","reason":"ContainersNotReady","status":"False","type":"ContainersReady"},{"lastProbeTime":null,"lastTransitionTime":"2020-04-24T20:46:44Z","status":"True","type":"PodScheduled"}],"containerStatuses":[{"containerID":"containerd://9987c0f9acdd7c416e4b9d937cfafa2616c188f2ed1fb2f10bd1525f10778c7e","image":"gcr.io/kaniko-project/executor:v0.19.0","imageID":"gcr.io/kaniko-project/executor@sha256:66be3f60f22b571faa82e0aaeb94731217ba0c58ac4a3b062bc84c6d8d545213","lastState":{},"name":"kaniko","ready":false,"restartCount":0,"state":{"terminated":{"containerID":"containerd://9987c0f9acdd7c416e4b9d937cfafa2616c188f2ed1fb2f10bd1525f10778c7e","exitCode":1,"finishedAt":"2020-04-24T20:50:21Z","reason":"OOMKilled","startedAt":"2020-04-24T20:46:48Z"}}}],"hostIP":"10.0.0.34","initContainerStatuses":[],"phase":"Failed","podIP":"10.60.4.62","qosClass":"Burstable","startTime":"2020-04-24T20:46:44Z"}`,
+                        namespace: "production",
+                    },
+                ],
+            };
+            const s: Sent[] = [];
+            const l: string[] = [];
+            const c = generateContext(d, s, l);
+            const r = await handler(c);
+            const em = "Container kaniko (gcr.io/kaniko-project/executor:v0.19.0) of pod production/oom-kill in Kubernetes cluster k8s-internal-demo has been OOMKilled: `1`";
+            const e = {
+                code: 1,
+                reason: em,
+            };
+            assert.deepStrictEqual(r, e);
+            const es = [
+                {
+                    destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
+                    message: "Pod production/oom-kill in Kubernetes cluster k8s-internal-demo recovered",
+                    options: {
+                        id: "k8s-internal-demo:production:oom-kill",
+                        post: "update_only",
+                        ttl: 86400000,
+                    },
+                },
+                {
+                    message: em,
+                    destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
+                    options: {
+                        id: "k8s-internal-demo:production:oom-kill:kaniko",
                         ttl: 86400000,
                     },
                 },

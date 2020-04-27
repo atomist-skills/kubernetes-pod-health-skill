@@ -62,6 +62,14 @@ parameters:
         the Docker image of a container in a pod.
       default_value: true
       required: true
+  - boolean:
+      name: oomKilled
+      display_name: Alert when pod container has been OOMKilled?
+      description: |-
+        Select if you want to get alerts if a container in a pod has
+        been killed because of an out-of-memory issue.
+      default_value: true
+      required: true
   - int:
       name: initContainerFailureCount
       display_name: Alert when pod init container fails more than this many times
