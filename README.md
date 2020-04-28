@@ -2,36 +2,67 @@
 
 Report when pods in a Kubernetes cluster are not healthy.
 
-## Overview
-
 <!---atomist-skill-readme:start--->
 
-In coordination with the k8vent utility, report when containers in
-pods in Kubernetes clusters are not healthy.
+[Code](https://github.com/atomist-skills/kubernetes-pod-health-skill) - [Issues](https://github.com/atomist-skills/kubernetes-pod-health-skill/issues)
 
-### Enabling
+## What it's useful for
 
-You must supply a Slack channel to send the alerts to.
+This skill will post Slack messages when pods in your Kubernetes
+cluster(s) are not healthy.
 
-## Configuration
+Kubernetes is great, sometimes too great.  We have come to rely on
+Kubernetes monitoring and fixing the resources we run on it,
+restarting failed containers and autoscaling clusters to accommodate
+increasing workloads, and therefore rarely check to make sure
+everything is running smoothly.  This skill takes the burden off you
+and your team to periodically check the health of your applications or
+manually verify that a new deployment was successful.
 
-### Slack channel
+Let this skill take care of monitoring your Kubernetes resources so
+you can focus on developing and improving them.
 
-Provide the name of the Slack channel where you want messages sent
-when a pod is not healthy.
+## Before you get started
 
-## Integrations
+Connect and configure these integrations:
 
-### Kubernetes
+1.  **Kubernetes**
+2.  **Slack**
 
-You must have deployed [k8vent][] to at least one Kubernetes cluster.
+Both the **Kubernetes** and **Slack** integrations must be configured
+to used this skill.  This skill will send a notification message to
+the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 
-[k8vent]: https://github.com/atomist/k8vent
+## How to configure
 
-### Slack
+1.  **Enter the chat channel(s) to send alerts to**
 
-This skill will send a notification message to the configured Slack
-channel when a pod is unhealthy.
+    The only required configuration parameter is the name of the chat
+    channel(s) you want to send the Kubernetes pod health alerts to.
+    You must enter one or more channel names.  Alerts will be sent to
+    all chat channels entered.
+
+2.  **Review remaining configuration**
+
+    We recommend you accept the default values for all remaining
+    configuration values.
+
+## How to use it
+
+1.  **Configure the skill**
+
+    Provide the name of at least one chat channel where you want the
+    pod health alerts to go.  See the above section for more details
+    on how to configure the skill and the meaning of various
+    configuration parameters.
+
+2.  **Stop worrying**
+
+    No longer waste time going to a dashboard or running `kubectl`
+    commands to check on the health of pods in your Kubernetes
+    clusters.  Stop worrying about the health of pods in your
+    Kubernetes clusters, knowing you only need to take action when you
+    see a chat message!  _Viva la ChatOps!_
 
 <!---atomist-skill-readme:end--->
 
@@ -40,5 +71,5 @@ channel when a pod is unhealthy.
 Created by [Atomist][atomist].
 Need Help?  [Join our Slack workspace][slack].
 
-[atomist]: https://atomist.com/ (Atomist - How Teams Deliver Software)
+[atomist]: https://atomist.com/ (Atomist - Automate All the Software Things)
 [slack]: https://join.atomist.com/ (Atomist Community Slack) 

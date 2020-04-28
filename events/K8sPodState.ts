@@ -69,20 +69,8 @@ export interface K8sPodStateConfiguration {
     crashLoopBackOff: boolean;
     /** Whether to alert for containers in ImagePullBackoff. */
     imagePullBackOff: boolean;
-    /** Alert when init container fails more times than this, set to `0` to disable. */
-    initContainerFailureCount: number;
-    /** How often to alert a given condition, in minutes. */
-    intervalMinutes: number;
-    /** Alert if pod container restarts exceeds this value, set to `0` to disable. */
-    maxRestarts: number;
-    /** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
-    notReadyDelaySeconds: number;
-    /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
-    notScheduledDelaySeconds: number;
     /** Alert when container has been OOMKilled. */
     oomKilled: boolean;
-    /** Rate of container restarts to alert on, set to `0` to disable. */
-    restartsPerDay: number;
     /**
      * Regular expression matching Kubernetes clusters whose pods
      * should be reported on.  If not provided, all clusters not
@@ -92,6 +80,12 @@ export interface K8sPodStateConfiguration {
     clusterIncludeRegExp?: string;
     /** Regular expression matching Kubernetes clusters whose pods should _not_ be reported on. */
     clusterExcludeRegExp?: string;
+    /** Alert when init container fails more times than this, set to `0` to disable. */
+    initContainerFailureCount?: number;
+    /** How often to alert a given condition, in minutes. */
+    intervalMinutes?: number;
+    /** Alert if pod container restarts exceeds this value, set to `0` to disable. */
+    maxRestarts?: number;
     /**
      * Regular expression matching namespaces whose pods should be
      * reported on.  If not provided, all namespaces not matching
@@ -100,6 +94,12 @@ export interface K8sPodStateConfiguration {
     namespaceIncludeRegExp?: string;
     /** Regular expression matching namespaces whose pods should _not_ be reported on. */
     namespaceExcludeRegExp?: string;
+    /** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
+    notReadyDelaySeconds?: number;
+    /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
+    notScheduledDelaySeconds?: number;
+    /** Rate of container restarts to alert on, set to `0` to disable. */
+    restartsPerDay?: number;
 }
 
 /** Structure for reporting on pods and containers. */
@@ -122,6 +122,26 @@ interface PodArgs {
     pod: K8Pod;
     /** Parsed pod statusJSON property. */
     status: PodStatus;
+}
+
+/**
+ * Ensure all parameter properties are set, using defaults if the
+ * property has not been set.  This function modifies the provided
+ * params object.
+ *
+ * @param params User-provided configuration parameters
+ */
+export function parameterDefaults(params: K8sPodStateConfiguration): void {
+    if (!params.channels || params.channels.length < 1) {
+        throw new Error(`Missing required configuration parameter: channels: ${JSON.stringify(params.channels)}`);
+    }
+    params.initContainerFailureCount = (params.initContainerFailureCount <= 0) ? 0 : (params.initContainerFailureCount || 2);
+    params.intervalMinutes = (params.intervalMinutes <= 0) ? 0 : (params.intervalMinutes || 1440);
+    params.maxRestarts = (params.maxRestarts <= 0) ? 0 : (params.maxRestarts || 10);
+    params.namespaceExcludeRegExp = params.namespaceExcludeRegExp || "^kube-";
+    params.notReadyDelaySeconds = (params.notReadyDelaySeconds <= 0) ? 0 : (params.notReadyDelaySeconds || 600);
+    params.notScheduledDelaySeconds = (params.notScheduledDelaySeconds <= 0) ? 0 : (params.notScheduledDelaySeconds || 600);
+    params.restartsPerDay = (params.restartsPerDay <= 0) ? 0 : (params.restartsPerDay || 2.0);
 }
 
 /** Detect if pod has been unscheduled too long. */
@@ -283,6 +303,7 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
     const reasons: string[] = [];
     for (const configuration of ctx.configuration) {
         const parameters = configuration.parameters;
+        parameterDefaults(parameters);
         const parameterChannels = parameters.channels;
         const chatChannelResponse = await ctx.graphql.query<ChatChannelQuery>("chatChannel.graphql", { channels: parameterChannels });
         const channels = chatChannelResponse.ChatChannel.filter(c => !c.archived).map(c => c.name);

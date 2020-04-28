@@ -16,16 +16,96 @@
 
 import * as log from "@atomist/skill/lib/log";
 import * as assert from "power-assert";
-import { handler } from "../events/K8sPodState";
+import {
+    handler,
+    parameterDefaults,
+} from "../events/K8sPodState";
 
 describe("K8sPodState", () => {
+
+    describe("parameterDefaults", () => {
+
+        it("populates default values", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 2,
+                intervalMinutes: 1440,
+                maxRestarts: 10,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 600,
+                notScheduledDelaySeconds: 600,
+                restartsPerDay: 2.0,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("retains provided values", () => {
+            const p = {
+                channels: ["lucinda", "williams"],
+                clusterExcludeRegExp: "junk$",
+                clusterIncludeRegExp: "^prod",
+                crashLoopBackOff: true,
+                imagePullBackOff: false,
+                oomKilled: false,
+                initContainerFailureCount: 20,
+                intervalMinutes: 144,
+                maxRestarts: 100,
+                namespaceExcludeRegExp: "^k8s-",
+                namespaceIncludeRegExp: "-system$",
+                notReadyDelaySeconds: 6000,
+                notScheduledDelaySeconds: 60,
+                restartsPerDay: 2.5,
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda", "williams"],
+                clusterExcludeRegExp: "junk$",
+                clusterIncludeRegExp: "^prod",
+                crashLoopBackOff: true,
+                imagePullBackOff: false,
+                oomKilled: false,
+                initContainerFailureCount: 20,
+                intervalMinutes: 144,
+                maxRestarts: 100,
+                namespaceExcludeRegExp: "^k8s-",
+                namespaceIncludeRegExp: "-system$",
+                notReadyDelaySeconds: 6000,
+                notScheduledDelaySeconds: 60,
+                restartsPerDay: 2.5,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("throws an error if no channels", () => {
+            const cs: string[][] = [undefined, []];
+            cs.forEach(c => {
+                assert.throws(() => parameterDefaults({
+                    channels: c,
+                    crashLoopBackOff: true,
+                    imagePullBackOff: false,
+                    oomKilled: false,
+                }), /Missing required configuration parameter: channels: /);
+            });
+        });
+
+    });
 
     describe("handler", () => {
 
         let originalLogInfo: any;
         before(() => {
             originalLogInfo = Object.getOwnPropertyDescriptor(log, "info");
-            Object.defineProperty(log, "info", { value: () => { return; } });
+            Object.defineProperty(log, "info", { value: async () => { return; } });
         });
         after(() => {
             Object.defineProperty(log, "info", originalLogInfo);

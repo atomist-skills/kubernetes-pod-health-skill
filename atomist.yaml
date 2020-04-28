@@ -21,7 +21,7 @@ skill:
   author: Atomist
   description: Report when a pod in a Kubernetes cluster is not healthy
   documentation: |-
-    In coordination with the k8vent utility, report when containers in
+    In coordination with the k8svent utility, report when containers in
     pods in Kubernetes clusters are not healthy.
   category:
     - CHAT_OPS
@@ -43,7 +43,8 @@ parameters:
       name: channels
       display_name: Chat channels to send alerts to
       description: |-
-        Specify the chat channels where alerts should be sent
+        Specify the chat channels where the pod health alerts should
+        be sent.  You must specify at least one chat channel.
       min_required: 1
       required: true
   - int:
@@ -52,11 +53,12 @@ parameters:
       description: |-
         Set this to the minimum number of minutes between receiving
         alerts for specific pod container.  The default is to receive
-        at most one alert per pod per day.
+        at most one alert per pod container per day.  The default
+        value is 1440, i.e., one per day.
       default_value: 1440
       place_holder: 1440
       minimum: 1
-      required: true
+      required: false
   - boolean:
       name: crashLoopBackOff
       display_name: Alert when pod container in crash loop back off?
@@ -86,54 +88,58 @@ parameters:
       display_name: Alert when pod init container fails more than this many times
       description: |-
         Set this to the number of init container failures you want to
-        ignore before sending an alert.
+        ignore before sending an alert.  The default value is `2`.
+        Set to `0` to disable this alert.
       default_value: 2
       place_holder: 2
       minimum: 0
-      required: true
+      required: false
   - int:
       name: maxRestarts
       display_name: Alert if pod container restarts exceeds this value
       description: |-
         Set this to the maximum number of pod container restarts to
-        allow before sending an alert.  Set to `0` to disable this
-        alert.
+        allow before sending an alert.  The default value is `10`
+        restarts.  Set to `0` to disable this alert.
       default_value: 10
       place_holder: 10
       minimum: 0
-      required: true
+      required: false
   - int:
       name: notReadyDelaySeconds
       display_name: Alert if pod container is not ready after this number of seconds
       description: |-
-        Set this to the number seconds to wait after a running container
-        starts before before sending an alert if the container is not
-        yet ready.  Set to `0` to disable this alert.
+        Set this to the number seconds to wait after a running
+        container starts before before sending an alert if the
+        container is not yet ready.  The default value is `600`, i.e.,
+        10 minutes.  Set to `0` to disable this alert.
       default_value: 600
       place_holder: 600
       minimum: 0
-      required: true
+      required: false
   - int:
       name: notScheduledDelaySeconds
       display_name: Alert if pod is not scheduled after this number of seconds
       description: |-
         Set this to the number seconds to wait after a pod is created
-        before sending an alert if the pod is not yet scheduled.  Set
-        to `0` to disable this alert.
+        before sending an alert if the pod is not yet scheduled.  The
+        default value is `600`, i.e., 10 minutes.  Set to `0` to
+        disable this alert.
       default_value: 600
       place_holder: 600
       minimum: 0
-      required: true
+      required: false
   - float:
       name: restartsPerDay
       display_name: Alert if pod container restart rate exceeds this rate
       description: |-
         Set this to the number of restarts per day to allow before
-        sending an alert.  Set to `0` to disable this alert.
+        sending an alert.  The default value is `2.0` restarts per
+        day.  Set to `0` to disable this alert.
       default_value: 2.0
       place_holder: 2.0
       minimum: 0.0
-      required: true
+      required: false
   - string:
       name: clusterIncludeRegExp
       display_name: Only alert on pods in Kubernetes clusters matching this regular expression
@@ -142,7 +148,7 @@ parameters:
         regular expression will be reported on.  If not provided, all
         clusters not matching the exclude cluster parameter will be
         reported on.  If you want match a single cluster, you can just
-        provide that environment of the k8vent running in that
+        provide that environment of the k8svent running in that
         cluster.  If you want to match multiple clusters, you can
         provide a regular expression using the alternation operator,
         e.g., `^(one-cluster|another-cluster|etc)$`.
@@ -154,7 +160,7 @@ parameters:
         If provided, only pods in Kubernetes clusters _not_ matching
         the regular expression will be reported on.  If you want
         exclude a single cluster, you can just provide the environment
-        of the k8vent running in that cluster.  If you want to exclude
+        of the k8svent running in that cluster.  If you want to exclude
         multiple clusters, you can provide a regular expression
         using the alternation operator, e.g.,
         `^(one-cluster|another-cluster|etc)$`.
@@ -180,7 +186,9 @@ parameters:
         single namespace, you can just provide that namespace.  If you
         want to exclude multiple namespaces, you can provide a regular
         expression using the alternation operator, e.g.,
-        `^(one-namespace|another-namespace|etc)$`.
+        `^(one-namespace|another-namespace|etc)$`.  The default value
+        is `^kube-` and matches all namespaces start start with
+        "kube-".
       default_value: "^kube-"
       place_holder: "^kube-"
       required: false
