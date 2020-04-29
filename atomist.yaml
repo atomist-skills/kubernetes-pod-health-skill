@@ -52,9 +52,9 @@ parameters:
       display_name: Minimum interval in minutes between alerts for a pod/container
       description: |-
         Set this to the minimum number of minutes between receiving
-        alerts for specific pod container.  The default is to receive
-        at most one alert per pod container per day.  The default
-        value is 1440, i.e., one per day.
+        alerts for a specific pod container.  The default value,
+        `1440`, sets the interval such that at most one alert message
+        is created per pod container per day.
       default_value: 1440
       place_holder: 1440
       minimum: 1
@@ -146,24 +146,15 @@ parameters:
       description: |-
         If provided, only pods in Kubernetes clusters matching the
         regular expression will be reported on.  If not provided, all
-        clusters not matching the exclude cluster parameter will be
-        reported on.  If you want match a single cluster, you can just
-        provide that environment of the k8svent running in that
-        cluster.  If you want to match multiple clusters, you can
-        provide a regular expression using the alternation operator,
-        e.g., `^(one-cluster|another-cluster|etc)$`.
+        clusters are implicitly included.
       required: false
   - string:
       name: clusterExcludeRegExp
       display_name: Only alert on pods in Kubernetes clusters _not_ matching this regular expression
       description: |-
         If provided, only pods in Kubernetes clusters _not_ matching
-        the regular expression will be reported on.  If you want
-        exclude a single cluster, you can just provide the environment
-        of the k8svent running in that cluster.  If you want to exclude
-        multiple clusters, you can provide a regular expression
-        using the alternation operator, e.g.,
-        `^(one-cluster|another-cluster|etc)$`.
+        the regular expression will be reported on.  If not provided,
+        no clusters are explicitly excluded.
       required: false
   - string:
       name: namespaceIncludeRegExp
@@ -171,24 +162,16 @@ parameters:
       description: |-
         If provided, only pods in namespaces matching the regular
         expression will be reported on.  If not provided, all
-        namespaces not matching the exclude namespace parameter will
-        be reported on.  If you want match a single namespace, you can
-        just provide that namespace.  If you want to match multiple
-        namespaces, you can provide a regular expression using the
-        alternation operator, e.g., `^(one-namespace|another-namespace|etc)$`.
+        namespaces are implicitly included.
       required: false
   - string:
       name: namespaceExcludeRegExp
       display_name: Only alert on pods in namespaces _not_ matching this regular expression
       description: |-
         If provided, only pods in namespaces _not_ matching the
-        regular expression will be reported on.  If you want exclude a
-        single namespace, you can just provide that namespace.  If you
-        want to exclude multiple namespaces, you can provide a regular
-        expression using the alternation operator, e.g.,
-        `^(one-namespace|another-namespace|etc)$`.  The default value
-        is `^kube-` and matches all namespaces start start with
-        "kube-".
+        regular expression will be reported on.  If not provided, the
+        default value is `^kube-`, which excludes all namespaces
+        starting with "kube-".
       default_value: "^kube-"
       place_holder: "^kube-"
       required: false
