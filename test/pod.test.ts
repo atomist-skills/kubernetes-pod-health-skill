@@ -15,9 +15,9 @@
  */
 
 import * as assert from "power-assert";
-import { parsePodStatus } from "../events/podStatus";
+import { parsePodStatus } from "../lib/pod";
 
-describe("podStatus", () => {
+describe("pod", () => {
 
     describe("parsePodStatus", () => {
 

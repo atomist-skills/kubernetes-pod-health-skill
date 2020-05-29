@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { K8sPodStateSubscription } from "./types";
+import { K8sPodStateSubscription } from "./typings/types";
 
 /** Extracted from @kubernetes/client-node. */
 export interface ContainerStateRunning {
