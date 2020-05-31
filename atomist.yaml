@@ -47,131 +47,143 @@ parameters:
         be sent.  You must specify at least one chat channel.
       min_required: 1
       required: true
-  - int:
-      name: intervalMinutes
-      display_name: Minimum interval in minutes between alerts for a pod/container
-      description: |-
-        Set this to the minimum number of minutes between receiving
-        alerts for a specific pod container.  The default value,
-        `1440`, sets the interval such that at most one alert message
-        is created per pod container per day.
-      default_value: 1440
-      place_holder: 1440
-      minimum: 1
-      required: false
-  - boolean:
-      name: crashLoopBackOff
-      display_name: Alert when pod container in crash loop back off?
-      description: |-
-        Select if you want to get alerts if a container in a pod is
-        repeatedly crashing.
-      default_value: true
-      required: true
-  - boolean:
-      name: imagePullBackOff
-      display_name: Alert when pod container in image pull back off?
-      description: |-
-        Select if you want to get alerts if the node is unable to pull
-        the Docker image of a container in a pod.
-      default_value: true
-      required: true
-  - boolean:
-      name: oomKilled
-      display_name: Alert when pod container has been OOMKilled?
-      description: |-
-        Select if you want to get alerts if a container in a pod has
-        been killed because of an out-of-memory issue.
-      default_value: true
-      required: true
-  - int:
-      name: initContainerFailureCount
-      display_name: Alert when pod init container fails more than this many times
-      description: |-
-        Set this to the number of init container failures you want to
-        ignore before sending an alert.  The default value is `2`.
-        Set to `0` to disable this alert.
-      default_value: 2
-      place_holder: 2
-      minimum: 0
-      required: false
-  - int:
+  # - int:
+  #     name: intervalMinutes
+  #     display_name: Minimum interval in minutes between alerts for a pod/container
+  #     description: |-
+  #       Set this to the minimum number of minutes between receiving
+  #       alerts for a specific pod container.  The default value,
+  #       `1440`, sets the interval such that at most one alert message
+  #       is created per pod container per day.
+  #     default_value: 1440
+  #     place_holder: 1440
+  #     minimum: 1
+  #     required: false
+  # - boolean:
+  #     name: crashLoopBackOff
+  #     display_name: Alert when pod container in crash loop back off?
+  #     description: |-
+  #       Select if you want to get alerts if a container in a pod is
+  #       repeatedly crashing.
+  #     default_value: true
+  #     required: true
+  # - boolean:
+  #     name: imagePullBackOff
+  #     display_name: Alert when pod container in image pull back off?
+  #     description: |-
+  #       Select if you want to get alerts if the node is unable to pull
+  #       the Docker image of a container in a pod.
+  #     default_value: true
+  #     required: true
+  # - boolean:
+  #     name: oomKilled
+  #     display_name: Alert when pod container has been OOMKilled?
+  #     description: |-
+  #       Select if you want to get alerts if a container in a pod has
+  #       been killed because of an out-of-memory issue.
+  #     default_value: true
+  #     required: true
+  # - int:
+  #     name: initContainerFailureCount
+  #     display_name: Alert when pod init container fails more than this many times
+  #     description: |-
+  #       Set this to the number of init container failures you want to
+  #       ignore before sending an alert.  The default value is `2`.
+  #       Set to `0` to disable this alert.
+  #     default_value: 3
+  #     place_holder: 3
+  #     minimum: 0
+  #     required: false
+  - single_choice:
       name: maxRestarts
-      display_name: Alert if pod container restarts exceeds this value
+      display_name: Pod container restarts
       description: |-
-        Set this to the maximum number of pod container restarts to
-        allow before sending an alert.  The default value is `10`
-        restarts.  Set to `0` to disable this alert.
-      default_value: 10
-      place_holder: 10
-      minimum: 0
-      required: false
-  - int:
-      name: notReadyDelaySeconds
-      display_name: Alert if pod container is not ready after this number of seconds
+        Alert if the count of pod container restarts reaches this
+        value or higher.
+      default_value: 10 restarts
+      options:
+        - description: Do not alert based on pod container restarts
+          text: Disable
+          value: 0
+        - description: Alert after five restarts
+          text: 5 restarts
+          value: 5
+        - description: Alert after ten restarts
+          text: 10 restarts
+          value: 10
+        - description: Alert after 25 restarts
+          text: 25 restarts
+          value: 25
+      required: true
+      visibility: advanced
+  - single_choice:
+      name: notReadyDelay
+      display_name: Pod container not ready
       description: |-
-        Set this to the number seconds to wait after a running
-        container starts before before sending an alert if the
-        container is not yet ready.  The default value is `600`, i.e.,
-        10 minutes.  Set to `0` to disable this alert.
+        Alert if pod container is not ready after this amount of time.
       default_value: 600
-      place_holder: 600
-      minimum: 0
-      required: false
-  - int:
-      name: notScheduledDelaySeconds
-      display_name: Alert if pod is not scheduled after this number of seconds
-      description: |-
-        Set this to the number seconds to wait after a pod is created
-        before sending an alert if the pod is not yet scheduled.  The
-        default value is `600`, i.e., 10 minutes.  Set to `0` to
-        disable this alert.
-      default_value: 600
-      place_holder: 600
-      minimum: 0
-      required: false
-  - float:
-      name: restartsPerDay
-      display_name: Alert if pod container restart rate exceeds this rate
-      description: |-
-        Set this to the number of restarts per day to allow before
-        sending an alert.  The default value is `2.0` restarts per
-        day.  Set to `0` to disable this alert.
-      default_value: 2.0
-      place_holder: 2.0
-      minimum: 0.0
-      required: false
-  - string:
-      name: clusterIncludeRegExp
-      display_name: Only alert on pods in Kubernetes clusters matching this regular expression
-      description: |-
-        If provided, only pods in Kubernetes clusters matching the
-        regular expression will be reported on.  If not provided, all
-        clusters are implicitly included.
-      required: false
-  - string:
-      name: clusterExcludeRegExp
-      display_name: Only alert on pods in Kubernetes clusters _not_ matching this regular expression
-      description: |-
-        If provided, only pods in Kubernetes clusters _not_ matching
-        the regular expression will be reported on.  If not provided,
-        no clusters are explicitly excluded.
-      required: false
-  - string:
-      name: namespaceIncludeRegExp
-      display_name: Only alert on pods in namespaces matching this regular expression
-      description: |-
-        If provided, only pods in namespaces matching the regular
-        expression will be reported on.  If not provided, all
-        namespaces are implicitly included.
-      required: false
-  - string:
-      name: namespaceExcludeRegExp
-      display_name: Only alert on pods in namespaces _not_ matching this regular expression
-      description: |-
-        If provided, only pods in namespaces _not_ matching the
-        regular expression will be reported on.  If not provided, the
-        default value is `^kube-`, which excludes all namespaces
-        starting with "kube-".
-      default_value: "^kube-"
-      place_holder: "^kube-"
-      required: false
+      options:
+        - description: Do not alert based on pod container readiness
+          text: Disable
+          value: 0
+        - description: Alert after five minutes
+          text: 5 minutes
+          value: 5
+        - description: Alert after ten minutes
+          text: 10 minutes
+          value: 10
+        - description: Alert after 30 minutes
+          text: 30 minutes
+          value: 30
+        - description: Alert after one hour
+          text: 1 hour
+          value: 60
+      required: true
+      visibility: advanced
+  # - int:
+  #     name: notScheduledDelaySeconds
+  #     display_name: Alert if pod is not scheduled after this number of seconds
+  #     description: |-
+  #       Set this to the number seconds to wait after a pod is created
+  #       before sending an alert if the pod is not yet scheduled.  The
+  #       default value is `600`, i.e., 10 minutes.  Set to `0` to
+  #       disable this alert.
+  #     default_value: 600
+  #     place_holder: 600
+  #     minimum: 0
+  #     required: false
+  # - string:
+  #     name: clusterIncludeRegExp
+  #     display_name: Only alert on pods in Kubernetes clusters matching this regular expression
+  #     description: |-
+  #       If provided, only pods in Kubernetes clusters matching the
+  #       regular expression will be reported on.  If not provided, all
+  #       clusters are implicitly included.
+  #     required: false
+  # - string:
+  #     name: clusterExcludeRegExp
+  #     display_name: Only alert on pods in Kubernetes clusters _not_ matching this regular expression
+  #     description: |-
+  #       If provided, only pods in Kubernetes clusters _not_ matching
+  #       the regular expression will be reported on.  If not provided,
+  #       no clusters are explicitly excluded.
+  #     required: false
+  # - string:
+  #     name: namespaceIncludeRegExp
+  #     display_name: Only alert on pods in namespaces matching this regular expression
+  #     description: |-
+  #       If provided, only pods in namespaces matching the regular
+  #       expression will be reported on.  If not provided, all
+  #       namespaces are implicitly included.
+  #     required: false
+  # - string:
+  #     name: namespaceExcludeRegExp
+  #     display_name: Only alert on pods in namespaces _not_ matching this regular expression
+  #     description: |-
+  #       If provided, only pods in namespaces _not_ matching the
+  #       regular expression will be reported on.  If not provided, the
+  #       default value is `^kube-`, which excludes all namespaces
+  #       starting with "kube-".
+  #     default_value: "^kube-"
+  #     place_holder: "^kube-"
+  #     required: false

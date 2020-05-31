@@ -19,8 +19,28 @@ everything is running smoothly.  This skill takes the burden off you
 and your team to periodically check the health of your applications or
 manually verify that a new deployment was successful.
 
+This skill, in coordination with the Atomist Kubernetes provider
+integration, monitors the activity of pods in your cluster and
+notifies you when:
+
+-   A pod container is in image pull back-off.
+-   A pod container is in crash loop back-off.
+-   A pod container is OOMKilled, i.e., killed because it has used too much memory.
+-   A pod init container has failed too many times.
+-   A pod container restarts too many times.[<sup>&ast;</sup>](#footnote-configure)
+-   A pod container is not in a ready state.[<sup>&ast;</sup>](#footnote-configure)
+
+This skill will alert you at most once per day per unique
+pod/container.
+
 Let this skill take care of monitoring your Kubernetes resources so
 you can focus on developing and improving them.
+
+---
+
+<span id="footnote-configure">
+&ast; - These items are configurable, see below.
+</span>
 
 ## Before you get started
 
@@ -40,9 +60,8 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
     If this is the first time you are configuring this skill, you can
     accept the default configuration name, "Kubernetes Pod Health
     Monitor".  If you are creating a second configuration, e.g., so
-    you can send alerts from different namespaces and/or clusters to
-    different chat channels, enter a name that is unique among all
-    configurations for this skill.
+    you can provide different configuration values, enter a name that
+    is unique among all configurations for this skill.
 
     ![name parameter](docs/images/param-name.png)
 
@@ -63,6 +82,7 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 
     Here is a brief run-through of the available options.
 
+    <!--
     -   _Minimum interval in minutes between alerts for a pod/container_
 
         Set this to the minimum number of minutes between receiving
@@ -107,11 +127,13 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
         Set to `0` to disable this alert.
 
         ![init container failures parameter](docs/images/param-init-container.png)
+    -->
 
     -   _Alert if pod container restarts exceeds this value_
 
         Set this to the maximum number of pod container restarts to
-        allow before sending an alert.  The default value is `10`
+        allow before sending an alert.  This counter accumulates over
+        the entire lifetime of the pod.  The default value is `10`
         restarts.  Set to `0` to disable this alert.
 
         ![max container restarts parameter](docs/images/param-restarts.png)
@@ -125,6 +147,7 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 
         ![container not ready delay parameter](docs/images/param-not-ready.png)
 
+    <!--
     -   _Alert if pod is not scheduled after this number of seconds_
 
         Set this to the number seconds to wait after a pod is created
@@ -133,14 +156,6 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
         disable this alert.
 
         ![pod not scheduled delay parameter](docs/images/param-not-scheduled.png)
-
-    -   _Alert if pod container restart rate exceeds this rate_
-
-        Set this to the number of restarts per day to allow before
-        sending an alert.  The default value is `2.0` restarts per
-        day.  Set to `0` to disable this alert.
-
-        ![container restart rate parameter](docs/images/param-restart-rate.png)
 
     -   _Kubernetes cluster selection_
 
@@ -213,6 +228,7 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 
         ![namespace include parameter](docs/images/param-namespace-include.png)
         ![namespace exclude parameter](docs/images/param-namespace-exclude.png)
+    -->
 
 4.  **Submit the skill configuration**
 
