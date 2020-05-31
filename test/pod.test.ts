@@ -27,55 +27,55 @@ describe("pod", () => {
             };
             const s = parsePodStatus(p);
             const e: any = {
-                "phase": "Pending",
-                "conditions": [
+                phase: "Pending",
+                conditions: [
                     {
-                        "type": "Initialized",
-                        "status": "True",
-                        "lastProbeTime": null,
-                        "lastTransitionTime": new Date("2019-12-08T19:08:18Z"),
+                        type: "Initialized",
+                        status: "True",
+                        lastProbeTime: null,
+                        lastTransitionTime: new Date("2019-12-08T19:08:18Z"),
                     },
                     {
-                        "type": "Ready",
-                        "status": "False",
-                        "lastProbeTime": null,
-                        "lastTransitionTime": new Date("2019-12-08T19:13:46Z"),
-                        "reason": "ContainersNotReady",
-                        "message": "containers with unready status: [io0]",
+                        type: "Ready",
+                        status: "False",
+                        lastProbeTime: null,
+                        lastTransitionTime: new Date("2019-12-08T19:13:46Z"),
+                        reason: "ContainersNotReady",
+                        message: "containers with unready status: [io0]",
                     },
                     {
-                        "type": "ContainersReady",
-                        "status": "False",
-                        "lastProbeTime": null,
-                        "lastTransitionTime": new Date("2019-12-08T19:13:46Z"),
-                        "reason": "ContainersNotReady",
-                        "message": "containers with unready status: [io0]",
+                        type: "ContainersReady",
+                        status: "False",
+                        lastProbeTime: null,
+                        lastTransitionTime: new Date("2019-12-08T19:13:46Z"),
+                        reason: "ContainersNotReady",
+                        message: "containers with unready status: [io0]",
                     },
                     {
-                        "type": "PodScheduled",
-                        "status": "True",
-                        "lastProbeTime": null,
-                        "lastTransitionTime": new Date("2019-12-08T19:08:18Z"),
+                        type: "PodScheduled",
+                        status: "True",
+                        lastProbeTime: null,
+                        lastTransitionTime: new Date("2019-12-08T19:08:18Z"),
                     },
                 ],
-                "hostIP": "10.0.0.60",
-                "startTime": new Date("2019-12-08T19:08:18Z"),
-                "containerStatuses": [
+                hostIP: "10.0.0.60",
+                startTime: new Date("2019-12-08T19:08:18Z"),
+                containerStatuses: [
                     {
-                        "name": "io0",
-                        "state": {
-                            "waiting": {
-                                "reason": "ContainerCreating",
+                        name: "io0",
+                        state: {
+                            waiting: {
+                                reason: "ContainerCreating",
                             },
                         },
-                        "lastState": {},
-                        "ready": false,
-                        "restartCount": 0,
-                        "image": "atomist/io0:0.2.2-20191208190707",
-                        "imageID": "",
+                        lastState: {},
+                        ready: false,
+                        restartCount: 0,
+                        image: "atomist/io0:0.2.2-20191208190707",
+                        imageID: "",
                     },
                 ],
-                "qosClass": "Burstable",
+                qosClass: "Burstable",
             };
             assert.deepStrictEqual(s, e);
         });

@@ -25,8 +25,10 @@ module.exports = {
         "comma-dangle": ["error", "always-multiline"],
         "comma-spacing": "off",
         "@typescript-eslint/comma-spacing": ["error"],
+        "eqeqeq": ["error", "always"],
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-floating-promises": ["error"],
+        "quote-props": ["error", "consistent-as-needed"],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
     }
