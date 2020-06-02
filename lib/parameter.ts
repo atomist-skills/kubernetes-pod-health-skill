@@ -35,6 +35,12 @@ export interface K8sPodStateConfiguration {
     initContainerFailureCount?: number;
     /** How often to alert a given condition, in minutes. */
     intervalMinutes?: number;
+    /**
+     * Alert if pod container restarts exceeds this value, set to `"0"` to disable.  This value will be parsed as a
+     * base-10 integer and used to populated [[maxRestarts]].  If both this property and [[maxRestarts]] are set, the
+     * latter takes precedence.
+     */
+    maxRestartsString?: string;
     /** Alert if pod container restarts exceeds this value, set to `0` to disable. */
     maxRestarts?: number;
     /**
@@ -45,9 +51,15 @@ export interface K8sPodStateConfiguration {
     namespaceIncludeRegExp?: string;
     /** Regular expression matching namespaces whose pods should _not_ be reported on. */
     namespaceExcludeRegExp?: string;
+    /**
+     * Alert when containers are not ready after this number of minutes, set to `"0"` to disable.  This value will be
+     * parsed as a base-10 integer and used to populated [[notReadyDelaySeconds]].  If both this property and
+     * [[notReadyDelaySeconds]] are set, the latter takes precedence.
+     */
+    notReadyDelay?: string;
     /** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
     notReadyDelaySeconds?: number;
-    /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
+    /** Alert when pod has not been scheduled after this number of minutes, set to `0` to disable. */
     notScheduledDelaySeconds?: number;
     /** Alert when container has been OOMKilled. */
     oomKilled?: boolean;
@@ -69,8 +81,26 @@ export function parameterDefaults(params: K8sPodStateConfiguration): void {
     params.oomKilled = params.oomKilled !== false;
     params.initContainerFailureCount = (params.initContainerFailureCount <= 0) ? 0 : (params.initContainerFailureCount || 3);
     params.intervalMinutes = (params.intervalMinutes <= 0) ? 0 : (params.intervalMinutes || 1440);
-    params.maxRestarts = (params.maxRestarts <= 0) ? 0 : (params.maxRestarts || 10);
+    if (params.maxRestarts <= 0) {
+        params.maxRestarts = 0;
+    } else if (!params.maxRestarts) {
+        if (params.maxRestartsString) {
+            params.maxRestarts = parseInt(params.maxRestartsString, 10);
+        } else {
+            params.maxRestarts = 10;
+        }
+    }
+    delete params.maxRestartsString;
     params.namespaceExcludeRegExp = params.namespaceExcludeRegExp || "^kube-";
-    params.notReadyDelaySeconds = (params.notReadyDelaySeconds <= 0) ? 0 : (params.notReadyDelaySeconds || 600);
+    if (params.notReadyDelaySeconds <= 0) {
+        params.notReadyDelaySeconds = 0;
+    } else if (!params.notReadyDelaySeconds) {
+        if (params.notReadyDelay) {
+            params.notReadyDelaySeconds = parseInt(params.notReadyDelay) * 60;
+        } else {
+            params.notReadyDelaySeconds = 600;
+        }
+    }
+    delete params.notReadyDelay;
     params.notScheduledDelaySeconds = (params.notScheduledDelaySeconds <= 0) ? 0 : (params.notScheduledDelaySeconds || 600);
 }

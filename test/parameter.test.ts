@@ -76,6 +76,178 @@ describe("parameter", () => {
             assert.deepStrictEqual(p, e);
         });
 
+        it("calculates notReadyDelaySeconds from notReadyDelay", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                notReadyDelay: "30",
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 10,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 1800,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("sets notReadyDelaySeconds to zero from notReadyDelay", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                notReadyDelay: "0",
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 10,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 0,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("overrides notReadyDelay with notReadyDelaySeconds", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                notReadyDelay: "30",
+                notReadyDelaySeconds: 900,
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 10,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 900,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("overrides notReadyDelay with zero notReadyDelaySeconds", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                notReadyDelay: "30",
+                notReadyDelaySeconds: 0,
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 10,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 0,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("calculates maxRestarts from maxRestartString", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                maxRestartsString: "25",
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 25,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 600,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("sets maxRestarts to zero from maxRestartString", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                maxRestartsString: "0",
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 0,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 600,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("overrides maxRestartString with maxRestarts", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                maxRestartsString: "25",
+                maxRestarts: 15,
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 15,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 600,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("overrides maxRestartString with zero maxRestarts", () => {
+            const p = {
+                channels: ["lucinda-williams"],
+                maxRestartsString: "25",
+                maxRestarts: 0,
+            };
+            parameterDefaults(p);
+            const e = {
+                channels: ["lucinda-williams"],
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                oomKilled: true,
+                initContainerFailureCount: 3,
+                intervalMinutes: 1440,
+                maxRestarts: 0,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 600,
+                notScheduledDelaySeconds: 600,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
         it("throws an error if no channels", () => {
             const cs: string[][] = [undefined, []];
             cs.forEach(c => {
