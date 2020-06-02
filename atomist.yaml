@@ -43,8 +43,8 @@ parameters:
       name: channels
       display_name: Chat channels to send alerts to
       description: |-
-        Specify the chat channels where the pod health alerts should
-        be sent.  You must specify at least one chat channel.
+        Specify the chat channels where the alerts should be sent.
+        You must specify at least one chat channel.
       min_required: 1
       required: true
   # - int:
