@@ -24,7 +24,6 @@ import {
     containerMaxRestart,
     containerNotReady,
     containerOomKilled,
-    containerRestartRate,
     containerSlug,
     initContainerFail,
     PodContainer,
@@ -106,7 +105,6 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                         containerCrashLoopBackOff,
                         containerOomKilled,
                         containerMaxRestart,
-                        containerRestartRate,
                         containerNotReady,
                     ];
                     for (const check of checks) {

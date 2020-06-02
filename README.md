@@ -31,7 +31,8 @@ notifies you when:
 -   A pod container is not in a ready state.[<sup>&ast;</sup>](#footnote-configure)
 
 This skill will alert you at most once per day per unique
-pod/container.
+pod/container.  This skill will _not_ alert on pods/containers in
+namespaces that start with `kube-`.
 
 Let this skill take care of monitoring your Kubernetes resources so
 you can focus on developing and improving them.

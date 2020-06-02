@@ -18,12 +18,6 @@
 export interface K8sPodStateConfiguration {
     /** Chat channels to sent alerts to. */
     channels: string[];
-    /** Whether to alert for containers in CrashLoopBackoff. */
-    crashLoopBackOff: boolean;
-    /** Whether to alert for containers in ImagePullBackoff. */
-    imagePullBackOff: boolean;
-    /** Alert when container has been OOMKilled. */
-    oomKilled: boolean;
     /**
      * Regular expression matching Kubernetes clusters whose pods
      * should be reported on.  If not provided, all clusters not
@@ -33,6 +27,10 @@ export interface K8sPodStateConfiguration {
     clusterIncludeRegExp?: string;
     /** Regular expression matching Kubernetes clusters whose pods should _not_ be reported on. */
     clusterExcludeRegExp?: string;
+    /** Whether to alert for containers in CrashLoopBackoff. */
+    crashLoopBackOff?: boolean;
+    /** Whether to alert for containers in ImagePullBackoff. */
+    imagePullBackOff?: boolean;
     /** Alert when init container fails more times than this, set to `0` to disable. */
     initContainerFailureCount?: number;
     /** How often to alert a given condition, in minutes. */
@@ -51,8 +49,8 @@ export interface K8sPodStateConfiguration {
     notReadyDelaySeconds?: number;
     /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
     notScheduledDelaySeconds?: number;
-    /** Rate of container restarts to alert on, set to `0` to disable. */
-    restartsPerDay?: number;
+    /** Alert when container has been OOMKilled. */
+    oomKilled?: boolean;
 }
 
 /**
@@ -66,11 +64,13 @@ export function parameterDefaults(params: K8sPodStateConfiguration): void {
     if (!params.channels || params.channels.length < 1) {
         throw new Error(`Missing required configuration parameter: channels: ${JSON.stringify(params.channels)}`);
     }
-    params.initContainerFailureCount = (params.initContainerFailureCount <= 0) ? 0 : (params.initContainerFailureCount || 2);
+    params.imagePullBackOff = params.imagePullBackOff !== false;
+    params.crashLoopBackOff = params.crashLoopBackOff !== false;
+    params.oomKilled = params.oomKilled !== false;
+    params.initContainerFailureCount = (params.initContainerFailureCount <= 0) ? 0 : (params.initContainerFailureCount || 3);
     params.intervalMinutes = (params.intervalMinutes <= 0) ? 0 : (params.intervalMinutes || 1440);
     params.maxRestarts = (params.maxRestarts <= 0) ? 0 : (params.maxRestarts || 10);
     params.namespaceExcludeRegExp = params.namespaceExcludeRegExp || "^kube-";
     params.notReadyDelaySeconds = (params.notReadyDelaySeconds <= 0) ? 0 : (params.notReadyDelaySeconds || 600);
     params.notScheduledDelaySeconds = (params.notScheduledDelaySeconds <= 0) ? 0 : (params.notScheduledDelaySeconds || 600);
-    params.restartsPerDay = (params.restartsPerDay <= 0) ? 0 : (params.restartsPerDay || 2.0);
 }

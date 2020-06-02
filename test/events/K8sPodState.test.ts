@@ -53,7 +53,7 @@ describe("K8sPodState", () => {
                             channels: ["prod-alerts", "managers", "devs"],
                             crashLoopBackOff: true,
                             imagePullBackOff: true,
-                            initContainerFailureCount: 2,
+                            initContainerFailureCount: 3,
                             intervalMinutes: 1440,
                             maxRestarts: 10,
                             notReadyDelaySeconds: 600,
@@ -910,83 +910,6 @@ describe("K8sPodState", () => {
             ];
             assert.deepStrictEqual(s, es);
             const el: string[] = [];
-            assert.deepStrictEqual(l, el);
-        });
-
-        it("detects exceeding allowable restart rate", async () => {
-            const age = ageString(new Date(new Date().getTime() - 24 * 60 * 60 * 1000));
-            const d = {
-                K8Pod: [
-                    {
-                        baseName: "restart",
-                        name: "restart",
-                        resourceVersion: 158217367,
-                        phase: "Running",
-                        containers: [
-                            {
-                                stateReason: "",
-                                ready: true,
-                                name: "sleep",
-                                restartCount: 4,
-                                resourceVersion: 158217367,
-                                state: "running",
-                                containerID: "containerd://7441f1838a5bbc3e318b6afdacfbd348e1ef18d53ef485e9a2abc4483a4665dd",
-                                image: {
-                                    commits: [] as any[],
-                                },
-                                environment: "k8s-internal-demo",
-                                imageName: "busybox:1.31.1-uclibc",
-                                timestamp: age,
-                                statusJSON: `{"name":"sleep","state":{"running":{"startedAt":"${age}"}},"lastState":{"terminated":{"exitCode":0,"reason":"Completed","startedAt":"${age}","finishedAt":"${age}","containerID":"containerd://87cb7ca0fbbc0b05d7dca1ddc5629db5157d2946636c83be228a508d763883ba"}},"ready":true,"restartCount":4,"image":"docker.io/library/busybox:1.31.1-uclibc","imageID":"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51","containerID":"containerd://aa4f3cbe18dfa2f3a42de286f434d3d457fa93ca1317013f8a2387437dda684e"}`,
-                            },
-                        ],
-                        environment: "k8s-internal-demo",
-                        timestamp: age,
-                        statusJSON: `{"phase":"Running","conditions":[{"type":"Initialized","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"},{"type":"Ready","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"},{"type":"ContainersReady","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"},{"type":"PodScheduled","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"}],"hostIP":"10.0.3.197","podIP":"10.12.0.31","startTime":"${age}","initContainerStatuses":[{"name":"success","state":{"terminated":{"exitCode":0,"reason":"Completed","startedAt":"${age}","finishedAt":"${age}","containerID":"containerd://3e43c95249a0020f56b53e365a02cb422e4c49fa419e13fb653e2adf67dc4cae"}},"lastState":{},"ready":true,"restartCount":0,"image":"docker.io/library/busybox:1.31.1-uclibc","imageID":"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51","containerID":"containerd://3e43c95249a0020f56b53e365a02cb422e4c49fa419e13fb653e2adf67dc4cae"}],"containerStatuses":[{"name":"sleep","state":{"running":{"startedAt":"${age}"}},"lastState":{"terminated":{"exitCode":0,"reason":"Completed","startedAt":"${age}","finishedAt":"${age}","containerID":"containerd://87cb7ca0fbbc0b05d7dca1ddc5629db5157d2946636c83be228a508d763883ba"}},"ready":true,"restartCount":4,"image":"docker.io/library/busybox:1.31.1-uclibc","imageID":"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51","containerID":"containerd://aa4f3cbe18dfa2f3a42de286f434d3d457fa93ca1317013f8a2387437dda684e"}],"qosClass":"BestEffort"}`,
-                        namespace: "production",
-                    },
-                ],
-            };
-            const s: Sent[] = [];
-            const l: string[] = [];
-            const c = generateContext(d, s, l);
-            const r = await handler(c);
-            const em = "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo restarts have exceeded acceptable rate: 4 restarts over 1.0 days";
-            const e = {
-                code: 1,
-                reason: em,
-            };
-            assert.deepStrictEqual(r, e);
-            const es = [
-                {
-                    destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
-                    message: "Pod production/restart in Kubernetes cluster k8s-internal-demo recovered",
-                    options: {
-                        id: "k8s-internal-demo:production:restart",
-                        post: "update_only",
-                        ttl: 86400000,
-                    },
-                },
-                {
-                    destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
-                    message: "Init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo recovered",
-                    options: {
-                        id: "k8s-internal-demo:production:restart:init:success",
-                        post: "update_only",
-                        ttl: 86400000,
-                    },
-                },
-                {
-                    message: em,
-                    destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
-                    options: {
-                        id: "k8s-internal-demo:production:restart:sleep",
-                        ttl: 86400000,
-                    },
-                },
-            ];
-            assert.deepStrictEqual(s, es);
-            const el = [em];
             assert.deepStrictEqual(l, el);
         });
 

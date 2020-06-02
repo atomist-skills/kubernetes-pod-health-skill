@@ -100,7 +100,7 @@ parameters:
       description: |-
         Alert if the count of pod container restarts reaches this
         value or higher.
-      default_value: 10 restarts
+      default_value: 10
       options:
         - description: Do not alert based on pod container restarts
           text: Disable
@@ -121,7 +121,7 @@ parameters:
       display_name: Pod container not ready
       description: |-
         Alert if pod container is not ready after this amount of time.
-      default_value: 600
+      default_value: 10
       options:
         - description: Do not alert based on pod container readiness
           text: Disable

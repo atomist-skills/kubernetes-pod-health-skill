@@ -24,9 +24,6 @@ describe("parameter", () => {
         it("populates default values", () => {
             const p = {
                 channels: ["lucinda-williams"],
-                crashLoopBackOff: true,
-                imagePullBackOff: true,
-                oomKilled: true,
             };
             parameterDefaults(p);
             const e = {
@@ -34,13 +31,12 @@ describe("parameter", () => {
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
                 oomKilled: true,
-                initContainerFailureCount: 2,
+                initContainerFailureCount: 3,
                 intervalMinutes: 1440,
                 maxRestarts: 10,
                 namespaceExcludeRegExp: "^kube-",
                 notReadyDelaySeconds: 600,
                 notScheduledDelaySeconds: 600,
-                restartsPerDay: 2.0,
             };
             assert.deepStrictEqual(p, e);
         });
@@ -60,7 +56,6 @@ describe("parameter", () => {
                 namespaceIncludeRegExp: "-system$",
                 notReadyDelaySeconds: 6000,
                 notScheduledDelaySeconds: 60,
-                restartsPerDay: 2.5,
             };
             parameterDefaults(p);
             const e = {
@@ -77,7 +72,6 @@ describe("parameter", () => {
                 namespaceIncludeRegExp: "-system$",
                 notReadyDelaySeconds: 6000,
                 notScheduledDelaySeconds: 60,
-                restartsPerDay: 2.5,
             };
             assert.deepStrictEqual(p, e);
         });

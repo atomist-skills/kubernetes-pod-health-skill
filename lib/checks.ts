@@ -108,7 +108,7 @@ export function initContainerFail(ca: ContainerArgs): PodContainer {
     if (ca.parameters.initContainerFailureCount < 1) {
         return pic;
     }
-    if (ca.container.state?.terminated?.reason === "Error" && ca.container.restartCount > ca.parameters.initContainerFailureCount) {
+    if (ca.container.state?.terminated?.reason === "Error" && ca.container.restartCount >= ca.parameters.initContainerFailureCount) {
         pic.error = `Init ${containerSlug(ca.pod, ca.container)} failed: \`${ca.container.state.terminated.exitCode}\``;
     }
     return pic;
@@ -189,32 +189,9 @@ export function containerMaxRestart(ca: ContainerArgs): string | undefined {
     if (!ca.container.restartCount) {
         return undefined;
     }
-    if (ca.container.restartCount > ca.parameters.maxRestarts) {
+    if (ca.container.restartCount >= ca.parameters.maxRestarts) {
         return `${containerSlug(ca.pod, ca.container)} has restarted too many times: ` +
             `\`${ca.container.restartCount} > ${ca.parameters.maxRestarts}\``;
-    }
-    return undefined;
-}
-
-/** Detect if container has exceeded allowable restart rate. */
-export function containerRestartRate(ca: ContainerArgs): string | undefined {
-    if (ca.parameters.restartsPerDay < 0.01) {
-        return undefined;
-    }
-    if (!ca.status.startTime) {
-        return undefined;
-    }
-    if (!ca.container.restartCount) {
-        return undefined;
-    }
-    const podDurationDays = (ca.now - new Date(ca.status.startTime).getTime()) / 1000 / 60 / 60 / 24;
-    const minAge = 0.5;
-    if (podDurationDays < minAge) {
-        return undefined;
-    }
-    if ((ca.container.restartCount / podDurationDays) > ca.parameters.restartsPerDay) {
-        return `${containerSlug(ca.pod, ca.container)} restarts have exceeded acceptable rate: ` +
-            `${ca.container.restartCount} restarts over ${podDurationDays.toFixed(1)} days`;
     }
     return undefined;
 }
