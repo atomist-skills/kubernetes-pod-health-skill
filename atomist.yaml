@@ -17,7 +17,7 @@
 skill:
   name: atomist/kubernetes-pod-health-skill
   title: Kubernetes Pod Health Monitor
-  version: 0.1.0
+  version: 0.2.0
   author: Atomist
   description: Report when a pod in a Kubernetes cluster is not healthy
   documentation: |-
