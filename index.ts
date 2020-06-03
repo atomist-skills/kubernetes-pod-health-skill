@@ -35,7 +35,7 @@ export const Skill = skill<Pick<K8sPodStateConfiguration, "channels" | "maxResta
             minRequired: 1,
             maxAllowed: 1,
         },
-        slack: slackResourceProvider(1),
+        slack: slackResourceProvider({ minRequired: 1, maxAllowed: 1 }),
     },
 
     parameters: {
