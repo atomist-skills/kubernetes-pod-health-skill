@@ -1,26 +1,42 @@
 {
+  "name": "@atomist/kubernetes-pod-health-skill",
+  "description": "Kubernetes Pod Health Monitor",
+  "author": {
+    "name": "Atomist",
+    "email": "oss@atomist.com"
+  },
+  "keywords": [
+    "CHAT",
+    "NOTIFICATIONS"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomist-skills/kubernetes-pod-health-skill.git"
+  },
+  "homepage": "https://github.com/atomist-skills/kubernetes-pod-health-skill",
+  "license": "Apache-2.0",
   "dependencies": {
     "@atomist/skill": "0.1.0-issue-6.20200603103624"
   },
   "devDependencies": {
-    "@google-cloud/functions-framework": "^1.4.0",
+    "@google-cloud/functions-framework": "^1.5.1",
     "@graphql-codegen/cli": "1.11.2",
     "@graphql-codegen/typescript": "1.11.2",
     "@graphql-codegen/typescript-operations": "1.11.2",
     "@types/mocha": "^7.0.2",
     "@types/power-assert": "^1.5.3",
-    "@typescript-eslint/eslint-plugin": "^2.23.0",
-    "@typescript-eslint/parser": "^2.23.0",
-    "eslint": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "^7.1.0",
     "espower-typescript": "^9.0.2",
-    "mocha": "^7.1.1",
+    "mocha": "^7.2.0",
     "npm-run-all": "^4.1.5",
     "power-assert": "^1.6.1",
     "rimraf": "^3.0.2",
     "supervisor": "^0.12.0",
-    "ts-node": "^8.6.2",
-    "typedoc": "^0.17.0",
-    "typescript": "^3.8.3"
+    "ts-node": "^8.10.2",
+    "typedoc": "^0.17.7",
+    "typescript": "^3.9.3"
   },
   "directories": {
     "test": "test"
@@ -45,7 +61,12 @@
     "lint:fix": "npm run lint -- --fix",
     "start": "functions-framework --target=sdm --signature-type=event",
     "test": "mocha --require espower-typescript/guess \"test/**/*.test.ts\"",
-    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\""
+    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
+    "skill": "run-s compile test skill:generate skill:bundle skill:package",
+    "skill:generate": "atm-skill generate",
+    "skill:bundle": "atm-skill bundle --minify --source-map",
+    "skill:package": "atm-skill package",
+    "skill:register": "atm-skill register"
   },
   "engines": {
     "node": ">=8.2.0",
