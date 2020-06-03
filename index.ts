@@ -27,6 +27,15 @@ export const Skill = skill<Pick<K8sPodStateConfiguration, "channels" | "maxResta
         memory: 256,
     },
 
+    resourceProviders: {
+        k8s: {
+            typeName: "KubernetesClusterProvider",
+            description: "Kubernetes cluster to monitor",
+            minRequired: 1,
+            maxAllowed: 1,
+        }
+    },
+
     parameters: {
         channels: {
             type: ParameterType.StringArray,
