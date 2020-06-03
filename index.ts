@@ -18,6 +18,7 @@ import {
     ParameterType,
     ParameterVisibility,
     skill,
+    slackResourceProvider,
 } from "@atomist/skill/lib/skill";
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
@@ -33,7 +34,8 @@ export const Skill = skill<Pick<K8sPodStateConfiguration, "channels" | "maxResta
             description: "Kubernetes cluster to monitor",
             minRequired: 1,
             maxAllowed: 1,
-        }
+        },
+        slack: slackResourceProvider(1),
     },
 
     parameters: {
