@@ -18,21 +18,12 @@ import { EventHandler } from "@atomist/skill/lib/handler";
 import { info } from "@atomist/skill/lib/log";
 import { MessageOptions } from "@atomist/skill/lib/message";
 import {
-    containerCrashLoopBackOff,
-    containerId,
-    containerImagePullBackOff,
-    containerMaxRestart,
-    containerNotReady,
-    containerOomKilled,
-    containerSlug,
-    initContainerFail,
-    PodContainer,
+    checkPodState,
     podSlug,
-    podUnscheduled,
 } from "../checks";
 import {
     K8sPodStateConfiguration,
-    parameterDefaults,
+    configurationToParameters,
 } from "../parameter";
 import {
     parsePodStatus,
@@ -52,28 +43,15 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
     const now = new Date().getTime();
     const reasons: string[] = [];
     for (const configuration of ctx.configuration) {
-        const parameters = configuration.parameters;
-        parameterDefaults(parameters);
-        const parameterChannels = parameters.channels;
+        const parameters = configurationToParameters(configuration.parameters);
+        const parameterChannels = configuration.parameters.channels;
         const chatChannelResponse = await ctx.graphql.query<ChatChannelQuery>("chatChannel.graphql", { channels: parameterChannels });
         const channels = chatChannelResponse.ChatChannel.filter(c => !c.archived).map(c => c.name);
         const users: string[] = [];
         const destination = { channels, users };
+        const ttl = 24 * 60 * 60 * 1000; // one day
 
         for (const pod of ctx.data.K8Pod) {
-            if (parameters.clusterExcludeRegExp && RegExp(parameters.clusterExcludeRegExp).test(pod.environment)) {
-                continue;
-            }
-            if (parameters.clusterIncludeRegExp && !RegExp(parameters.clusterIncludeRegExp).test(pod.environment)) {
-                continue;
-            }
-            if (parameters.namespaceExcludeRegExp && RegExp(parameters.namespaceExcludeRegExp).test(pod.namespace)) {
-                continue;
-            }
-            if (parameters.namespaceIncludeRegExp && !RegExp(parameters.namespaceIncludeRegExp).test(pod.namespace)) {
-                continue;
-            }
-
             let status: PodStatus;
             try {
                 status = parsePodStatus(pod);
@@ -83,46 +61,12 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                 continue;
             }
 
-            const podContainers: PodContainer[] = [];
-
-            podContainers.push(podUnscheduled({ now, parameters, pod, status }));
-
-            if (podContainers.filter(c => !!c.error).length < 1 && status.initContainerStatuses) {
-                for (const container of status.initContainerStatuses) {
-                    podContainers.push(initContainerFail({ now, parameters, pod, status, container }));
-                }
-            }
-
-            if (podContainers.filter(c => !!c.error).length < 1 && status.containerStatuses) {
-                for (const container of status.containerStatuses) {
-                    const pc: PodContainer = {
-                        id: containerId(pod, container),
-                        slug: containerSlug(pod, container),
-                    };
-
-                    const checks = [
-                        containerImagePullBackOff,
-                        containerCrashLoopBackOff,
-                        containerOomKilled,
-                        containerMaxRestart,
-                        containerNotReady,
-                    ];
-                    for (const check of checks) {
-                        const error = check({ now, parameters, pod, status, container });
-                        if (error) {
-                            pc.error = ucFirst(error);
-                            break;
-                        }
-                    }
-
-                    podContainers.push(pc);
-                }
-            }
+            const podContainers = await checkPodState({ now, parameters, pod, status });
 
             for (const container of podContainers) {
                 const options: MessageOptions = {
                     id: container.id,
-                    ttl: parameters.intervalMinutes * 60 * 1000,
+                    ttl,
                 };
                 let message: string;
                 if (container.error === "DELETE") {

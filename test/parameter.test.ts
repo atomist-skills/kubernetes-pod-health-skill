@@ -15,235 +15,84 @@
  */
 
 import * as assert from "power-assert";
-import { parameterDefaults } from "../lib/parameter";
+import { configurationToParameters } from "../lib/parameter";
 
 describe("parameter", () => {
 
     describe("parameterDefaults", () => {
 
         it("populates default values", () => {
-            const p = {
+            const c = {
                 channels: ["lucinda-williams"],
             };
-            parameterDefaults(p);
+            const p = configurationToParameters(c);
             const e = {
-                channels: ["lucinda-williams"],
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
-                oomKilled: true,
                 initContainerFailureCount: 3,
-                intervalMinutes: 1440,
                 maxRestarts: 10,
                 namespaceExcludeRegExp: "^kube-",
                 notReadyDelaySeconds: 600,
                 notScheduledDelaySeconds: 600,
+                oomKilled: true,
             };
             assert.deepStrictEqual(p, e);
         });
 
         it("retains provided values", () => {
-            const p = {
+            const c = {
                 channels: ["lucinda", "williams"],
-                clusterExcludeRegExp: "junk$",
-                clusterIncludeRegExp: "^prod",
-                crashLoopBackOff: true,
-                imagePullBackOff: false,
-                oomKilled: false,
-                initContainerFailureCount: 20,
-                intervalMinutes: 144,
-                maxRestarts: 100,
-                namespaceExcludeRegExp: "^k8s-",
-                namespaceIncludeRegExp: "-system$",
-                notReadyDelaySeconds: 6000,
-                notScheduledDelaySeconds: 60,
+                maxRestarts: "100",
+                notReadyDelay: "60",
             };
-            parameterDefaults(p);
+            const p = configurationToParameters(c);
             const e = {
-                channels: ["lucinda", "williams"],
-                clusterExcludeRegExp: "junk$",
-                clusterIncludeRegExp: "^prod",
-                crashLoopBackOff: true,
-                imagePullBackOff: false,
-                oomKilled: false,
-                initContainerFailureCount: 20,
-                intervalMinutes: 144,
-                maxRestarts: 100,
-                namespaceExcludeRegExp: "^k8s-",
-                namespaceIncludeRegExp: "-system$",
-                notReadyDelaySeconds: 6000,
-                notScheduledDelaySeconds: 60,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-
-        it("calculates notReadyDelaySeconds from notReadyDelay", () => {
-            const p = {
-                channels: ["lucinda-williams"],
-                notReadyDelay: "30",
-            };
-            parameterDefaults(p);
-            const e = {
-                channels: ["lucinda-williams"],
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
-                oomKilled: true,
                 initContainerFailureCount: 3,
-                intervalMinutes: 1440,
-                maxRestarts: 10,
+                maxRestarts: 100,
                 namespaceExcludeRegExp: "^kube-",
-                notReadyDelaySeconds: 1800,
+                notReadyDelaySeconds: 3600,
                 notScheduledDelaySeconds: 600,
+                oomKilled: true,
             };
             assert.deepStrictEqual(p, e);
         });
 
-        it("sets notReadyDelaySeconds to zero from notReadyDelay", () => {
-            const p = {
+        it("sets maxRestarts to zero", () => {
+            const c = {
+                channels: ["lucinda-williams"],
+                maxRestarts: "0",
+            };
+            const p = configurationToParameters(c);
+            const e = {
+                crashLoopBackOff: true,
+                imagePullBackOff: true,
+                initContainerFailureCount: 3,
+                maxRestarts: 0,
+                namespaceExcludeRegExp: "^kube-",
+                notReadyDelaySeconds: 600,
+                notScheduledDelaySeconds: 600,
+                oomKilled: true,
+            };
+            assert.deepStrictEqual(p, e);
+        });
+
+        it("sets notReadyDelaySeconds to zero", () => {
+            const c = {
                 channels: ["lucinda-williams"],
                 notReadyDelay: "0",
             };
-            parameterDefaults(p);
+            const p = configurationToParameters(c);
             const e = {
-                channels: ["lucinda-williams"],
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
-                oomKilled: true,
                 initContainerFailureCount: 3,
-                intervalMinutes: 1440,
                 maxRestarts: 10,
                 namespaceExcludeRegExp: "^kube-",
                 notReadyDelaySeconds: 0,
                 notScheduledDelaySeconds: 600,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-
-        it("overrides notReadyDelay with notReadyDelaySeconds", () => {
-            const p = {
-                channels: ["lucinda-williams"],
-                notReadyDelay: "30",
-                notReadyDelaySeconds: 900,
-            };
-            parameterDefaults(p);
-            const e = {
-                channels: ["lucinda-williams"],
-                crashLoopBackOff: true,
-                imagePullBackOff: true,
                 oomKilled: true,
-                initContainerFailureCount: 3,
-                intervalMinutes: 1440,
-                maxRestarts: 10,
-                namespaceExcludeRegExp: "^kube-",
-                notReadyDelaySeconds: 900,
-                notScheduledDelaySeconds: 600,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-
-        it("overrides notReadyDelay with zero notReadyDelaySeconds", () => {
-            const p = {
-                channels: ["lucinda-williams"],
-                notReadyDelay: "30",
-                notReadyDelaySeconds: 0,
-            };
-            parameterDefaults(p);
-            const e = {
-                channels: ["lucinda-williams"],
-                crashLoopBackOff: true,
-                imagePullBackOff: true,
-                oomKilled: true,
-                initContainerFailureCount: 3,
-                intervalMinutes: 1440,
-                maxRestarts: 10,
-                namespaceExcludeRegExp: "^kube-",
-                notReadyDelaySeconds: 0,
-                notScheduledDelaySeconds: 600,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-
-        it("calculates maxRestarts from maxRestartString", () => {
-            const p = {
-                channels: ["lucinda-williams"],
-                maxRestartsString: "25",
-            };
-            parameterDefaults(p);
-            const e = {
-                channels: ["lucinda-williams"],
-                crashLoopBackOff: true,
-                imagePullBackOff: true,
-                oomKilled: true,
-                initContainerFailureCount: 3,
-                intervalMinutes: 1440,
-                maxRestarts: 25,
-                namespaceExcludeRegExp: "^kube-",
-                notReadyDelaySeconds: 600,
-                notScheduledDelaySeconds: 600,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-
-        it("sets maxRestarts to zero from maxRestartString", () => {
-            const p = {
-                channels: ["lucinda-williams"],
-                maxRestartsString: "0",
-            };
-            parameterDefaults(p);
-            const e = {
-                channels: ["lucinda-williams"],
-                crashLoopBackOff: true,
-                imagePullBackOff: true,
-                oomKilled: true,
-                initContainerFailureCount: 3,
-                intervalMinutes: 1440,
-                maxRestarts: 0,
-                namespaceExcludeRegExp: "^kube-",
-                notReadyDelaySeconds: 600,
-                notScheduledDelaySeconds: 600,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-
-        it("overrides maxRestartString with maxRestarts", () => {
-            const p = {
-                channels: ["lucinda-williams"],
-                maxRestartsString: "25",
-                maxRestarts: 15,
-            };
-            parameterDefaults(p);
-            const e = {
-                channels: ["lucinda-williams"],
-                crashLoopBackOff: true,
-                imagePullBackOff: true,
-                oomKilled: true,
-                initContainerFailureCount: 3,
-                intervalMinutes: 1440,
-                maxRestarts: 15,
-                namespaceExcludeRegExp: "^kube-",
-                notReadyDelaySeconds: 600,
-                notScheduledDelaySeconds: 600,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-
-        it("overrides maxRestartString with zero maxRestarts", () => {
-            const p = {
-                channels: ["lucinda-williams"],
-                maxRestartsString: "25",
-                maxRestarts: 0,
-            };
-            parameterDefaults(p);
-            const e = {
-                channels: ["lucinda-williams"],
-                crashLoopBackOff: true,
-                imagePullBackOff: true,
-                oomKilled: true,
-                initContainerFailureCount: 3,
-                intervalMinutes: 1440,
-                maxRestarts: 0,
-                namespaceExcludeRegExp: "^kube-",
-                notReadyDelaySeconds: 600,
-                notScheduledDelaySeconds: 600,
             };
             assert.deepStrictEqual(p, e);
         });
@@ -251,11 +100,9 @@ describe("parameter", () => {
         it("throws an error if no channels", () => {
             const cs: string[][] = [undefined, []];
             cs.forEach(c => {
-                assert.throws(() => parameterDefaults({
+                assert.throws(() => configurationToParameters({
                     channels: c,
-                    crashLoopBackOff: true,
-                    imagePullBackOff: false,
-                    oomKilled: false,
+                    maxRestarts: "7",
                 }), /Missing required configuration parameter: channels: /);
             });
         });
