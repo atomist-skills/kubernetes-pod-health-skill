@@ -1,6 +1,10 @@
 # `atomist/kubernetes-pod-health-skill`
 
-Report when pods in a Kubernetes cluster are not healthy.
+<!---atomist-skill-description:start--->
+
+Report when pods in a Kubernetes cluster are not healthy
+
+<!---atomist-skill-description:end--->
 
 <!---atomist-skill-readme:start--->
 

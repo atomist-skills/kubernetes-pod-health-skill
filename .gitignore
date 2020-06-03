@@ -19,3 +19,4 @@ node_modules/
 git-info.json
 /lib/typings/types.ts
 /events/types.ts
+/.atomist
