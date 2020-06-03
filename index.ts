@@ -15,10 +15,13 @@
  */
 
 import {
+    kubernetesResourceProvider,
+    slackResourceProvider,
+} from "@atomist/skill/lib/resource_providers";
+import {
     ParameterType,
     ParameterVisibility,
     skill,
-    slackResourceProvider,
 } from "@atomist/skill/lib/skill";
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
@@ -29,12 +32,11 @@ export const Skill = skill<Pick<K8sPodStateConfiguration, "channels" | "maxResta
     },
 
     resourceProviders: {
-        k8s: {
-            typeName: "KubernetesClusterProvider",
+        k8s: kubernetesResourceProvider({
             description: "Kubernetes cluster to monitor",
             minRequired: 1,
             maxAllowed: 1,
-        },
+        }),
         slack: slackResourceProvider({ minRequired: 1, maxAllowed: 1 }),
     },
 
