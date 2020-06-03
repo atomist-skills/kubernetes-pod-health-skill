@@ -166,7 +166,7 @@ export const Skill = skill<Pick<K8sPodStateConfiguration, "channels" | "maxResta
     },
 
     subscriptions: [
-        "file://**/subscription/*.graphql"
-    ]
+        "file://**/subscription/*.graphql",
+    ],
 
 });
