@@ -1,5 +1,7 @@
 # `@atomist/kubernetes-pod-health-skill`
 
+`@atomist/kubernetes-pod-health-skill` is licensed under Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 This page details all runtime OSS dependencies of `@atomist/kubernetes-pod-health-skill`.
 
 ## Licenses
