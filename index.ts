@@ -42,7 +42,7 @@ export const Skill = skill<K8sPodStateConfiguration>({
 
     parameters: {
         channels: {
-            type: ParameterType.StringArray,
+            type: ParameterType.ChatChannels,
             displayName: "Chat channels to send alerts to",
             description: "Specify the chat channels where the alerts should be sent. You must specify at least one chat channel.",
             required: true,
