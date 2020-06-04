@@ -22,8 +22,9 @@ import {
     podSlug,
 } from "../checks";
 import {
-    K8sPodStateConfiguration,
+    chatChannelName,
     configurationToParameters,
+    K8sPodStateConfiguration,
 } from "../parameter";
 import {
     parsePodStatus,
@@ -43,8 +44,8 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
     const now = new Date().getTime();
     const reasons: string[] = [];
     for (const configuration of ctx.configuration) {
+        const parameterChannels = chatChannelName(configuration.parameters.channels);
         const parameters = configurationToParameters(configuration.parameters);
-        const parameterChannels = configuration.parameters.channels;
         const chatChannelResponse = await ctx.graphql.query<ChatChannelQuery>("chatChannel.graphql", { channels: parameterChannels });
         const channels = chatChannelResponse.ChatChannel.filter(c => !c.archived).map(c => c.name);
         const users: string[] = [];

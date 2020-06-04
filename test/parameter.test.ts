@@ -15,16 +15,38 @@
  */
 
 import * as assert from "power-assert";
-import { configurationToParameters } from "../lib/parameter";
+import {
+    chatChannelName,
+    configurationToParameters,
+} from "../lib/parameter";
 
 describe("parameter", () => {
+
+    describe("chatChannelName", () => {
+
+        it("maps to channel names", () => {
+            const c = [
+                { channelName: "mavis", channelId: "5T4P135", chatTeamId: "S1NG345", resourceProviderId: "slack" },
+                { channelName: "staples", channelId: "5T4P135", chatTeamId: "S1NG345", resourceProviderId: "slack" },
+            ];
+            const n = chatChannelName(c);
+            const e = ["mavis", "staples"];
+            assert.deepStrictEqual(n, e);
+        });
+
+        it("throws an error if no channels", () => {
+            const cs: any[][] = [undefined, []];
+            cs.forEach(c => {
+                assert.throws(() => chatChannelName(c), /Missing required configuration parameter: channels: /);
+            });
+        });
+
+    });
 
     describe("parameterDefaults", () => {
 
         it("populates default values", () => {
-            const c = {
-                channels: ["lucinda-williams"],
-            };
+            const c = {};
             const p = configurationToParameters(c);
             const e = {
                 crashLoopBackOff: true,
@@ -41,7 +63,6 @@ describe("parameter", () => {
 
         it("retains provided values", () => {
             const c = {
-                channels: ["lucinda", "williams"],
                 maxRestarts: "100",
                 notReadyDelay: "60",
             };
@@ -60,10 +81,7 @@ describe("parameter", () => {
         });
 
         it("sets maxRestarts to zero", () => {
-            const c = {
-                channels: ["lucinda-williams"],
-                maxRestarts: "0",
-            };
+            const c = { maxRestarts: "0" };
             const p = configurationToParameters(c);
             const e = {
                 crashLoopBackOff: true,
@@ -79,10 +97,7 @@ describe("parameter", () => {
         });
 
         it("sets notReadyDelaySeconds to zero", () => {
-            const c = {
-                channels: ["lucinda-williams"],
-                notReadyDelay: "0",
-            };
+            const c = { notReadyDelay: "0" };
             const p = configurationToParameters(c);
             const e = {
                 crashLoopBackOff: true,
@@ -95,16 +110,6 @@ describe("parameter", () => {
                 oomKilled: true,
             };
             assert.deepStrictEqual(p, e);
-        });
-
-        it("throws an error if no channels", () => {
-            const cs: string[][] = [undefined, []];
-            cs.forEach(c => {
-                assert.throws(() => configurationToParameters({
-                    channels: c,
-                    maxRestarts: "7",
-                }), /Missing required configuration parameter: channels: /);
-            });
         });
 
     });

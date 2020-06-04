@@ -14,10 +14,29 @@
  * limitations under the License.
  */
 
+/** Type of chat channel parameter. */
+export interface ChatChannel {
+    channelName: string;
+    channelId: string;
+    chatTeamId: string;
+    resourceProviderId: string;
+}
+
+/**
+ * Convert array of [[ChatChannel]]s to array of channel name strings.  If no chat channels are provided, throw an
+ * error.
+ */
+export function chatChannelName(chatChannels: ChatChannel[]): string[] {
+    if (!chatChannels || chatChannels.length < 1) {
+        throw new Error(`Missing required configuration parameter: channels: ${JSON.stringify(chatChannels)}`);
+    }
+    return chatChannels.map(cc => cc.channelName);
+}
+
 /** K8sPodState [[handler]] skill parameters. */
 export interface K8sPodStateConfiguration {
     /** Chat channels to sent alerts to. */
-    channels: string[];
+    channels: ChatChannel[];
     /**
      * Alert if pod container restarts exceeds this value, set to `"0"` to disable.  This value will be parsed as a
      * base-10 integer and used to populate [[K8sPodCheckConfiguration.maxRestarts]].
@@ -69,10 +88,7 @@ export interface K8sPodCheckParameters {
  * @param params User-provided skill configuration parameters
  * @return Kubernetes pod checker configuration
  */
-export function configurationToParameters(params: K8sPodStateConfiguration): K8sPodCheckParameters {
-    if (!params.channels || params.channels.length < 1) {
-        throw new Error(`Missing required configuration parameter: channels: ${JSON.stringify(params.channels)}`);
-    }
+export function configurationToParameters(params: Omit<K8sPodStateConfiguration, "channels">): K8sPodCheckParameters {
     const maxRestarts = (params.maxRestarts) ? parseInt(params.maxRestarts, 10) : 10;
     const notReadyDelaySeconds = (params.notReadyDelay) ? parseInt(params.notReadyDelay) * 60 : 600;
     return {
