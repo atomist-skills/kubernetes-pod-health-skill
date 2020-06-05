@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-import {
-    kubernetesResourceProvider,
-    slackResourceProvider,
-} from "@atomist/skill/lib/resource_providers";
-import {
-    ParameterType,
-    ParameterVisibility,
-    skill,
-} from "@atomist/skill/lib/skill";
+import { kubernetesResourceProvider, slackResourceProvider } from "@atomist/skill/lib/resource_providers";
+import { ParameterType, ParameterVisibility, skill } from "@atomist/skill/lib/skill";
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({

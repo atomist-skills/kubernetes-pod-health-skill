@@ -15,10 +15,7 @@
  */
 
 import * as assert from "power-assert";
-import {
-    checkPodState,
-    PodArgs,
-} from "../lib/checks";
+import { checkPodState, PodArgs } from "../lib/checks";
 import { parsePodStatus } from "../lib/pod";
 import { K8sPodStateSubscription } from "../lib/typings/types";
 

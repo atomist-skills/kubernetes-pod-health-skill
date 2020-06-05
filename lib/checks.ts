@@ -15,10 +15,7 @@
  */
 
 import { K8sPodCheckParameters } from "./parameter";
-import {
-    ContainerStatus,
-    PodStatus,
-} from "./pod";
+import { ContainerStatus, PodStatus } from "./pod";
 import { K8Pod } from "./typings/types";
 import { ucFirst } from "./util";
 

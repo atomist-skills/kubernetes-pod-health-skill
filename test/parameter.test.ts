@@ -15,10 +15,7 @@
  */
 
 import * as assert from "power-assert";
-import {
-    chatChannelName,
-    configurationToParameters,
-} from "../lib/parameter";
+import { chatChannelName, configurationToParameters } from "../lib/parameter";
 
 describe("parameter", () => {
 

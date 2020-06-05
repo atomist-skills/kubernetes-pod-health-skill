@@ -17,23 +17,10 @@
 import { EventHandler } from "@atomist/skill/lib/handler";
 import { info } from "@atomist/skill/lib/log";
 import { MessageOptions } from "@atomist/skill/lib/message";
-import {
-    checkPodState,
-    podSlug,
-} from "../checks";
-import {
-    chatChannelName,
-    configurationToParameters,
-    K8sPodStateConfiguration,
-} from "../parameter";
-import {
-    parsePodStatus,
-    PodStatus,
-} from "../pod";
-import {
-    ChatChannelQuery,
-    K8sPodStateSubscription,
-} from "../typings/types";
+import { checkPodState, podSlug } from "../checks";
+import { chatChannelName, configurationToParameters, K8sPodStateConfiguration } from "../parameter";
+import { parsePodStatus, PodStatus } from "../pod";
+import { ChatChannelQuery, K8sPodStateSubscription } from "../typings/types";
 import { ucFirst } from "../util";
 
 /** Process K8Pod event and send alerts. */
