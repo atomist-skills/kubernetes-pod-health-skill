@@ -17,7 +17,7 @@
 import { EventHandler } from "@atomist/skill/lib/handler";
 import { info } from "@atomist/skill/lib/log";
 import { MessageOptions } from "@atomist/skill/lib/message";
-import { checkPodState, podSlug } from "../checks";
+import { checkCluster, checkPodState, podSlug } from "../checks";
 import { chatChannelName, configurationToParameters, K8sPodStateConfiguration } from "../parameter";
 import { parsePodStatus, PodStatus } from "../pod";
 import { ChatChannelQuery, K8sPodStateSubscription } from "../typings/types";
@@ -40,12 +40,20 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
         const ttl = 24 * 60 * 60 * 1000; // one day
 
         for (const pod of ctx.data.K8Pod) {
+            if (!await checkCluster({
+                environment: pod.environment,
+                graphql: ctx.graphql,
+                resourceProviders: configuration.resourceProviders,
+            })) {
+                await ctx.audit.log(`Environment ${pod.environment} of ${podSlug(pod)} does not match k8s integrations`);
+                continue;
+            }
+
             let status: PodStatus;
             try {
                 status = parsePodStatus(pod);
             } catch (e) {
-                const msg = `Failed to parse status of ${podSlug(pod)}: ${e.message}`;
-                await ctx.audit.log(msg);
+                await ctx.audit.log(`Failed to parse status of ${podSlug(pod)}: ${e.message}`);
                 continue;
             }
 

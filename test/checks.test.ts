@@ -15,11 +15,60 @@
  */
 
 import * as assert from "power-assert";
-import { checkPodState, PodArgs } from "../lib/checks";
+import { checkCluster, CheckClusterArgs, checkPodState, PodArgs } from "../lib/checks";
 import { parsePodStatus } from "../lib/pod";
 import { K8sPodStateSubscription } from "../lib/typings/types";
 
 describe("checks", () => {
+
+    describe("checkCluster", () => {
+
+        function generateArgs(e: string): CheckClusterArgs {
+            return {
+                environment: e,
+                graphql: {
+                    query: async (f: string, o: { id: string }) => {
+                        assert(f === "kubernetesClusterProvider.graphql");
+                        if (o.id === "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999") {
+                            return { KubernetesClusterProvider: [{ name: "staging" }] };
+                        } else if (o.id === "AW04K5PID_33333333-4444-cccc-dddd-888888888888") {
+                            return { KubernetesClusterProvider: [{ name: "production" }] };
+                        } else {
+                            return { KubernetesClusterProvider: [] };
+                        }
+                    },
+                },
+                resourceProviders: {
+                    gcp: {
+                        typeName: "KubernetesClusterProvider",
+                        selectedResourceProviders: [
+                            { id: "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999" },
+                            { id: "AW04K5PID_33333333-4444-cccc-dddd-888888888888" },
+                        ],
+                    },
+                    slack: {
+                        typeName: "SlackChatProvider",
+                        selectedResourceProviders: [{ id: "T5L4CK1D" }],
+                    },
+                },
+            } as unknown as CheckClusterArgs;
+        }
+
+        it("matches the cluster", async () => {
+            for (const e of ["production", "staging"]) {
+                const a = generateArgs(e);
+                assert(await checkCluster(a));
+            }
+        });
+
+        it("does not match the cluster", async () => {
+            for (const e of ["k8s-production", "staging-k8s", "testing"]) {
+                const a = generateArgs(e);
+                assert(!await checkCluster(a));
+            }
+        });
+
+    });
 
     describe("checkPodState", () => {
 
@@ -35,8 +84,6 @@ describe("checks", () => {
                     notReadyDelaySeconds: 600,
                     notScheduledDelaySeconds: 600,
                     oomKilled: true,
-                    clusterIncludeRegExp: "demo|production",
-                    clusterExcludeRegExp: "^k9s-",
                     namespaceIncludeRegExp: "production|staging",
                     namespaceExcludeRegExp: "^kube-",
                 },
@@ -91,74 +138,6 @@ describe("checks", () => {
                 },
             ];
             assert.deepStrictEqual(pc, e);
-        });
-
-        it("ignores problems in excluded clusters", async () => {
-            const p = {
-                baseName: "crash-loop",
-                name: "crash-loop",
-                resourceVersion: 157792924,
-                phase: "Running",
-                containers: [
-                    {
-                        stateReason: "CrashLoopBackOff",
-                        ready: false,
-                        name: "sleep",
-                        restartCount: 2,
-                        resourceVersion: 157792924,
-                        state: "waiting",
-                        containerID: "containerd://7441f1838a5bbc3e318b6afdacfbd348e1ef18d53ef485e9a2abc4483a4665dd",
-                        image: {
-                            commits: [] as any[],
-                        },
-                        environment: "k9s-internal-demo",
-                        imageName: "busybox:1.31.1-uclibc",
-                        timestamp: "2020-03-18T18:15:50.548Z",
-                        statusJSON: "{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"CrashLoopBackOff\",\"message\":\"Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)\"}},\"lastState\":{\"terminated\":{\"exitCode\":0,\"reason\":\"Completed\",\"startedAt\":\"2020-03-18T18:16:23Z\",\"finishedAt\":\"2020-03-18T18:16:33Z\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}},\"ready\":false,\"restartCount\":2,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}",
-                    },
-                ],
-                environment: "k9s-internal-demo",
-                timestamp: "2020-03-18T18:15:48Z",
-                statusJSON: "{\"phase\":\"Running\",\"conditions\":[{\"type\":\"Initialized\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:15:48Z\"},{\"type\":\"Ready\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:16:33Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"ContainersReady\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:16:33Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"PodScheduled\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:15:48Z\"}],\"hostIP\":\"10.0.3.197\",\"podIP\":\"10.12.0.24\",\"startTime\":\"2020-03-18T18:15:48Z\",\"containerStatuses\":[{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"CrashLoopBackOff\",\"message\":\"Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)\"}},\"lastState\":{\"terminated\":{\"exitCode\":0,\"reason\":\"Completed\",\"startedAt\":\"2020-03-18T18:16:23Z\",\"finishedAt\":\"2020-03-18T18:16:33Z\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}},\"ready\":false,\"restartCount\":2,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}],\"qosClass\":\"BestEffort\"}",
-                namespace: "kube-something",
-            };
-            const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
-            assert.deepStrictEqual(pc, []);
-        });
-
-        it("ignores problems in not included clusters", async () => {
-            const p = {
-                baseName: "crash-loop",
-                name: "crash-loop",
-                resourceVersion: 157792924,
-                phase: "Running",
-                containers: [
-                    {
-                        stateReason: "CrashLoopBackOff",
-                        ready: false,
-                        name: "sleep",
-                        restartCount: 2,
-                        resourceVersion: 157792924,
-                        state: "waiting",
-                        containerID: "containerd://7441f1838a5bbc3e318b6afdacfbd348e1ef18d53ef485e9a2abc4483a4665dd",
-                        image: {
-                            commits: [] as any[],
-                        },
-                        environment: "k8s-internal-domo",
-                        imageName: "busybox:1.31.1-uclibc",
-                        timestamp: "2020-03-18T18:15:50.548Z",
-                        statusJSON: "{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"CrashLoopBackOff\",\"message\":\"Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)\"}},\"lastState\":{\"terminated\":{\"exitCode\":0,\"reason\":\"Completed\",\"startedAt\":\"2020-03-18T18:16:23Z\",\"finishedAt\":\"2020-03-18T18:16:33Z\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}},\"ready\":false,\"restartCount\":2,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}",
-                    },
-                ],
-                environment: "k8s-internal-domo",
-                timestamp: "2020-03-18T18:15:48Z",
-                statusJSON: "{\"phase\":\"Running\",\"conditions\":[{\"type\":\"Initialized\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:15:48Z\"},{\"type\":\"Ready\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:16:33Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"ContainersReady\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:16:33Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"PodScheduled\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:15:48Z\"}],\"hostIP\":\"10.0.3.197\",\"podIP\":\"10.12.0.24\",\"startTime\":\"2020-03-18T18:15:48Z\",\"containerStatuses\":[{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"CrashLoopBackOff\",\"message\":\"Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)\"}},\"lastState\":{\"terminated\":{\"exitCode\":0,\"reason\":\"Completed\",\"startedAt\":\"2020-03-18T18:16:23Z\",\"finishedAt\":\"2020-03-18T18:16:33Z\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}},\"ready\":false,\"restartCount\":2,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}],\"qosClass\":\"BestEffort\"}",
-                namespace: "staggering",
-            };
-            const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
-            assert.deepStrictEqual(pc, []);
         });
 
         it("ignores problems in excluded namespaces", async () => {

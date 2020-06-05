@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import { GraphQLClient } from "@atomist/skill/lib/graphql";
 import { K8sPodCheckParameters } from "./parameter";
 import { ContainerStatus, PodStatus } from "./pod";
-import { K8Pod } from "./typings/types";
+import { K8Pod, KubernetesClusterProviderQuery } from "./typings/types";
 import { ucFirst } from "./util";
 
 /** Create string for Kubernetes pod. */
@@ -42,6 +43,41 @@ function containerId(pod: K8Pod, container: ContainerStatus, init = false): stri
     }
     parts.push(container.name);
     return parts.join(":");
+}
+
+/** Arguments to [[checkCluster]]. */
+export interface CheckClusterArgs {
+    /** Pod environment from event data.  */
+    environment: string;
+    /** Client to query for Kubernetes cluster providers. */
+    graphql: GraphQLClient;
+    /** Resource providers from skill configuration. */
+    resourceProviders: Record<string, { typeName: string, selectedResourceProviders: Array<{ id: string }> }>,
+}
+
+/**
+ * Iterate through selected resource providers to see if any match the provided environment.
+ *
+ * @param args see [[CheckClusterArgs]].
+ */
+export async function checkCluster(args: CheckClusterArgs): Promise<boolean> {
+    const env = args.environment;
+    const providers = args.resourceProviders;
+    const clusterProviderIds = Object.keys(providers)
+        .filter(provider => providers[provider].typeName === "KubernetesClusterProvider")
+        .map(clustersProvider => providers[clustersProvider].selectedResourceProviders)
+        .map(clusters => clusters.map(c => c.id))
+        .reduce((acc, cur) => acc.concat(...cur), [])
+        .filter((value, index, self) => self.indexOf(value) === index);
+    const clusters: string[] = [];
+    for (const clusterProviderId of clusterProviderIds) {
+        const kubernetesClusterProviderResponse = await args.graphql.query<KubernetesClusterProviderQuery>(
+            "kubernetesClusterProvider.graphql",
+            { id: clusterProviderId },
+        );
+        clusters.push(...kubernetesClusterProviderResponse.KubernetesClusterProvider.map(kcp => kcp.name));
+    }
+    return clusters.includes(env);
 }
 
 /** Structure for reporting on pods and containers. */
@@ -197,12 +233,6 @@ function containerMaxRestart(ca: ContainerArgs): string | undefined {
 export async function checkPodState(pa: PodArgs): Promise<PodContainer[]> {
     const podContainers: PodContainer[] = [];
 
-    if (pa.parameters.clusterExcludeRegExp && RegExp(pa.parameters.clusterExcludeRegExp).test(pa.pod.environment)) {
-        return podContainers;
-    }
-    if (pa.parameters.clusterIncludeRegExp && !RegExp(pa.parameters.clusterIncludeRegExp).test(pa.pod.environment)) {
-        return podContainers;
-    }
     if (pa.parameters.namespaceExcludeRegExp && RegExp(pa.parameters.namespaceExcludeRegExp).test(pa.pod.namespace)) {
         return podContainers;
     }

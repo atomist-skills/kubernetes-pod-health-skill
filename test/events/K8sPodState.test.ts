@@ -73,38 +73,62 @@ describe("K8sPodState", () => {
                             maxRestarts: "10",
                             notReadyDelay: "10",
                         },
+                        resourceProviders: {
+                            gcp: {
+                                typeName: "KubernetesClusterProvider",
+                                selectedResourceProviders: [
+                                    { id: "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999" },
+                                    { id: "AW04K5PID_33333333-4444-cccc-dddd-888888888888" },
+                                ],
+                            },
+                            slack: {
+                                typeName: "SlackChatProvider",
+                                selectedResourceProviders: [{ id: "T5L4CK1D" }],
+                            },
+                        },
                     },
                 ],
                 data,
                 graphql: {
                     query: async (q: string, p: Record<string, any>): Promise<any> => {
-                        assert(q === "chatChannel.graphql");
-                        assert.deepStrictEqual(p, { channels: ["prod-alerts", "managers", "devs"] });
-                        return {
-                            ChatChannel: [
-                                {
-                                    archived: null,
-                                    channelId: "CDW6ZU86B",
-                                    id: "T7GMF5USG_CDW6ZU86B",
-                                    name: "devs",
-                                    provider: "slack",
-                                },
-                                {
-                                    archived: true,
-                                    channelId: "CQKPQV7U2",
-                                    id: "T7GMF5USG_CQKPQV7U2",
-                                    name: "managers",
-                                    provider: "slack",
-                                },
-                                {
-                                    archived: false,
-                                    channelId: "CS23XNAGH",
-                                    id: "T7GMF5USG_CS23XNAGH",
-                                    name: "prod-alerts",
-                                    provider: "slack",
-                                },
-                            ],
-                        };
+                        if (q === "chatChannel.graphql") {
+                            assert.deepStrictEqual(p, { channels: ["prod-alerts", "managers", "devs"] });
+                            return {
+                                ChatChannel: [
+                                    {
+                                        archived: null,
+                                        channelId: "CDW6ZU86B",
+                                        id: "T7GMF5USG_CDW6ZU86B",
+                                        name: "devs",
+                                        provider: "slack",
+                                    },
+                                    {
+                                        archived: true,
+                                        channelId: "CQKPQV7U2",
+                                        id: "T7GMF5USG_CQKPQV7U2",
+                                        name: "managers",
+                                        provider: "slack",
+                                    },
+                                    {
+                                        archived: false,
+                                        channelId: "CS23XNAGH",
+                                        id: "T7GMF5USG_CS23XNAGH",
+                                        name: "prod-alerts",
+                                        provider: "slack",
+                                    },
+                                ],
+                            };
+                        } else if (q === "kubernetesClusterProvider.graphql") {
+                            if (p.id === "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999") {
+                                return { KubernetesClusterProvider: [{ name: "k8s-internal-staging" }] };
+                            } else if (p.id === "AW04K5PID_33333333-4444-cccc-dddd-888888888888") {
+                                return { KubernetesClusterProvider: [{ name: "k8s-internal-demo" }] };
+                            } else {
+                                return { KubernetesClusterProvider: [] };
+                            }
+                        } else {
+                            assert.fail(`unrecognized GraphQL query file: ${q}`);
+                        }
                     },
                 },
                 message: {
@@ -207,6 +231,57 @@ describe("K8sPodState", () => {
             ];
             assert.deepStrictEqual(s, es);
             const el: string[] = [];
+            assert.deepStrictEqual(l, el);
+        });
+
+        it("ignores problems in clusters not in integrations", async () => {
+            const d = {
+                K8Pod: [
+                    {
+                        baseName: "crash-loop",
+                        name: "crash-loop",
+                        resourceVersion: 157792924,
+                        phase: "Running",
+                        containers: [
+                            {
+                                stateReason: "CrashLoopBackOff",
+                                ready: false,
+                                name: "sleep",
+                                restartCount: 2,
+                                resourceVersion: 157792924,
+                                state: "waiting",
+                                containerID: "containerd://7441f1838a5bbc3e318b6afdacfbd348e1ef18d53ef485e9a2abc4483a4665dd",
+                                image: {
+                                    commits: [] as any[],
+                                },
+                                environment: "k9s-internal-demo",
+                                imageName: "busybox:1.31.1-uclibc",
+                                timestamp: "2020-03-18T18:15:50.548Z",
+                                statusJSON: "{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"CrashLoopBackOff\",\"message\":\"Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)\"}},\"lastState\":{\"terminated\":{\"exitCode\":0,\"reason\":\"Completed\",\"startedAt\":\"2020-03-18T18:16:23Z\",\"finishedAt\":\"2020-03-18T18:16:33Z\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}},\"ready\":false,\"restartCount\":2,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}",
+                            },
+                        ],
+                        environment: "k9s-internal-demo",
+                        timestamp: "2020-03-18T18:15:48Z",
+                        statusJSON: "{\"phase\":\"Running\",\"conditions\":[{\"type\":\"Initialized\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:15:48Z\"},{\"type\":\"Ready\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:16:33Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"ContainersReady\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:16:33Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"PodScheduled\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-18T18:15:48Z\"}],\"hostIP\":\"10.0.3.197\",\"podIP\":\"10.12.0.24\",\"startTime\":\"2020-03-18T18:15:48Z\",\"containerStatuses\":[{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"CrashLoopBackOff\",\"message\":\"Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)\"}},\"lastState\":{\"terminated\":{\"exitCode\":0,\"reason\":\"Completed\",\"startedAt\":\"2020-03-18T18:16:23Z\",\"finishedAt\":\"2020-03-18T18:16:33Z\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}},\"ready\":false,\"restartCount\":2,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://b5b301bf493cca046a9b1598b3769a6215f89ac119837db06b1f12a63401dd81\"}],\"qosClass\":\"BestEffort\"}",
+                        namespace: "kube-something",
+                    },
+                ],
+            };
+            const s: Sent[] = [];
+            const l: string[] = [];
+            const c = generateContext(d, s, l);
+            const r = await handler(c);
+            const e = {
+                code: 0,
+                reason: "All pods healthy",
+                visibility: "hidden",
+            };
+            assert.deepStrictEqual(r, e);
+            const es: Sent[] = [];
+            assert.deepStrictEqual(s, es);
+            const el = [
+                "Environment k9s-internal-demo of pod kube-something/crash-loop in Kubernetes cluster k9s-internal-demo does not match k8s integrations",
+            ];
             assert.deepStrictEqual(l, el);
         });
 
@@ -990,12 +1065,12 @@ describe("K8sPodState", () => {
                                         },
                                     ],
                                 },
-                                environment: "k8s-internal-staging",
+                                environment: "k8s-internal-demo",
                                 imageName: "atomist/dood:0.1.3-20200323102421",
                                 timestamp: age,
                             },
                         ],
-                        environment: "k8s-internal-production",
+                        environment: "k8s-internal-demo",
                         timestamp: age,
                         statusJSON: `{"phase":"Running","conditions":[{"type":"Initialized","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"},{"type":"Ready","status":"False","lastProbeTime":null,"lastTransitionTime":"${age}","reason":"ContainersNotReady","message":"containers with unready status: [dood]"},{"type":"ContainersReady","status":"False","lastProbeTime":null,"lastTransitionTime":"${age}","reason":"ContainersNotReady","message":"containers with unready status: [dood]"},{"type":"PodScheduled","status":"True","lastProbeTime":null,"lastTransitionTime":"${age}"}],"hostIP":"10.121.36.46","podIP":"10.56.11.217","startTime":"${age}","containerStatuses":[{"name":"dood","state":{"terminated":{"exitCode":143,"reason":"Error","startedAt":"${age}","finishedAt":"${age}","containerID":"docker://6a2c75f5b101172812f7e90aecc92a4e3d75d91bda7bcac05d396abc4dca9184"}},"lastState":{},"ready":false,"restartCount":0,"image":"atomist/dood:0.1.3-20200323102421","imageID":"docker-pullable://docker.io/atomist/dood@sha256:36f2ddd2110904c70bb02d2350f482fc325aecd64dc672b4ed777f76fbd592ad","containerID":"docker://6a2c75f5b101172812f7e90aecc92a4e3d75d91bda7bcac05d396abc4dca9184"}],"qosClass":"Burstable"}`,
                         namespace: "api-production",
@@ -1015,9 +1090,9 @@ describe("K8sPodState", () => {
             const es = [
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
-                    message: "Pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production recovered",
+                    message: "Pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds",
+                        id: "k8s-internal-demo:api-production:dood-7d4b7588bd-vptds",
                         post: "update_only",
                         ttl: 86400000,
                     },
@@ -1026,7 +1101,7 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "DELETE",
                     options: {
-                        id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds:dood",
+                        id: "k8s-internal-demo:api-production:dood-7d4b7588bd-vptds:dood",
                     },
                 },
             ];

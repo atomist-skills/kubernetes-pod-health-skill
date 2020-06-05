@@ -66,14 +66,6 @@ export interface K8sPodCheckParameters {
     /** Alert when container has been OOMKilled. */
     oomKilled: boolean;
     /**
-     * Regular expression matching Kubernetes clusters whose pods should be reported on.  If not provided, all clusters
-     * not matching [[clusterExcludeRegExp]] are reported on.  The cluster for a pod is obtained from the k8vent
-     * environment property.
-     */
-    clusterIncludeRegExp?: string;
-    /** Regular expression matching Kubernetes clusters whose pods should _not_ be reported on. */
-    clusterExcludeRegExp?: string;
-    /**
      * Regular expression matching namespaces whose pods should be reported on.  If not provided, all namespaces not
      * matching [[namespaceExcludeRegExp]] are reported on.
      */
