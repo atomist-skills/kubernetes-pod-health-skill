@@ -63,7 +63,7 @@ export const Skill = skill<K8sPodStateConfiguration>({
                 value: "25",
             }],
             required: true,
-            visibility: ParameterVisibility.Advanced,
+            visibility: ParameterVisibility.Normal,
         },
         notReadyDelay: {
             type: ParameterType.SingleChoice,
@@ -92,7 +92,7 @@ export const Skill = skill<K8sPodStateConfiguration>({
                 value: "60",
             }],
             required: true,
-            visibility: ParameterVisibility.Advanced,
+            visibility: ParameterVisibility.Normal,
         },
     },
 
