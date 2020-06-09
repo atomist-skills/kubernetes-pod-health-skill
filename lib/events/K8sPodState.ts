@@ -45,7 +45,8 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                 graphql: ctx.graphql,
                 resourceProviders: configuration.resourceProviders,
             })) {
-                await ctx.audit.log(`Environment ${pod.environment} of ${podSlug(pod)} does not match k8s integrations`);
+                await ctx.audit.log(`Environment ${pod.environment} of ${podSlug(pod)} does not match k8s integrations ` +
+                    `in configuration ${configuration.name}`);
                 continue;
             }
 
@@ -60,15 +61,13 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
             const podContainers = await checkPodState({ now, parameters, pod, status });
 
             for (const container of podContainers) {
-                const options: MessageOptions = {
-                    id: container.id,
-                    ttl,
-                };
+                const id = `${configuration.name}:${container.id}`;
+                const options: MessageOptions = { id, ttl };
                 let message: string;
                 if (container.error === "DELETE") {
                     container.error = undefined;
                     try {
-                        await ctx.message.delete(destination, { id: container.id });
+                        await ctx.message.delete(destination, { id });
                     } catch (e) {
                         await ctx.audit.log(`Failed to delete message ${options.id}: ${e.message}`);
                     }
