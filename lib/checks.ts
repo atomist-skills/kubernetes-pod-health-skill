@@ -178,6 +178,9 @@ function containerOomKilled(ca: ContainerArgs): string | undefined {
 
 /** Detect if container is in not ready. */
 function containerNotReady(ca: ContainerArgs): string | undefined {
+    if (ca.init) {
+        return undefined;
+    }
     if (ca.parameters.notReadyDelaySeconds < 1) {
         return undefined;
     }
@@ -259,14 +262,16 @@ export function checkPodState(pa: PodArgs): PodContainer[] {
         return podContainers;
     }
 
+    const checks = [
+        containerImagePullBackOff,
+        containerCrashLoopBackOff,
+        containerOomKilled,
+        containerMaxRestart,
+        containerNotReady,
+    ];
+
     if (pa.status.initContainerStatuses) {
         for (const container of pa.status.initContainerStatuses) {
-            const checks = [
-                containerImagePullBackOff,
-                containerCrashLoopBackOff,
-                containerOomKilled,
-                containerMaxRestart,
-            ];
             podContainers.push(checkContainerState({ ...pa, container, checks, init: true }));
         }
     }
@@ -276,13 +281,6 @@ export function checkPodState(pa: PodArgs): PodContainer[] {
 
     if (pa.status.containerStatuses) {
         for (const container of pa.status.containerStatuses) {
-            const checks = [
-                containerImagePullBackOff,
-                containerCrashLoopBackOff,
-                containerOomKilled,
-                containerMaxRestart,
-                containerNotReady,
-            ];
             podContainers.push(checkContainerState({ ...pa, container, checks }));
         }
     }
