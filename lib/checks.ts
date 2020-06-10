@@ -20,31 +20,6 @@ import { ContainerStatus, PodStatus } from "./pod";
 import { K8Pod, KubernetesClusterProviderQuery } from "./typings/types";
 import { ucFirst } from "./util";
 
-/** Create string for Kubernetes pod. */
-export function podSlug(pod: K8Pod): string {
-    return `pod ${pod.namespace}/${pod.name} in Kubernetes cluster ${pod.environment}`;
-}
-
-/** Create string for Kubernetes container. */
-function containerSlug(pod: K8Pod, container: ContainerStatus, init = false): string {
-    return `${(init) ? "init " : ""}container ${container.name} (${container.image}) of ${podSlug(pod)}`;
-}
-
-/** Return unique pod identifier string. */
-function podId(pod: K8Pod): string {
-    return [pod.environment, pod.namespace, pod.name].join(":");
-}
-
-/** Return unique container identifier string. */
-function containerId(pod: K8Pod, container: ContainerStatus, init = false): string {
-    const parts = [podId(pod)];
-    if (init) {
-        parts.push("init");
-    }
-    parts.push(container.name);
-    return parts.join(":");
-}
-
 /** Arguments to [[checkCluster]]. */
 export interface CheckClusterArgs {
     /** Pod environment from event data.  */
@@ -102,6 +77,39 @@ export interface PodArgs {
     status: PodStatus;
 }
 
+/** Arguments to container-inspecting functions. */
+interface ContainerArgs extends PodArgs {
+    /** Container status obtained from parsed pod statusJSON property. */
+    container: ContainerStatus;
+    /** Set to true if container is an init container. */
+    init?: boolean;
+}
+
+/** Create string for Kubernetes pod. */
+export function podSlug(pod: K8Pod): string {
+    return `pod ${pod.namespace}/${pod.name} in Kubernetes cluster ${pod.environment}`;
+}
+
+/** Create string for Kubernetes container. */
+function containerSlug(ca: Pick<ContainerArgs, "container" | "init" | "pod">): string {
+    return `${(ca.init) ? "init " : ""}container ${ca.container.name} (${ca.container.image}) of ${podSlug(ca.pod)}`;
+}
+
+/** Return unique pod identifier string. */
+function podId(pod: K8Pod): string {
+    return [pod.environment, pod.namespace, pod.name].join(":");
+}
+
+/** Return unique container identifier string. */
+function containerId(ca: Pick<ContainerArgs, "container" | "init" | "pod">): string {
+    const parts = [podId(ca.pod)];
+    if (ca.init) {
+        parts.push("init");
+    }
+    parts.push(ca.container.name);
+    return parts.join(":");
+}
+
 /** Detect if pod has been unscheduled too long. */
 function podUnscheduled(pa: PodArgs): PodContainer {
     const p: PodContainer = {
@@ -126,27 +134,6 @@ function podUnscheduled(pa: PodArgs): PodContainer {
     return p;
 }
 
-/** Arguments to container-inspecting functions. */
-interface ContainerArgs extends PodArgs {
-    /** Container status obtained from parsed pod statusJSON property. */
-    container: ContainerStatus;
-}
-
-/** Detect if init container failed too many times. */
-function initContainerFail(ca: ContainerArgs): PodContainer {
-    const pic: PodContainer = {
-        id: containerId(ca.pod, ca.container, true),
-        slug: containerSlug(ca.pod, ca.container, true),
-    };
-    if (ca.parameters.initContainerFailureCount < 1) {
-        return pic;
-    }
-    if (ca.container.state?.terminated?.reason === "Error" && ca.container.restartCount >= ca.parameters.initContainerFailureCount) {
-        pic.error = `Init ${containerSlug(ca.pod, ca.container)} failed: \`${ca.container.state.terminated.exitCode}\``;
-    }
-    return pic;
-}
-
 /** Detect if container is in ImagePullBackOff. */
 function containerImagePullBackOff(ca: ContainerArgs): string | undefined {
     if (!ca.parameters.imagePullBackOff) {
@@ -156,7 +143,7 @@ function containerImagePullBackOff(ca: ContainerArgs): string | undefined {
         return undefined;
     }
     if (ca.container.state.waiting.reason === "ImagePullBackOff") {
-        return `${containerSlug(ca.pod, ca.container)} is in ImagePullBackOff: \`${ca.container.state.waiting.message}\``;
+        return `${containerSlug(ca)} is in ImagePullBackOff: \`${ca.container.state.waiting.message}\``;
     }
     return undefined;
 }
@@ -170,7 +157,7 @@ function containerCrashLoopBackOff(ca: ContainerArgs): string | undefined {
         return undefined;
     }
     if (ca.container.state.waiting.reason === "CrashLoopBackOff") {
-        return `${containerSlug(ca.pod, ca.container)} is in CrashLoopBackOff: \`${ca.container.state.waiting.message}\``;
+        return `${containerSlug(ca)} is in CrashLoopBackOff: \`${ca.container.state.waiting.message}\``;
     }
     return undefined;
 }
@@ -184,7 +171,7 @@ function containerOomKilled(ca: ContainerArgs): string | undefined {
         return undefined;
     }
     if (ca.container.state.terminated.reason === "OOMKilled") {
-        return `${containerSlug(ca.pod, ca.container)} has been OOMKilled: \`${ca.container.state.terminated.exitCode}\``;
+        return `${containerSlug(ca)} has been OOMKilled: \`${ca.container.state.terminated.exitCode}\``;
     }
     return undefined;
 }
@@ -208,7 +195,7 @@ function containerNotReady(ca: ContainerArgs): string | undefined {
         return "DELETE";
     } else if (ca.container.state?.running) {
         if (podDurationSeconds > ca.parameters.notReadyDelaySeconds) {
-            return `${containerSlug(ca.pod, ca.container)} is not ready`;
+            return `${containerSlug(ca)} is not ready`;
         }
     }
     return undefined;
@@ -223,14 +210,41 @@ function containerMaxRestart(ca: ContainerArgs): string | undefined {
         return undefined;
     }
     if (ca.container.restartCount >= ca.parameters.maxRestarts) {
-        return `${containerSlug(ca.pod, ca.container)} has restarted too many times: ` +
+        return `${containerSlug(ca)} has restarted too many times: ` +
             `\`${ca.container.restartCount} > ${ca.parameters.maxRestarts}\``;
     }
     return undefined;
 }
 
+interface CheckContainerArgs extends ContainerArgs {
+    checks: Array<(ca: ContainerArgs) => (string | undefined)>;
+}
+
+/**
+ * Run container status through a series of checks.
+ */
+function checkContainerState(cc: CheckContainerArgs): PodContainer {
+    const pc: PodContainer = {
+        id: containerId(cc),
+        slug: containerSlug(cc),
+    };
+    for (const check of cc.checks) {
+        const error = check(cc);
+        if (error) {
+            pc.error = ucFirst(error);
+            break;
+        }
+    }
+    return pc;
+}
+
+/** Return true if any of the pod containers have an error. */
+function foundError(pcs: PodContainer[]): boolean {
+    return !pcs.every(c => !c.error);
+}
+
 /** Interrogate pod status and return array of states. */
-export async function checkPodState(pa: PodArgs): Promise<PodContainer[]> {
+export function checkPodState(pa: PodArgs): PodContainer[] {
     const podContainers: PodContainer[] = [];
 
     if (pa.parameters.namespaceExcludeRegExp && RegExp(pa.parameters.namespaceExcludeRegExp).test(pa.pod.namespace)) {
@@ -241,20 +255,27 @@ export async function checkPodState(pa: PodArgs): Promise<PodContainer[]> {
     }
 
     podContainers.push(podUnscheduled(pa));
-
-    if (podContainers.filter(c => !!c.error).length < 1 && pa.status.initContainerStatuses) {
-        for (const container of pa.status.initContainerStatuses) {
-            podContainers.push(initContainerFail({ ...pa, container }));
-        }
+    if (foundError(podContainers)) {
+        return podContainers;
     }
 
-    if (podContainers.filter(c => !!c.error).length < 1 && pa.status.containerStatuses) {
-        for (const container of pa.status.containerStatuses) {
-            const pc: PodContainer = {
-                id: containerId(pa.pod, container),
-                slug: containerSlug(pa.pod, container),
-            };
+    if (pa.status.initContainerStatuses) {
+        for (const container of pa.status.initContainerStatuses) {
+            const checks = [
+                containerImagePullBackOff,
+                containerCrashLoopBackOff,
+                containerOomKilled,
+                containerMaxRestart,
+            ];
+            podContainers.push(checkContainerState({ ...pa, container, checks, init: true }));
+        }
+    }
+    if (foundError(podContainers)) {
+        return podContainers;
+    }
 
+    if (pa.status.containerStatuses) {
+        for (const container of pa.status.containerStatuses) {
             const checks = [
                 containerImagePullBackOff,
                 containerCrashLoopBackOff,
@@ -262,15 +283,7 @@ export async function checkPodState(pa: PodArgs): Promise<PodContainer[]> {
                 containerMaxRestart,
                 containerNotReady,
             ];
-            for (const check of checks) {
-                const error = check({ ...pa, container });
-                if (error) {
-                    pc.error = ucFirst(error);
-                    break;
-                }
-            }
-
-            podContainers.push(pc);
+            podContainers.push(checkContainerState({ ...pa, container, checks }));
         }
     }
 

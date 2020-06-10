@@ -48,7 +48,6 @@ describe("parameter", () => {
             const e = {
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
-                initContainerFailureCount: 3,
                 maxRestarts: 10,
                 namespaceExcludeRegExp: "^kube-",
                 notReadyDelaySeconds: 600,
@@ -67,7 +66,6 @@ describe("parameter", () => {
             const e = {
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
-                initContainerFailureCount: 3,
                 maxRestarts: 100,
                 namespaceExcludeRegExp: "^kube-",
                 notReadyDelaySeconds: 3600,
@@ -83,7 +81,6 @@ describe("parameter", () => {
             const e = {
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
-                initContainerFailureCount: 3,
                 maxRestarts: 0,
                 namespaceExcludeRegExp: "^kube-",
                 notReadyDelaySeconds: 600,
@@ -99,7 +96,6 @@ describe("parameter", () => {
             const e = {
                 crashLoopBackOff: true,
                 imagePullBackOff: true,
-                initContainerFailureCount: 3,
                 maxRestarts: 10,
                 namespaceExcludeRegExp: "^kube-",
                 notReadyDelaySeconds: 0,

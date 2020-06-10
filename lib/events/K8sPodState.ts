@@ -58,7 +58,7 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                 continue;
             }
 
-            const podContainers = await checkPodState({ now, parameters, pod, status });
+            const podContainers = checkPodState({ now, parameters, pod, status });
 
             for (const container of podContainers) {
                 const id = `${configuration.name}:${container.id}`;

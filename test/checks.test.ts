@@ -79,7 +79,6 @@ describe("checks", () => {
                 parameters: {
                     crashLoopBackOff: true,
                     imagePullBackOff: true,
-                    initContainerFailureCount: 3,
                     maxRestarts: 10,
                     notReadyDelaySeconds: 600,
                     notScheduledDelaySeconds: 600,
@@ -92,7 +91,7 @@ describe("checks", () => {
             };
         }
 
-        it("concludes everything is okay", async () => {
+        it("concludes everything is okay", () => {
             const p = {
                 baseName: "init",
                 name: "init-sleep",
@@ -122,7 +121,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:init-sleep",
@@ -140,7 +139,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("ignores problems in excluded namespaces", async () => {
+        it("ignores problems in excluded namespaces", () => {
             const p = {
                 baseName: "crash-loop",
                 name: "crash-loop",
@@ -170,11 +169,11 @@ describe("checks", () => {
                 namespace: "kube-something",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             assert.deepStrictEqual(pc, []);
         });
 
-        it("ignores problems in not included namespaces", async () => {
+        it("ignores problems in not included namespaces", () => {
             const p = {
                 baseName: "crash-loop",
                 name: "crash-loop",
@@ -204,11 +203,11 @@ describe("checks", () => {
                 namespace: "staggering",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             assert.deepStrictEqual(pc, []);
         });
 
-        it("detects when pod is not scheduled", async () => {
+        it("detects when pod is not scheduled", () => {
             const p = {
                 baseName: "no-schedule",
                 name: "no-schedule",
@@ -221,7 +220,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     error: "Pod production/no-schedule in Kubernetes cluster k8s-internal-demo has not been scheduled: `0/1 nodes are available: 1 Insufficient cpu, 1 Insufficient memory.`",
@@ -232,7 +231,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("ignores when young pod is not scheduled", async () => {
+        it("ignores when young pod is not scheduled", () => {
             const p = {
                 baseName: "no-schedule",
                 name: "no-schedule",
@@ -245,7 +244,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:no-schedule",
@@ -255,7 +254,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("detects crash loop backoff", async () => {
+        it("detects crash loop backoff", () => {
             const p = {
                 baseName: "crash-loop",
                 name: "crash-loop",
@@ -285,7 +284,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:crash-loop",
@@ -300,7 +299,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("detects image pull backoff", async () => {
+        it("detects image pull backoff", () => {
             const p = {
                 baseName: "image-pull-backoff",
                 name: "image-pull-backoff",
@@ -313,7 +312,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:image-pull-backoff",
@@ -328,7 +327,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("detects OOMKilled", async () => {
+        it("detects OOMKilled", () => {
             const p = {
                 baseName: "oom-kill",
                 name: "oom-kill",
@@ -341,7 +340,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:oom-kill",
@@ -356,7 +355,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("detects init container failure", async () => {
+        it("detects init container failure", () => {
             const p = {
                 baseName: "init-fail",
                 name: "init-fail",
@@ -365,18 +364,18 @@ describe("checks", () => {
                 containers: [] as any[],
                 environment: "k8s-internal-demo",
                 timestamp: "2020-03-19T18:12:20Z",
-                statusJSON: "{\"phase\":\"Pending\",\"conditions\":[{\"type\":\"Initialized\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\",\"reason\":\"ContainersNotInitialized\",\"message\":\"containers with incomplete status: [fail]\"},{\"type\":\"Ready\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"ContainersReady\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"PodScheduled\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\"}],\"hostIP\":\"10.0.3.197\",\"podIP\":\"10.12.0.27\",\"startTime\":\"2020-03-19T18:12:20Z\",\"initContainerStatuses\":[{\"name\":\"fail\",\"state\":{\"terminated\":{\"exitCode\":1,\"reason\":\"Error\",\"startedAt\":\"2020-03-19T18:13:00Z\",\"finishedAt\":\"2020-03-19T18:13:00Z\",\"containerID\":\"containerd://702440f02a119413f98348e67417601436d05421736bf5e2ba8d9a44d92a24e5\"}},\"lastState\":{\"terminated\":{\"exitCode\":1,\"reason\":\"Error\",\"startedAt\":\"2020-03-19T18:12:36Z\",\"finishedAt\":\"2020-03-19T18:12:36Z\",\"containerID\":\"containerd://dc0bf77bc467ffd287ff6afbac571ea3f299d242bdf3c7bde9071cbd30b33c08\"}},\"ready\":false,\"restartCount\":3,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://702440f02a119413f98348e67417601436d05421736bf5e2ba8d9a44d92a24e5\"}],\"containerStatuses\":[{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"PodInitializing\"}},\"lastState\":{},\"ready\":false,\"restartCount\":0,\"image\":\"busybox:1.31.1-uclibc\",\"imageID\":\"\"}],\"qosClass\":\"BestEffort\"}",
+                statusJSON: "{\"phase\":\"Pending\",\"conditions\":[{\"type\":\"Initialized\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\",\"reason\":\"ContainersNotInitialized\",\"message\":\"containers with incomplete status: [fail]\"},{\"type\":\"Ready\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"ContainersReady\",\"status\":\"False\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\",\"reason\":\"ContainersNotReady\",\"message\":\"containers with unready status: [sleep]\"},{\"type\":\"PodScheduled\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"2020-03-19T18:12:20Z\"}],\"hostIP\":\"10.0.3.197\",\"podIP\":\"10.12.0.27\",\"startTime\":\"2020-03-19T18:12:20Z\",\"initContainerStatuses\":[{\"name\":\"fail\",\"state\":{\"terminated\":{\"exitCode\":1,\"reason\":\"Error\",\"startedAt\":\"2020-03-19T18:13:00Z\",\"finishedAt\":\"2020-03-19T18:13:00Z\",\"containerID\":\"containerd://702440f02a119413f98348e67417601436d05421736bf5e2ba8d9a44d92a24e5\"}},\"lastState\":{\"terminated\":{\"exitCode\":1,\"reason\":\"Error\",\"startedAt\":\"2020-03-19T18:12:36Z\",\"finishedAt\":\"2020-03-19T18:12:36Z\",\"containerID\":\"containerd://dc0bf77bc467ffd287ff6afbac571ea3f299d242bdf3c7bde9071cbd30b33c08\"}},\"ready\":false,\"restartCount\":13,\"image\":\"docker.io/library/busybox:1.31.1-uclibc\",\"imageID\":\"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51\",\"containerID\":\"containerd://702440f02a119413f98348e67417601436d05421736bf5e2ba8d9a44d92a24e5\"}],\"containerStatuses\":[{\"name\":\"sleep\",\"state\":{\"waiting\":{\"reason\":\"PodInitializing\"}},\"lastState\":{},\"ready\":false,\"restartCount\":0,\"image\":\"busybox:1.31.1-uclibc\",\"imageID\":\"\"}],\"qosClass\":\"BestEffort\"}",
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:init-fail",
                     slug: "pod production/init-fail in Kubernetes cluster k8s-internal-demo",
                 },
                 {
-                    error: "Init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo failed: `1`",
+                    error: "Init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo has restarted too many times: `13 > 10`",
                     id: "k8s-internal-demo:production:init-fail:init:fail",
                     slug: "init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo",
                 },
@@ -384,7 +383,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("ignores init container failures below threshold", async () => {
+        it("ignores init container failures below threshold", () => {
             const p = {
                 baseName: "init-fail",
                 name: "init-fail",
@@ -397,7 +396,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:init-fail",
@@ -415,7 +414,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("detects exceeding maximum restarts", async () => {
+        it("detects exceeding maximum restarts", () => {
             const p = {
                 baseName: "restart",
                 name: "restart",
@@ -445,7 +444,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     slug: "pod production/restart in Kubernetes cluster k8s-internal-demo",
@@ -464,7 +463,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("ignores fewer than maximum restarts", async () => {
+        it("ignores fewer than maximum restarts", () => {
             const p = {
                 baseName: "restart",
                 name: "restart",
@@ -494,7 +493,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:restart",
@@ -512,7 +511,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("detects when pod is not ready", async () => {
+        it("detects when pod is not ready", () => {
             const p = {
                 baseName: "unhealthy",
                 name: "unhealthy",
@@ -558,7 +557,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:unhealthy",
@@ -577,7 +576,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("ignores when young pod is not ready", async () => {
+        it("ignores when young pod is not ready", () => {
             const p = {
                 baseName: "unhealthy",
                 name: "unhealthy",
@@ -623,7 +622,7 @@ describe("checks", () => {
                 namespace: "production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-demo:production:unhealthy",
@@ -641,7 +640,7 @@ describe("checks", () => {
             assert.deepStrictEqual(pc, e);
         });
 
-        it("ignores a pod being replaced", async () => {
+        it("ignores a pod being replaced", () => {
             const p = {
                 baseName: "dood-7d4b7588bd",
                 name: "dood-7d4b7588bd-vptds",
@@ -678,7 +677,7 @@ describe("checks", () => {
                 namespace: "api-production",
             };
             const pa = generatePodArgs(p);
-            const pc = await checkPodState(pa);
+            const pc = checkPodState(pa);
             const e = [
                 {
                     id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds",

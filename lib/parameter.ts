@@ -55,8 +55,6 @@ export interface K8sPodCheckParameters {
     crashLoopBackOff: boolean;
     /** Whether to alert for containers in ImagePullBackoff. */
     imagePullBackOff: boolean;
-    /** Alert when init container fails more times than this, set to `0` to disable. */
-    initContainerFailureCount: number;
     /** Alert if pod container restarts exceeds this value, set to `0` to disable. */
     maxRestarts: number;
     /** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
@@ -86,7 +84,6 @@ export function configurationToParameters(params: Omit<K8sPodStateConfiguration,
     return {
         crashLoopBackOff: true,
         imagePullBackOff: true,
-        initContainerFailureCount: 3,
         maxRestarts,
         namespaceExcludeRegExp: "^kube-",
         notReadyDelaySeconds,
