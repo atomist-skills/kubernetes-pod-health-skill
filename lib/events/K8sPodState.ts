@@ -21,14 +21,16 @@ import { checkCluster, checkPodState, podSlug } from "../checks";
 import { chatChannelName, configurationToParameters, K8sPodStateConfiguration } from "../parameter";
 import { parsePodStatus, PodStatus } from "../pod";
 import { ChatChannelQuery, K8sPodStateSubscription } from "../typings/types";
-import { ucFirst } from "../util";
+import { ucFirst, dateString } from "../util";
 
 /** Process K8Pod event and send alerts. */
 export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfiguration> = async ctx => {
     for (const pod of ctx.data.K8Pod) {
         info(`${ucFirst(podSlug(pod))} status: ${pod.statusJSON}`);
     }
-    const now = new Date().getTime();
+    const date = new Date();
+    const now = date.getTime();
+    const today = dateString(date);
     const reasons: string[] = [];
     for (const configuration of ctx.configuration) {
         const parameterChannels = chatChannelName(configuration.parameters.channels);
@@ -37,7 +39,6 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
         const channels = chatChannelResponse.ChatChannel.filter(c => !c.archived).map(c => c.name);
         const users: string[] = [];
         const destination = { channels, users };
-        const ttl = 24 * 60 * 60 * 1000; // one day
 
         for (const pod of ctx.data.K8Pod) {
             if (!await checkCluster({
@@ -61,8 +62,8 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
             const podContainers = checkPodState({ now, parameters, pod, status });
 
             for (const container of podContainers) {
-                const id = `${configuration.name}:${container.id}`;
-                const options: MessageOptions = { id, ttl };
+                const id = `${configuration.name}:${container.id}:${today}`;
+                const options: MessageOptions = { id };
                 let message: string;
                 if (container.error === "DELETE") {
                     container.error = undefined;

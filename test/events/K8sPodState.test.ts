@@ -17,15 +17,18 @@
 import * as log from "@atomist/skill/lib/log";
 import * as assert from "power-assert";
 import { handler } from "../../lib/events/K8sPodState";
+import { dateString } from "../../lib/util";
 
 describe("K8sPodState", () => {
 
     describe("handler", () => {
 
         let originalLogInfo: any;
+        let today: string | undefined;
         before(() => {
             originalLogInfo = Object.getOwnPropertyDescriptor(log, "info");
             Object.defineProperty(log, "info", { value: async () => { return; } });
+            today = dateString(new Date());
         });
         after(() => {
             Object.defineProperty(log, "info", originalLogInfo);
@@ -205,27 +208,24 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/init-sleep in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-sleep",
+                        id: `testing:k8s-internal-demo:production:init-sleep:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-sleep:init:success",
+                        id: `testing:k8s-internal-demo:production:init-sleep:init:success:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-sleep:sleep",
+                        id: `testing:k8s-internal-demo:production:init-sleep:sleep:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
             ];
@@ -366,8 +366,7 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: em,
                     options: {
-                        id: "testing:k8s-internal-demo:production:no-schedule",
-                        ttl: 86400000,
+                        id: `testing:k8s-internal-demo:production:no-schedule:${today}`,
                     },
                 },
             ];
@@ -408,9 +407,8 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/no-schedule in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:no-schedule",
+                        id: `testing:k8s-internal-demo:production:no-schedule:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
             ];
@@ -467,17 +465,15 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/crash-loop in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:crash-loop",
+                        id: `testing:k8s-internal-demo:production:crash-loop:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: em,
                     options: {
-                        id: "testing:k8s-internal-demo:production:crash-loop:sleep",
-                        ttl: 86400000,
+                        id: `testing:k8s-internal-demo:production:crash-loop:sleep:${today}`,
                     },
                 },
             ];
@@ -517,17 +513,16 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:image-pull-backoff",
+                        id: `testing:k8s-internal-demo:production:image-pull-backoff:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     message: em,
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
-                        id: "testing:k8s-internal-demo:production:image-pull-backoff:nothing",
-                        ttl: 86400000,
+                        id: `testing:k8s-internal-demo:production:image-pull-backoff:nothing:${today}`,
+
                     },
                 },
             ];
@@ -567,17 +562,15 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/oom-kill in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:oom-kill",
+                        id: `testing:k8s-internal-demo:production:oom-kill:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     message: em,
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
-                        id: "testing:k8s-internal-demo:production:oom-kill:kaniko",
-                        ttl: 86400000,
+                        id: `testing:k8s-internal-demo:production:oom-kill:kaniko:${today}`,
                     },
                 },
             ];
@@ -617,17 +610,15 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/init-fail in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-fail",
+                        id: `testing:k8s-internal-demo:production:init-fail:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     message: em,
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-fail:init:fail",
-                        ttl: 86400000,
+                        id: `testing:k8s-internal-demo:production:init-fail:init:fail:${today}`,
                     },
                 },
             ];
@@ -667,27 +658,25 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/init-fail in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-fail",
+                        id: `testing:k8s-internal-demo:production:init-fail:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-fail:init:fail",
+                        id: `testing:k8s-internal-demo:production:init-fail:init:fail:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Container sleep (busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:init-fail:sleep",
+                        id: `testing:k8s-internal-demo:production:init-fail:sleep:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
+
                     },
                 },
             ];
@@ -744,26 +733,23 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/restart in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:restart",
+                        id: `testing:k8s-internal-demo:production:restart:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:restart:init:success",
+                        id: `testing:k8s-internal-demo:production:restart:init:success:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     message: em,
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
-                        id: "testing:k8s-internal-demo:production:restart:sleep",
-                        ttl: 86400000,
+                        id: `testing:k8s-internal-demo:production:restart:sleep:${today}`,
                     },
                 },
             ];
@@ -820,27 +806,24 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/restart in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:restart",
+                        id: `testing:k8s-internal-demo:production:restart:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:restart:init:success",
+                        id: `testing:k8s-internal-demo:production:restart:init:success:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     message: "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo recovered",
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
-                        id: "testing:k8s-internal-demo:production:restart:sleep",
+                        id: `testing:k8s-internal-demo:production:restart:sleep:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
             ];
@@ -914,26 +897,23 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/unhealthy in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:unhealthy",
+                        id: `testing:k8s-internal-demo:production:unhealthy:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:unhealthy:sleep",
+                        id: `testing:k8s-internal-demo:production:unhealthy:sleep:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     message: em,
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
-                        id: "testing:k8s-internal-demo:production:unhealthy:unhealthy",
-                        ttl: 86400000,
+                        id: `testing:k8s-internal-demo:production:unhealthy:unhealthy:${today}`,
                     },
                 },
             ];
@@ -1007,27 +987,24 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod production/unhealthy in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:unhealthy",
+                        id: `testing:k8s-internal-demo:production:unhealthy:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:production:unhealthy:sleep",
+                        id: `testing:k8s-internal-demo:production:unhealthy:sleep:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     message: "Container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo recovered",
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     options: {
-                        id: "testing:k8s-internal-demo:production:unhealthy:unhealthy",
+                        id: `testing:k8s-internal-demo:production:unhealthy:unhealthy:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
             ];
@@ -1092,16 +1069,15 @@ describe("K8sPodState", () => {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "Pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-demo recovered",
                     options: {
-                        id: "testing:k8s-internal-demo:api-production:dood-7d4b7588bd-vptds",
+                        id: `testing:k8s-internal-demo:api-production:dood-7d4b7588bd-vptds:${today}`,
                         post: "update_only",
-                        ttl: 86400000,
                     },
                 },
                 {
                     destination: { channels: ["devs", "prod-alerts"], users: [] as string[] },
                     message: "DELETE",
                     options: {
-                        id: "testing:k8s-internal-demo:api-production:dood-7d4b7588bd-vptds:dood",
+                        id: `testing:k8s-internal-demo:api-production:dood-7d4b7588bd-vptds:dood:${today}`,
                     },
                 },
             ];

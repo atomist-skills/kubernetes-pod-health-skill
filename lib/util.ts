@@ -21,3 +21,16 @@ export function ucFirst(s: string | undefined): string | undefined {
     }
     return s.substring(0, 1).toUpperCase() + s.substring(1);
 }
+
+/** Pad numbers less than ten with leading zero. */
+function padNumber(n: number): string {
+    return (n < 10) ? `0${n}` : `${n}`;
+}
+
+/** Return a UTC date string for provided date. */
+export function dateString(d: Date): string {
+    const y = d.getUTCFullYear();
+    const m = padNumber(d.getUTCMonth() + 1);
+    const a = padNumber(d.getUTCDate());
+    return `${y}${m}${a}`;
+}
