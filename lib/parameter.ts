@@ -53,13 +53,17 @@ export interface K8sPodStateConfiguration {
 export interface K8sPodCheckParameters {
     /** Whether to alert for containers in CrashLoopBackoff. */
     crashLoopBackOff: boolean;
+    /** Whether to alert for containers in CreateContainerConfigError. */
+    createContainerConfigError: boolean;
     /** Whether to alert for containers in ImagePullBackoff. */
     imagePullBackOff: boolean;
     /** Alert if pod container restarts exceeds this value, set to `0` to disable. */
     maxRestarts: number;
+    /** Alert when pod has not completed creating after this number of seconds, set to `0` to disable. */
+    notCreatedSeconds: number;
     /** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
     notReadyDelaySeconds: number;
-    /** Alert when pod has not been scheduled after this number of minutes, set to `0` to disable. */
+    /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
     notScheduledDelaySeconds: number;
     /** Alert when container has been OOMKilled. */
     oomKilled: boolean;
@@ -83,9 +87,11 @@ export function configurationToParameters(params: Omit<K8sPodStateConfiguration,
     const notReadyDelaySeconds = (params.notReadyDelay) ? parseInt(params.notReadyDelay) * 60 : 600;
     return {
         crashLoopBackOff: true,
+        createContainerConfigError: true,
         imagePullBackOff: true,
         maxRestarts,
         namespaceExcludeRegExp: "^kube-",
+        notCreatedSeconds: 600,
         notReadyDelaySeconds,
         notScheduledDelaySeconds: 600,
         oomKilled: true,

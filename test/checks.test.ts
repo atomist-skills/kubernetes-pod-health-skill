@@ -78,8 +78,10 @@ describe("checks", () => {
                 now: 1584649389876, // 2020-03-19T20:23:09.876Z
                 parameters: {
                     crashLoopBackOff: true,
+                    createContainerConfigError: true,
                     imagePullBackOff: true,
                     maxRestarts: 10,
+                    notCreatedSeconds: 600,
                     notReadyDelaySeconds: 600,
                     notScheduledDelaySeconds: 600,
                     oomKilled: true,
@@ -687,6 +689,96 @@ describe("checks", () => {
                     error: "DELETE",
                     id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds:dood",
                     slug: "container dood (atomist/dood:0.1.3-20200323102421) of pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
+                },
+            ];
+            assert.deepStrictEqual(pc, e);
+        });
+
+        it("detects when container is creating too long", () => {
+            const p = {
+                baseName: "creating",
+                name: "creating",
+                resourceVersion: 158465639,
+                phase: "Pending",
+                containers: [
+                    {
+                        stateReason: "ContainerCreating",
+                        ready: false,
+                        name: "sleep",
+                        restartCount: 0,
+                        resourceVersion: 158465639,
+                        state: "waiting",
+                        containerID: "containerd://13147fc42ce076fd9008c01b1b8db19c43e972997b3d3cdefc87f05196b967c6",
+                        image: {
+                            commits: [] as any[],
+                        },
+                        environment: "k8s-internal-demo",
+                        imageName: "busybox:1.31.1-uclibc",
+                        timestamp: "2020-03-19T20:10:09Z",
+                        statusJSON: `{"image":"busybox:1.31.1-uclibc","imageID":"","lastState":{},"name":"sleep","ready":false,"restartCount":0,"state":{"waiting":{"reason":"ContainerCreating"}}}`,
+                    },
+                ],
+                environment: "k8s-internal-demo",
+                timestamp: "2020-03-19T20:10:09Z",
+                statusJSON: `{"conditions":[{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","status":"True","type":"Initialized"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","message":"containers with unready status: [sleep]","reason":"ContainersNotReady","status":"False","type":"Ready"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","message":"containers with unready status: [sleep]","reason":"ContainersNotReady","status":"False","type":"ContainersReady"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","status":"True","type":"PodScheduled"}],"containerStatuses":[{"image":"busybox:1.31.1-uclibc","imageID":"","lastState":{},"name":"sleep","ready":false,"restartCount":0,"state":{"waiting":{"reason":"ContainerCreating"}}}],"hostIP":"10.159.0.6","phase":"Pending","qosClass":"Burstable","startTime":"2020-06-10T15:26:39Z"}`,
+                namespace: "production",
+            };
+            const pa = generatePodArgs(p);
+            const pc = checkPodState(pa);
+            const e = [
+                {
+                    id: "k8s-internal-demo:production:creating",
+                    slug: "pod production/creating in Kubernetes cluster k8s-internal-demo",
+                },
+                {
+                    error: "Container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo has been creating too long",
+                    id: "k8s-internal-demo:production:creating:sleep",
+                    slug: "container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo",
+                },
+            ];
+            assert.deepStrictEqual(pc, e);
+        });
+
+        it("detects when container is in CreateContainerConfigError", () => {
+            const p = {
+                baseName: "creating",
+                name: "creating",
+                resourceVersion: 158465639,
+                phase: "Pending",
+                containers: [
+                    {
+                        stateReason: "CreateContainerConfigError",
+                        ready: false,
+                        name: "sleep",
+                        restartCount: 0,
+                        resourceVersion: 158465639,
+                        state: "waiting",
+                        containerID: "containerd://13147fc42ce076fd9008c01b1b8db19c43e972997b3d3cdefc87f05196b967c6",
+                        image: {
+                            commits: [] as any[],
+                        },
+                        environment: "k8s-internal-demo",
+                        imageName: "busybox:1.31.1-uclibc",
+                        timestamp: "2020-03-19T20:10:09Z",
+                        statusJSON: `{"image":"busybox:1.31.1-uclibc","imageID":"","lastState":{},"name":"sleep","ready":false,"restartCount":0,"state":{"waiting":{"message":"secret \\"missing\\" not found","reason":"CreateContainerConfigError"}}}`,
+                    },
+                ],
+                environment: "k8s-internal-demo",
+                timestamp: "2020-03-19T20:10:09Z",
+                statusJSON: `{"conditions":[{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","status":"True","type":"Initialized"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","message":"containers with unready status: [sleep]","reason":"ContainersNotReady","status":"False","type":"Ready"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","message":"containers with unready status: [sleep]","reason":"ContainersNotReady","status":"False","type":"ContainersReady"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T15:26:39Z","status":"True","type":"PodScheduled"}],"containerStatuses":[{"image":"busybox:1.31.1-uclibc","imageID":"","lastState":{},"name":"sleep","ready":false,"restartCount":0,"state":{"waiting":{"message":"secret \\"missing\\" not found","reason":"CreateContainerConfigError"}}}],"hostIP":"10.159.0.6","phase":"Pending","podIP": "10.12.2.17","qosClass":"Burstable","startTime":"2020-06-10T15:26:39Z"}`,
+                namespace: "production",
+            };
+            const pa = generatePodArgs(p);
+            const pc = checkPodState(pa);
+            const e = [
+                {
+                    id: "k8s-internal-demo:production:creating",
+                    slug: "pod production/creating in Kubernetes cluster k8s-internal-demo",
+                },
+                {
+                    error: "Container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo is in CreateContainerConfigError: `secret \"missing\" not found`",
+                    id: "k8s-internal-demo:production:creating:sleep",
+                    slug: "container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo",
                 },
             ];
             assert.deepStrictEqual(pc, e);

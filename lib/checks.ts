@@ -134,6 +134,39 @@ function podUnscheduled(pa: PodArgs): PodContainer {
     return p;
 }
 
+/** Detect if container has been creating too long. */
+function containerCreating(ca: ContainerArgs): string | undefined {
+    if (ca.parameters.notCreatedSeconds < 1) {
+        return undefined;
+    }
+    if (!ca.pod.timestamp) {
+        return undefined;
+    }
+    if (ca.container.state?.waiting?.reason !== "ContainerCreating") {
+        return undefined;
+    }
+    const podCreationTime = new Date(ca.pod.timestamp).getTime();
+    const podAgeSeconds = (ca.now - podCreationTime) / 1000;
+    if (podAgeSeconds > ca.parameters.notCreatedSeconds) {
+        return `${containerSlug(ca)} has been creating too long`;
+    }
+    return undefined;
+}
+
+/** Detect if container is in CreateContainerConfigError. */
+function containerConfigError(ca: ContainerArgs): string | undefined {
+    if (!ca.parameters.createContainerConfigError) {
+        return undefined;
+    }
+    if (!ca.container.state?.waiting) {
+        return undefined;
+    }
+    if (ca.container.state.waiting.reason === "CreateContainerConfigError") {
+        return `${containerSlug(ca)} is in CreateContainerConfigError: \`${ca.container.state.waiting.message}\``;
+    }
+    return undefined;
+}
+
 /** Detect if container is in ImagePullBackOff. */
 function containerImagePullBackOff(ca: ContainerArgs): string | undefined {
     if (!ca.parameters.imagePullBackOff) {
@@ -263,6 +296,8 @@ export function checkPodState(pa: PodArgs): PodContainer[] {
     }
 
     const checks = [
+        containerCreating,
+        containerConfigError,
         containerImagePullBackOff,
         containerCrashLoopBackOff,
         containerOomKilled,

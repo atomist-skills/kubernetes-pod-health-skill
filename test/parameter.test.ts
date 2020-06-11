@@ -47,9 +47,11 @@ describe("parameter", () => {
             const p = configurationToParameters(c);
             const e = {
                 crashLoopBackOff: true,
+                createContainerConfigError: true,
                 imagePullBackOff: true,
                 maxRestarts: 10,
                 namespaceExcludeRegExp: "^kube-",
+                notCreatedSeconds: 600,
                 notReadyDelaySeconds: 600,
                 notScheduledDelaySeconds: 600,
                 oomKilled: true,
@@ -65,9 +67,11 @@ describe("parameter", () => {
             const p = configurationToParameters(c);
             const e = {
                 crashLoopBackOff: true,
+                createContainerConfigError: true,
                 imagePullBackOff: true,
                 maxRestarts: 100,
                 namespaceExcludeRegExp: "^kube-",
+                notCreatedSeconds: 600,
                 notReadyDelaySeconds: 3600,
                 notScheduledDelaySeconds: 600,
                 oomKilled: true,
@@ -80,9 +84,11 @@ describe("parameter", () => {
             const p = configurationToParameters(c);
             const e = {
                 crashLoopBackOff: true,
+                createContainerConfigError: true,
                 imagePullBackOff: true,
                 maxRestarts: 0,
                 namespaceExcludeRegExp: "^kube-",
+                notCreatedSeconds: 600,
                 notReadyDelaySeconds: 600,
                 notScheduledDelaySeconds: 600,
                 oomKilled: true,
@@ -95,9 +101,11 @@ describe("parameter", () => {
             const p = configurationToParameters(c);
             const e = {
                 crashLoopBackOff: true,
+                createContainerConfigError: true,
                 imagePullBackOff: true,
                 maxRestarts: 10,
                 namespaceExcludeRegExp: "^kube-",
+                notCreatedSeconds: 600,
                 notReadyDelaySeconds: 0,
                 notScheduledDelaySeconds: 600,
                 oomKilled: true,
