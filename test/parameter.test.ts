@@ -18,9 +18,7 @@ import * as assert from "power-assert";
 import { chatChannelName, configurationToParameters } from "../lib/parameter";
 
 describe("parameter", () => {
-
     describe("chatChannelName", () => {
-
         it("maps to channel names", () => {
             const c = [
                 { channelName: "mavis", channelId: "5T4P135", chatTeamId: "S1NG345", resourceProviderId: "slack" },
@@ -37,11 +35,9 @@ describe("parameter", () => {
                 assert.throws(() => chatChannelName(c), /Missing required configuration parameter: channels: /);
             });
         });
-
     });
 
     describe("parameterDefaults", () => {
-
         it("populates default values", () => {
             const c = {};
             const p = configurationToParameters(c);
@@ -112,7 +108,5 @@ describe("parameter", () => {
             };
             assert.deepStrictEqual(p, e);
         });
-
     });
-
 });

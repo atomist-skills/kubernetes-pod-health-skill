@@ -16,7 +16,7 @@
   "homepage": "https://github.com/atomist-skills/kubernetes-pod-health-skill",
   "license": "Apache-2.0",
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200604061313"
+    "@atomist/skill": "0.1.0-add-index.20200618142801"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.5.1",
@@ -28,10 +28,13 @@
     "@typescript-eslint/eslint-plugin": "^3.1.0",
     "@typescript-eslint/parser": "^3.1.0",
     "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "espower-typescript": "^9.0.2",
     "mocha": "^7.2.0",
     "npm-run-all": "^4.1.5",
     "power-assert": "^1.6.1",
+    "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "supervisor": "^0.12.0",
     "ts-node": "^8.10.2",

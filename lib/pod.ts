@@ -180,7 +180,11 @@ export interface PodStatus {
 
 /** Recognize date values and convert them to Date objects. */
 function dateConverter(key: string, value: any): any {
-    if (value && typeof value === "string" && /^[1-9]\d*-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(?:\.\d+)?Z$/.test(value)) {
+    if (
+        value &&
+        typeof value === "string" &&
+        /^[1-9]\d*-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(?:\.\d+)?Z$/.test(value)
+    ) {
         return new Date(value);
     }
     return value;

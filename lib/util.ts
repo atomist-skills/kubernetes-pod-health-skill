@@ -24,7 +24,7 @@ export function ucFirst(s: string | undefined): string | undefined {
 
 /** Pad numbers less than ten with leading zero. */
 function padNumber(n: number): string {
-    return (n < 10) ? `0${n}` : `${n}`;
+    return n < 10 ? `0${n}` : `${n}`;
 }
 
 /** Return a UTC date string for provided date. */

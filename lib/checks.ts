@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { GraphQLClient } from "@atomist/skill/lib/graphql";
+import { GraphQLClient } from "@atomist/skill";
 import { K8sPodCheckParameters } from "./parameter";
 import { ContainerStatus, PodStatus } from "./pod";
 import { K8Pod, KubernetesClusterProviderQuery } from "./typings/types";
@@ -22,21 +22,27 @@ import { ucFirst } from "./util";
 
 /** Arguments to [[checkCluster]]. */
 export interface CheckClusterArgs {
-    /** Pod environment from event data.  */
-    environment: string;
+    /** Cluster name of the pod in the event data.  */
+    clusterName: string;
     /** Client to query for Kubernetes cluster providers. */
     graphql: GraphQLClient;
     /** Resource providers from skill configuration. */
-    resourceProviders: Record<string, { typeName: string, selectedResourceProviders: Array<{ id: string }> }>,
+    resourceProviders: Record<
+        string,
+        {
+            typeName: string;
+            selectedResourceProviders: Array<{ id: string }>;
+        }
+    >;
 }
 
 /**
- * Iterate through selected resource providers to see if any match the provided environment.
+ * Iterate through selected resource providers to see if any match the provided cluster name.
  *
  * @param args see [[CheckClusterArgs]].
  */
 export async function checkCluster(args: CheckClusterArgs): Promise<boolean> {
-    const env = args.environment;
+    const env = args.clusterName;
     const providers = args.resourceProviders;
     const clusterProviderIds = Object.keys(providers)
         .filter(provider => providers[provider].typeName === "KubernetesClusterProvider")
@@ -87,17 +93,17 @@ interface ContainerArgs extends PodArgs {
 
 /** Create string for Kubernetes pod. */
 export function podSlug(pod: K8Pod): string {
-    return `pod ${pod.namespace}/${pod.name} in Kubernetes cluster ${pod.environment}`;
+    return `pod ${pod.namespace}/${pod.name} in Kubernetes cluster ${pod.clusterName}`;
 }
 
 /** Create string for Kubernetes container. */
 function containerSlug(ca: Pick<ContainerArgs, "container" | "init" | "pod">): string {
-    return `${(ca.init) ? "init " : ""}container ${ca.container.name} (${ca.container.image}) of ${podSlug(ca.pod)}`;
+    return `${ca.init ? "init " : ""}container ${ca.container.name} (${ca.container.image}) of ${podSlug(ca.pod)}`;
 }
 
 /** Return unique pod identifier string. */
 function podId(pod: K8Pod): string {
-    return [pod.environment, pod.namespace, pod.name].join(":");
+    return [pod.clusterName, pod.namespace, pod.name].join(":");
 }
 
 /** Return unique container identifier string. */
@@ -246,14 +252,16 @@ function containerMaxRestart(ca: ContainerArgs): string | undefined {
         return undefined;
     }
     if (ca.container.restartCount >= ca.parameters.maxRestarts) {
-        return `${containerSlug(ca)} has restarted too many times: ` +
-            `\`${ca.container.restartCount} > ${ca.parameters.maxRestarts}\``;
+        return (
+            `${containerSlug(ca)} has restarted too many times: ` +
+            `\`${ca.container.restartCount} > ${ca.parameters.maxRestarts}\``
+        );
     }
     return undefined;
 }
 
 interface CheckContainerArgs extends ContainerArgs {
-    checks: Array<(ca: ContainerArgs) => (string | undefined)>;
+    checks: Array<(ca: ContainerArgs) => string | undefined>;
 }
 
 /**

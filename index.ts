@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-import { kubernetesResourceProvider, slackResourceProvider } from "@atomist/skill/lib/resource_providers";
-import { DispatchStyle, ParameterType, ParameterVisibility, skill } from "@atomist/skill/lib/skill";
+import {
+    kubernetesResourceProvider,
+    slackResourceProvider,
+    DispatchStyle,
+    ParameterType,
+    ParameterVisibility,
+    skill,
+} from "@atomist/skill";
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({
-
     dispatchStyle: DispatchStyle.Single,
 
     runtime: {
@@ -38,7 +43,8 @@ export const Skill = skill<K8sPodStateConfiguration>({
         channels: {
             type: ParameterType.ChatChannels,
             displayName: "Chat channels to send alerts to",
-            description: "Specify the chat channels where the alerts should be sent. You must specify at least one chat channel.",
+            description:
+                "Specify the chat channels where the alerts should be sent. You must specify at least one chat channel.",
             required: true,
             minRequired: 1,
         },
@@ -47,23 +53,28 @@ export const Skill = skill<K8sPodStateConfiguration>({
             displayName: "Pod container restarts",
             description: "Alert if the count of pod container restarts reaches this value or higher.",
             defaultValue: "10",
-            options: [{
-                description: "Do not alert based on pod container restarts",
-                text: "Disable",
-                value: "0",
-            }, {
-                description: "Alert after five restarts",
-                text: "5 restarts",
-                value: "5",
-            }, {
-                description: "Alert after ten restarts",
-                text: "10 restarts",
-                value: "10",
-            }, {
-                description: "Alert after 25 restarts",
-                text: "25 restarts",
-                value: "25",
-            }],
+            options: [
+                {
+                    description: "Do not alert based on pod container restarts",
+                    text: "Disable",
+                    value: "0",
+                },
+                {
+                    description: "Alert after five restarts",
+                    text: "5 restarts",
+                    value: "5",
+                },
+                {
+                    description: "Alert after ten restarts",
+                    text: "10 restarts",
+                    value: "10",
+                },
+                {
+                    description: "Alert after 25 restarts",
+                    text: "25 restarts",
+                    value: "25",
+                },
+            ],
             required: true,
             visibility: ParameterVisibility.Normal,
         },
@@ -72,34 +83,37 @@ export const Skill = skill<K8sPodStateConfiguration>({
             displayName: "Pod container not ready",
             description: "Alert if pod container is not ready after this amount of time.",
             defaultValue: "10",
-            options: [{
-                description: "Do not alert based on pod container readiness",
-                text: "Disable",
-                value: "0",
-            }, {
-                description: "Alert after five minutes",
-                text: "5 minutes",
-                value: "5",
-            }, {
-                description: "Alert after ten minutes",
-                text: "10 minutes",
-                value: "10",
-            }, {
-                description: "Alert after 30 minutes",
-                text: "30 minutes",
-                value: "30",
-            }, {
-                description: "Alert after one hour",
-                text: "1 hour",
-                value: "60",
-            }],
+            options: [
+                {
+                    description: "Do not alert based on pod container readiness",
+                    text: "Disable",
+                    value: "0",
+                },
+                {
+                    description: "Alert after five minutes",
+                    text: "5 minutes",
+                    value: "5",
+                },
+                {
+                    description: "Alert after ten minutes",
+                    text: "10 minutes",
+                    value: "10",
+                },
+                {
+                    description: "Alert after 30 minutes",
+                    text: "30 minutes",
+                    value: "30",
+                },
+                {
+                    description: "Alert after one hour",
+                    text: "1 hour",
+                    value: "60",
+                },
+            ],
             required: true,
             visibility: ParameterVisibility.Normal,
         },
     },
 
-    subscriptions: [
-        "file://**/subscription/*.graphql",
-    ],
-
+    subscriptions: ["file://**/subscription/*.graphql"],
 });

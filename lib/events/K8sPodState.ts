@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
-import { info } from "@atomist/skill/lib/log";
-import { MessageOptions } from "@atomist/skill/lib/message";
+import { EventHandler, MessageOptions } from "@atomist/skill";
+import * as log from "@atomist/skill/lib/log";
 import { checkCluster, checkPodState, podSlug } from "../checks";
 import { chatChannelName, configurationToParameters, K8sPodStateConfiguration } from "../parameter";
 import { parsePodStatus, PodStatus } from "../pod";
@@ -26,7 +25,7 @@ import { ucFirst, dateString } from "../util";
 /** Process K8Pod event and send alerts. */
 export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfiguration> = async ctx => {
     for (const pod of ctx.data.K8Pod) {
-        info(`${ucFirst(podSlug(pod))} status: ${pod.statusJSON}`);
+        log.info(`${ucFirst(podSlug(pod))} status: ${pod.statusJSON}`);
     }
     const date = new Date();
     const now = date.getTime();
@@ -35,19 +34,25 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
     for (const configuration of ctx.configuration) {
         const parameterChannels = chatChannelName(configuration.parameters.channels);
         const parameters = configurationToParameters(configuration.parameters);
-        const chatChannelResponse = await ctx.graphql.query<ChatChannelQuery>("chatChannel.graphql", { channels: parameterChannels });
+        const chatChannelResponse = await ctx.graphql.query<ChatChannelQuery>("chatChannel.graphql", {
+            channels: parameterChannels,
+        });
         const channels = chatChannelResponse.ChatChannel.filter(c => !c.archived).map(c => c.name);
         const users: string[] = [];
         const destination = { channels, users };
 
         for (const pod of ctx.data.K8Pod) {
-            if (!await checkCluster({
-                environment: pod.environment,
-                graphql: ctx.graphql,
-                resourceProviders: configuration.resourceProviders,
-            })) {
-                await ctx.audit.log(`Environment ${pod.environment} of ${podSlug(pod)} does not match k8s integrations ` +
-                    `in configuration ${configuration.name}`);
+            if (
+                !(await checkCluster({
+                    clusterName: pod.clusterName,
+                    graphql: ctx.graphql,
+                    resourceProviders: configuration.resourceProviders,
+                }))
+            ) {
+                await ctx.audit.log(
+                    `Cluster ${pod.clusterName} of ${podSlug(pod)} does not match k8s integrations ` +
+                        `in configuration ${configuration.name}`,
+                );
                 continue;
             }
 

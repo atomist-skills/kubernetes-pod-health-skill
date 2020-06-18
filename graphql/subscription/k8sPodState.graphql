@@ -1,8 +1,7 @@
 subscription K8sPodState {
   K8Pod {
     baseName
-    environment
-    envJSON
+    clusterName
     metadataJSON
     name
     namespace
@@ -11,29 +10,5 @@ subscription K8sPodState {
     specsJSON
     statusJSON
     timestamp
-    containers {
-      containerID
-      containerJSON
-      environment
-      imageName
-      name
-      ready
-      resourceVersion
-      restartCount
-      state
-      stateReason
-      statusJSON
-      ready
-      timestamp
-      image {
-        commits {
-          sha
-          repo {
-            name
-            owner
-          }
-        }
-      }
-    }
   }
 }
