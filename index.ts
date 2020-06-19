@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    kubernetesResourceProvider,
-    slackResourceProvider,
-    DispatchStyle,
-    ParameterType,
-    ParameterVisibility,
-    skill,
-} from "@atomist/skill";
+import { DispatchStyle, ParameterType, ParameterVisibility, resourceProvider, skill } from "@atomist/skill";
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({
@@ -32,11 +25,11 @@ export const Skill = skill<K8sPodStateConfiguration>({
     },
 
     resourceProviders: {
-        k8s: kubernetesResourceProvider({
+        k8s: resourceProvider.kubernetes({
             description: "Kubernetes cluster to monitor",
             minRequired: 1,
         }),
-        slack: slackResourceProvider({ minRequired: 1, maxAllowed: 1 }),
+        slack: resourceProvider.slack({ minRequired: 1, maxAllowed: 1 }),
     },
 
     parameters: {
