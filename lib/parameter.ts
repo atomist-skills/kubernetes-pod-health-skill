@@ -84,7 +84,7 @@ export interface K8sPodCheckParameters {
  */
 export function configurationToParameters(params: Omit<K8sPodStateConfiguration, "channels">): K8sPodCheckParameters {
     const maxRestarts = params.maxRestarts ? parseInt(params.maxRestarts, 10) : 10;
-    const notReadyDelaySeconds = params.notReadyDelay ? parseInt(params.notReadyDelay) * 60 : 600;
+    const notReadyDelaySeconds = params.notReadyDelay ? parseInt(params.notReadyDelay, 10) * 60 : 600;
     return {
         crashLoopBackOff: true,
         createContainerConfigError: true,
