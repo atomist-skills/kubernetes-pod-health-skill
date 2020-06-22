@@ -40,13 +40,17 @@ notifies you when:
 -   A pod init container has failed too many times.
 -   A pod container restarts too many times.
 -   A pod container is not in a ready state.
+-   A pod has not been scheduled, e.g., when the cluster nodes do not have enough CPU or memory.
+-   A pod is misconfigured, e.g., it references a secret that does not exist.
 
 This skill will alert you at most once per day per unique
 pod/container.  This skill will _not_ alert on pods/containers in
-namespaces that start with `kube-`.
+[namespaces][] that start with `kube-`.
 
 Let this skill take care of monitoring your Kubernetes resources so
 you can focus on developing and improving them.
+
+[namespaces]: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
 
 ## Before you get started
 
@@ -56,7 +60,7 @@ Connect and configure these integrations:
 2.  **Slack**
 
 Both the **Kubernetes** and **Slack** integrations must be configured
-to used this skill.  This skill will send a notification message to
+to enable this skill.  This skill will send a notification message to
 the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 
 ## How to configure
@@ -66,18 +70,38 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
     If this is the first time you are configuring this skill, you can
     accept the default configuration name, "Kubernetes Pod Health
     Monitor".  If you are creating a second configuration, e.g., so
-    you can provide different configuration values, enter a name that
-    is unique among all configurations for this skill.
+    you can select different Kubernetes clusters, chat channels,
+    and/or configuration values, enter a name that is unique among all
+    configurations for this skill.
 
     ![name parameter](docs/images/param-name.png)
 
-2.  **Enter the chat channel(s) to send alerts to**
+2.  **Ensure required integrations are available**
 
-    The only required configuration parameter is the name of the chat
-    channel(s) you want to send the Kubernetes pod health alerts to.
-    You must enter one or more channel names.  Alerts will be sent to
-    all chat channels entered.  To enter more than one channel, click
-    the "Add" button so additional text boxes will appear.
+    If all of the integrations do not display a green check mark,
+    click on the integration(s) that do not have the green check mark
+    to configure/add the required integration.
+
+    ![integrations](docs/images/integrations.png)
+
+2.  **Select the Kubernetes cluster(s) to alert on**
+
+    Select the Kubernetes cluster(s) you want to receive alerts for.
+    You must select one or more clusters.  You can select clusters one
+    at a time.  You can deselect individual clusters by clicking the
+    "X" to the right of their name.  You can deselect all clusters by
+    click the gray "X" at the top-right of the drop down.
+
+    ![chat channel parameter](docs/images/param-clusters.png)
+
+2.  **Select the chat channel(s) to send alerts to**
+
+    Select the chat channel(s) you want to send the Kubernetes pod
+    health alerts to.  You must select one or more channel names.
+    Alerts will be sent to all chat channels entered.  You can select
+    channels one at a time.  You can deselect channels by clicking the
+    "X" to the right of their name.  You can deselect all channels by
+    click the gray "X" at the top-right of the drop down.
 
     ![chat channel parameter](docs/images/param-chat-channels.png)
 
@@ -109,17 +133,14 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 
     ![submit configuration](docs/images/config-submit.png)
 
-[regexp]: https://www.regular-expressions.info/ (Regular Expressions)
-[namespace]: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
-
 ## How to use it
 
 1.  **Configure the skill**
 
-    Provide the name of at least one chat channel where you want the
-    pod health alerts to go.  See the above section for more details
-    on how to configure the skill and the meaning of various
-    configuration parameters.
+    Select at least one Kubernetes and chat channel and click the
+    "Submit" button.  See the above section for more details on how to
+    configure the skill and the meaning of various configuration
+    parameters.
 
 2.  **Stop worrying**
 
