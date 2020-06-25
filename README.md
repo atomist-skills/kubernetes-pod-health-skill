@@ -126,10 +126,10 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 
         ![container not ready delay parameter](docs/images/param-not-ready.png)
 
-4.  **Submit the skill configuration**
+4.  **Enable the skill configuration**
 
-    Click the "Submit" button to save your configuration and activate
-    the skill.
+    Click the "Enable Skill" button to save your configuration and
+    activate the skill.
 
     ![submit configuration](docs/images/config-submit.png)
 
@@ -138,9 +138,9 @@ the configured Slack channel(s) when a Kubernetes pod is unhealthy.
 1.  **Configure the skill**
 
     Select at least one Kubernetes and chat channel and click the
-    "Submit" button.  See the above section for more details on how to
-    configure the skill and the meaning of various configuration
-    parameters.
+    "Enable Skill" button.  See the above section for more details on
+    how to configure the skill and the meaning of various
+    configuration parameters.
 
 2.  **Stop worrying**
 
