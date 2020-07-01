@@ -31,9 +31,10 @@
       "error",
       {
         "arrowParens": "avoid",
-        "trailingComma": "all",
+        "printWidth": 120,
+        "quoteProps": "consistent",
         "tabWidth": 4,
-        "printWidth": 120
+        "trailingComma": "all"
       }
     ]
   }
