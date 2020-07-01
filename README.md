@@ -6,13 +6,6 @@ Report when pods in a Kubernetes cluster are not healthy
 
 <!---atomist-skill-description:end--->
 
-<!---atomist-skill-long_description:start--->
-
-In coordination with the k8svent utility, report when containers in
-pods in Kubernetes clusters are not healthy.
-
-<!---atomist-skill-long_description:end--->
-
 <!---atomist-skill-readme:start--->
 
 [Code](https://github.com/atomist-skills/kubernetes-pod-health-skill) - [Issues](https://github.com/atomist-skills/kubernetes-pod-health-skill/issues)
