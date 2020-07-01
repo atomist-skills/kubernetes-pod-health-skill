@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.2.0...HEAD)
 
+### Changed
+
+-   Migrate from slack to chat provider. [1c18d27](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/1c18d2734f3fad089fac570fcc68566f71709c15)
+
 ## [0.2.0](https://github.com/atomist-skills/kubernetes-pod-health-skill/tree/0.2.0) - 2020-06-19
 
 ### Added
