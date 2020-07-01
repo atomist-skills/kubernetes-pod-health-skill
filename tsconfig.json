@@ -8,11 +8,9 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "lib": [
-      "DOM"
-    ],
+    "lib": ["DOM"],
     "strict": true,
-    "strictNullChecks":false,
+    "strictNullChecks": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -30,9 +28,7 @@
     "events/*.ts",
     "tests/*.ts"
   ],
-  "exclude": [
-    ".#*"
-  ],
+  "exclude": [".#*"],
   "compileOnSave": true,
   "buildOnSave": false,
   "atom": {
