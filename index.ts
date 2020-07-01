@@ -29,7 +29,7 @@ export const Skill = skill<K8sPodStateConfiguration>({
             description: "Kubernetes cluster to monitor",
             minRequired: 1,
         }),
-        slack: resourceProvider.slack({ minRequired: 1, maxAllowed: 1 }),
+        chat: resourceProvider.chat({ maxAllowed: 1, minRequired: 1 }),
     },
 
     parameters: {

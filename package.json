@@ -16,7 +16,7 @@
   "homepage": "https://github.com/atomist-skills/kubernetes-pod-health-skill",
   "license": "Apache-2.0",
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200622134321"
+    "@atomist/skill": "0.1.0-master.20200630191218"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.5.1",
