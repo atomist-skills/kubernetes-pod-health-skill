@@ -12,7 +12,7 @@ Report when pods in a Kubernetes cluster are not healthy
 
 ## What it's useful for
 
-This skill will post Slack messages when pods in your Kubernetes
+This skill will post chat messages when pods in your Kubernetes
 cluster(s) are not healthy.
 
 Kubernetes is great, sometimes too great.  We have come to rely on
@@ -50,11 +50,12 @@ you can focus on developing and improving them.
 Connect and configure these integrations:
 
 1.  **Kubernetes**
-2.  **Slack**
+2.  **Chat**
 
-Both the **Kubernetes** and **Slack** integrations must be configured
+Both the **Kubernetes** and **Chat** integrations must be configured
 to enable this skill.  This skill will send a notification message to
-the configured Slack channel(s) when a Kubernetes pod is unhealthy.
+the configured chat channel(s) when a Kubernetes pod is unhealthy.
+Either a Slack or Microsoft Teams chat integration is supported.
 
 ## How to configure
 
