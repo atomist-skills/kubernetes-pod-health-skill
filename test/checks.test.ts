@@ -507,7 +507,6 @@ describe("checks", () => {
                     slug: "pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
                 },
                 {
-                    error: "DELETE",
                     id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds:dood",
                     slug:
                         "container dood (atomist/dood:0.1.3-20200323102421) of pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
@@ -569,6 +568,37 @@ describe("checks", () => {
                     id: "k8s-internal-demo:production:creating:sleep",
                     slug:
                         "container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo",
+                },
+            ];
+            assert.deepStrictEqual(pc, e);
+        });
+
+        it("detects when a pod is deleted", () => {
+            const p = {
+                baseName: "init",
+                name: "init-sleep",
+                resourceVersion: 158190338,
+                phase: "Deleted",
+                clusterName: "k8s-internal-demo",
+                timestamp: "2020-03-19T19:23:09Z",
+                statusJSON:
+                    '{"phase":"Deleted","conditions":[{"type":"Initialized","status":"True","lastProbeTime":null,"lastTransitionTime":"2020-03-19T19:23:21Z"},{"type":"Ready","status":"True","lastProbeTime":null,"lastTransitionTime":"2020-03-19T19:23:22Z"},{"type":"ContainersReady","status":"True","lastProbeTime":null,"lastTransitionTime":"2020-03-19T19:23:22Z"},{"type":"PodScheduled","status":"True","lastProbeTime":null,"lastTransitionTime":"2020-03-19T19:23:09Z"}],"hostIP":"10.0.3.197","podIP":"10.12.0.29","startTime":"2020-03-19T19:23:09Z","initContainerStatuses":[{"name":"success","state":{"terminated":{"exitCode":0,"reason":"Completed","startedAt":"2020-03-19T19:23:10Z","finishedAt":"2020-03-19T19:23:20Z","containerID":"containerd://701bc329ef85396fa59e94c5cead8cbbe5210f086619c90dce7b1f3bd02aaf1e"}},"lastState":{},"ready":true,"restartCount":0,"image":"docker.io/library/busybox:1.31.1-uclibc","imageID":"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51","containerID":"containerd://701bc329ef85396fa59e94c5cead8cbbe5210f086619c90dce7b1f3bd02aaf1e"}],"containerStatuses":[{"name":"sleep","state":{"running":{"startedAt":"2020-03-19T19:23:21Z"}},"lastState":{},"ready":true,"restartCount":0,"image":"docker.io/library/busybox:1.31.1-uclibc","imageID":"docker.io/library/busybox@sha256:2e5566a5fdc78fe7c48627e69e11448a2211f5e6c1544c2ae6262f2799205b51","containerID":"containerd://a35f0076125fc74de40e1716236aee1c15e6ca54d71620cdc993ddea5cb195cd"}],"qosClass":"BestEffort"}',
+                namespace: "production",
+            };
+            const pa = generatePodArgs(p);
+            const pc = checkPodState(pa);
+            const e = [
+                {
+                    error: "Pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted",
+                    id: "k8s-internal-demo:production:init-sleep",
+                    slug: "pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
+                },
+                {
+                    error:
+                        "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted",
+                    id: "k8s-internal-demo:production:init-sleep:sleep",
+                    slug:
+                        "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
                 },
             ];
             assert.deepStrictEqual(pc, e);

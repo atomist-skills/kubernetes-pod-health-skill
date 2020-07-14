@@ -70,28 +70,22 @@ export const handler: EventHandler<K8sPodStateSubscription, K8sPodStateConfigura
                 const id = `${configuration.name}:${container.id}:${today}`;
                 const options: MessageOptions = { id };
                 let message: string;
-                if (container.error === "DELETE") {
-                    container.error = undefined;
-                    try {
-                        await ctx.message.delete(destination, { id });
-                    } catch (e) {
-                        await ctx.audit.log(`Failed to delete message ${options.id}: ${e.message}`);
-                    }
+                if (!container.error) {
+                    options.post = "update_only";
+                    message = `${ucFirst(container.slug)} recovered`;
                 } else {
-                    if (!container.error) {
+                    message = container.error;
+                    if (/ was deleted$/.test(container.error)) {
                         options.post = "update_only";
-                        message = `${ucFirst(container.slug)} recovered`;
-                    } else {
-                        message = container.error;
                     }
-                    try {
-                        await ctx.message.send(message, destination, options);
-                        if (container.error) {
-                            await ctx.audit.log(container.error);
-                        }
-                    } catch (e) {
-                        await ctx.audit.log(`Failed to send message ${options.id}: ${e.message}`);
+                }
+                try {
+                    await ctx.message.send(message, destination, options);
+                    if (container.error) {
+                        await ctx.audit.log(container.error);
                     }
+                } catch (e) {
+                    await ctx.audit.log(`Failed to send message ${options.id}: ${e.message}`);
                 }
             }
 

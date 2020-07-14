@@ -116,6 +116,29 @@ function containerId(ca: Pick<ContainerArgs, "container" | "init" | "pod">): str
     return parts.join(":");
 }
 
+/** Detect if pod was deleted. */
+export function podDeleted(pa: Pick<PodArgs, "pod" | "status">): PodContainer[] {
+    if (pa.status.phase !== "Deleted") {
+        return [];
+    }
+    const p: PodContainer = {
+        id: podId(pa.pod),
+        slug: podSlug(pa.pod),
+        error: ucFirst(`${podSlug(pa.pod)} was deleted`),
+    };
+    const podContainers: PodContainer[] = [p];
+    for (const container of pa.status.containerStatuses) {
+        const slug = containerSlug({ ...pa, container });
+        const pc: PodContainer = {
+            id: containerId({ ...pa, container }),
+            slug,
+            error: ucFirst(`${slug} was deleted`),
+        };
+        podContainers.push(pc);
+    }
+    return podContainers;
+}
+
 /** Detect if pod has been unscheduled too long. */
 function podUnscheduled(pa: PodArgs): PodContainer {
     const p: PodContainer = {
@@ -234,7 +257,7 @@ function containerNotReady(ca: ContainerArgs): string | undefined {
     }
     const podDurationSeconds = (ca.now - new Date(ca.status.startTime).getTime()) / 1000;
     if (ca.container.state?.terminated) {
-        return "DELETE";
+        return undefined;
     } else if (ca.container.state?.running) {
         if (podDurationSeconds > ca.parameters.notReadyDelaySeconds) {
             return `${containerSlug(ca)} is not ready`;
@@ -298,6 +321,10 @@ export function checkPodState(pa: PodArgs): PodContainer[] {
         return podContainers;
     }
 
+    const deleted = podDeleted(pa);
+    if (deleted.length > 0) {
+        return deleted;
+    }
     podContainers.push(podUnscheduled(pa));
     if (foundError(podContainers)) {
         return podContainers;
