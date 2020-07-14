@@ -22,11 +22,11 @@ pods in Kubernetes clusters are not healthy.
 This skill will post chat messages when pods in your Kubernetes
 cluster(s) are not healthy.
 
-Kubernetes is great, sometimes too great.  We have come to rely on
+Kubernetes is great, sometimes too great. We have come to rely on
 Kubernetes monitoring and fixing the resources we run on it,
 restarting failed containers and autoscaling clusters to accommodate
 increasing workloads, and therefore rarely check to make sure
-everything is running smoothly.  This skill takes the burden off you
+everything is running smoothly. This skill takes the burden off you
 and your team to periodically check the health of your applications or
 manually verify that a new deployment was successful.
 
@@ -44,7 +44,7 @@ notifies you when:
 -   A pod is misconfigured, e.g., it references a secret that does not exist.
 
 This skill will alert you at most once per day per unique
-pod/container.  This skill will _not_ alert on pods/containers in
+pod/container. This skill will _not_ alert on pods/containers in
 [namespaces][] that start with `kube-`.
 
 Let this skill take care of monitoring your Kubernetes resources so
@@ -60,7 +60,7 @@ Connect and configure these integrations:
 2.  **Chat**
 
 Both the **Kubernetes** and **Chat** integrations must be configured
-to enable this skill.  This skill will send a notification message to
+to enable this skill. This skill will send a notification message to
 the configured chat channel(s) when a Kubernetes pod is unhealthy.
 Either a Slack or Microsoft Teams chat integration is supported.
 
@@ -70,7 +70,7 @@ Either a Slack or Microsoft Teams chat integration is supported.
 
     If this is the first time you are configuring this skill, you can
     accept the default configuration name, "Kubernetes Pod Health
-    Monitor".  If you are creating a second configuration, e.g., so
+    Monitor". If you are creating a second configuration, e.g., so
     you can select different Kubernetes clusters, chat channels,
     and/or configuration values, enter a name that is unique among all
     configurations for this skill.
@@ -85,28 +85,28 @@ Either a Slack or Microsoft Teams chat integration is supported.
 
     ![integrations](docs/images/integrations.png)
 
-2.  **Select the Kubernetes cluster(s) to alert on**
+3.  **Select the Kubernetes cluster(s) to alert on**
 
     Select the Kubernetes cluster(s) you want to receive alerts for.
-    You must select one or more clusters.  You can select clusters one
-    at a time.  You can deselect individual clusters by clicking the
-    "X" to the right of their name.  You can deselect all clusters by
+    You must select one or more clusters. You can select clusters one
+    at a time. You can deselect individual clusters by clicking the
+    "X" to the right of their name. You can deselect all clusters by
     click the gray "X" at the top-right of the drop down.
 
     ![chat channel parameter](docs/images/param-clusters.png)
 
-2.  **Select the chat channel(s) to send alerts to**
+4.  **Select the chat channel(s) to send alerts to**
 
     Select the chat channel(s) you want to send the Kubernetes pod
-    health alerts to.  You must select one or more channel names.
-    Alerts will be sent to all chat channels entered.  You can select
-    channels one at a time.  You can deselect channels by clicking the
-    "X" to the right of their name.  You can deselect all channels by
+    health alerts to. You must select one or more channel names.
+    Alerts will be sent to all chat channels entered. You can select
+    channels one at a time. You can deselect channels by clicking the
+    "X" to the right of their name. You can deselect all channels by
     click the gray "X" at the top-right of the drop down.
 
     ![chat channel parameter](docs/images/param-chat-channels.png)
 
-3.  **Review remaining configuration**
+5.  **Review remaining configuration**
 
     We recommend you accept the default values for all remaining
     configuration values.
@@ -127,7 +127,7 @@ Either a Slack or Microsoft Teams chat integration is supported.
 
         ![container not ready delay parameter](docs/images/param-not-ready.png)
 
-4.  **Enable the skill configuration**
+6.  **Enable the skill configuration**
 
     Click the "Enable Skill" button to save your configuration and
     activate the skill.
@@ -139,7 +139,7 @@ Either a Slack or Microsoft Teams chat integration is supported.
 1.  **Configure the skill**
 
     Select at least one Kubernetes and chat channel and click the
-    "Enable Skill" button.  See the above section for more details on
+    "Enable Skill" button. See the above section for more details on
     how to configure the skill and the meaning of various
     configuration parameters.
 
@@ -147,16 +147,16 @@ Either a Slack or Microsoft Teams chat integration is supported.
 
     No longer waste time going to a dashboard or running `kubectl`
     commands to check on the health of pods in your Kubernetes
-    clusters.  Stop worrying about the health of pods in your
+    clusters. Stop worrying about the health of pods in your
     Kubernetes clusters, knowing you only need to take action when you
-    see a chat message!  _Vive la ChatOps!_
+    see a chat message! _Vive la ChatOps!_
 
 <!---atomist-skill-readme:end--->
 
 ---
 
 Created by [Atomist][atomist].
-Need Help?  [Join our Slack workspace][slack].
+Need Help? [Join our Slack workspace][slack].
 
-[atomist]: https://atomist.com/ (Atomist - Automate All the Software Things)
-[slack]: https://join.atomist.com/ (Atomist Community Slack) 
+[atomist]: https://atomist.com/ "Atomist - Automate All the Software Things"
+[slack]: https://join.atomist.com/ "Atomist Community Slack"
