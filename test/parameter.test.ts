@@ -18,95 +18,108 @@ import * as assert from "power-assert";
 import { chatChannelName, configurationToParameters } from "../lib/parameter";
 
 describe("parameter", () => {
-    describe("chatChannelName", () => {
-        it("maps to channel names", () => {
-            const c = [
-                { channelName: "mavis", channelId: "5T4P135", chatTeamId: "S1NG345", resourceProviderId: "slack" },
-                { channelName: "staples", channelId: "5T4P135", chatTeamId: "S1NG345", resourceProviderId: "slack" },
-            ];
-            const n = chatChannelName(c);
-            const e = ["mavis", "staples"];
-            assert.deepStrictEqual(n, e);
-        });
+	describe("chatChannelName", () => {
+		it("maps to channel names", () => {
+			const c = [
+				{
+					channelName: "mavis",
+					channelId: "5T4P135",
+					chatTeamId: "S1NG345",
+					resourceProviderId: "slack",
+				},
+				{
+					channelName: "staples",
+					channelId: "5T4P135",
+					chatTeamId: "S1NG345",
+					resourceProviderId: "slack",
+				},
+			];
+			const n = chatChannelName(c);
+			const e = ["mavis", "staples"];
+			assert.deepStrictEqual(n, e);
+		});
 
-        it("throws an error if no channels", () => {
-            const cs: any[][] = [undefined, []];
-            cs.forEach(c => {
-                assert.throws(() => chatChannelName(c), /Missing required configuration parameter: channels: /);
-            });
-        });
-    });
+		it("throws an error if no channels", () => {
+			const cs: any[][] = [undefined, []];
+			cs.forEach(c => {
+				assert.throws(
+					() => chatChannelName(c),
+					/Missing required configuration parameter: channels: /,
+				);
+			});
+		});
+	});
 
-    describe("parameterDefaults", () => {
-        it("populates default values", () => {
-            const c = {};
-            const p = configurationToParameters(c);
-            const e = {
-                crashLoopBackOff: true,
-                createContainerConfigError: true,
-                imagePullBackOff: true,
-                maxRestarts: 10,
-                namespaceExcludeRegExp: "^kube-",
-                notCreatedSeconds: 600,
-                notReadyDelaySeconds: 600,
-                notScheduledDelaySeconds: 600,
-                oomKilled: true,
-            };
-            assert.deepStrictEqual(p, e);
-        });
+	describe("parameterDefaults", () => {
+		it("populates default values", () => {
+			const c = {};
+			const p = configurationToParameters(c);
+			const e = {
+				crashLoopBackOff: true,
+				createContainerConfigError: true,
+				imagePullBackOff: true,
+				maxRestarts: 10,
+				namespaceExcludeRegExp: "^kube-",
+				notCreatedSeconds: 600,
+				notReadyDelaySeconds: 600,
+				notScheduledDelaySeconds: 600,
+				oomKilled: true,
+			};
+			assert.deepStrictEqual(p, e);
+		});
 
-        it("retains provided values", () => {
-            const c = {
-                maxRestarts: "100",
-                notReadyDelay: "60",
-            };
-            const p = configurationToParameters(c);
-            const e = {
-                crashLoopBackOff: true,
-                createContainerConfigError: true,
-                imagePullBackOff: true,
-                maxRestarts: 100,
-                namespaceExcludeRegExp: "^kube-",
-                notCreatedSeconds: 600,
-                notReadyDelaySeconds: 3600,
-                notScheduledDelaySeconds: 600,
-                oomKilled: true,
-            };
-            assert.deepStrictEqual(p, e);
-        });
+		it("retains provided values", () => {
+			const c = {
+				maxRestarts: "100",
+				notReadyDelay: "60",
+			};
+			const p = configurationToParameters(c);
+			const e = {
+				crashLoopBackOff: true,
+				createContainerConfigError: true,
+				imagePullBackOff: true,
+				maxRestarts: 100,
+				namespaceExcludeRegExp: "^kube-",
+				notCreatedSeconds: 600,
+				notReadyDelaySeconds: 3600,
+				notScheduledDelaySeconds: 600,
+				oomKilled: true,
+			};
+			assert.deepStrictEqual(p, e);
+		});
 
-        it("sets maxRestarts to zero", () => {
-            const c = { maxRestarts: "0" };
-            const p = configurationToParameters(c);
-            const e = {
-                crashLoopBackOff: true,
-                createContainerConfigError: true,
-                imagePullBackOff: true,
-                maxRestarts: 0,
-                namespaceExcludeRegExp: "^kube-",
-                notCreatedSeconds: 600,
-                notReadyDelaySeconds: 600,
-                notScheduledDelaySeconds: 600,
-                oomKilled: true,
-            };
-            assert.deepStrictEqual(p, e);
-        });
+		it("sets maxRestarts to zero", () => {
+			const c = { maxRestarts: "0" };
+			const p = configurationToParameters(c);
+			const e = {
+				crashLoopBackOff: true,
+				createContainerConfigError: true,
+				imagePullBackOff: true,
+				maxRestarts: 0,
+				namespaceExcludeRegExp: "^kube-",
+				notCreatedSeconds: 600,
+				notReadyDelaySeconds: 600,
+				notScheduledDelaySeconds: 600,
+				oomKilled: true,
+			};
+			assert.deepStrictEqual(p, e);
+		});
 
-        it("sets notReadyDelaySeconds to zero", () => {
-            const c = { notReadyDelay: "0" };
-            const p = configurationToParameters(c);
-            const e = {
-                crashLoopBackOff: true,
-                createContainerConfigError: true,
-                imagePullBackOff: true,
-                maxRestarts: 10,
-                namespaceExcludeRegExp: "^kube-",
-                notCreatedSeconds: 600,
-                notReadyDelaySeconds: 0,
-                notScheduledDelaySeconds: 600,
-                oomKilled: true,
-            };
-            assert.deepStrictEqual(p, e);
-        });
-    });
+		it("sets notReadyDelaySeconds to zero", () => {
+			const c = { notReadyDelay: "0" };
+			const p = configurationToParameters(c);
+			const e = {
+				crashLoopBackOff: true,
+				createContainerConfigError: true,
+				imagePullBackOff: true,
+				maxRestarts: 10,
+				namespaceExcludeRegExp: "^kube-",
+				notCreatedSeconds: 600,
+				notReadyDelaySeconds: 0,
+				notScheduledDelaySeconds: 600,
+				oomKilled: true,
+			};
+			assert.deepStrictEqual(p, e);
+		});
+	});
 });

@@ -16,10 +16,10 @@
 
 /** Type of chat channel parameter. */
 export interface ChatChannel {
-    channelName: string;
-    channelId: string;
-    chatTeamId: string;
-    resourceProviderId: string;
+	channelName: string;
+	channelId: string;
+	chatTeamId: string;
+	resourceProviderId: string;
 }
 
 /**
@@ -27,53 +27,57 @@ export interface ChatChannel {
  * error.
  */
 export function chatChannelName(chatChannels: ChatChannel[]): string[] {
-    if (!chatChannels || chatChannels.length < 1) {
-        throw new Error(`Missing required configuration parameter: channels: ${JSON.stringify(chatChannels)}`);
-    }
-    return chatChannels.map(cc => cc.channelName);
+	if (!chatChannels || chatChannels.length < 1) {
+		throw new Error(
+			`Missing required configuration parameter: channels: ${JSON.stringify(
+				chatChannels,
+			)}`,
+		);
+	}
+	return chatChannels.map(cc => cc.channelName);
 }
 
 /** K8sPodState [[handler]] skill parameters. */
 export interface K8sPodStateConfiguration {
-    /** Chat channels to sent alerts to. */
-    channels: ChatChannel[];
-    /**
-     * Alert if pod container restarts exceeds this value, set to `"0"` to disable.  This value will be parsed as a
-     * base-10 integer and used to populate [[K8sPodCheckConfiguration.maxRestarts]].
-     */
-    maxRestarts?: string;
-    /**
-     * Alert when containers are not ready after this number of minutes, set to `"0"` to disable.  This value will be
-     * parsed as a base-10 integer and used to populate [[K8sPodCheckConfiguration.notReadyDelaySeconds]].
-     */
-    notReadyDelay?: string;
+	/** Chat channels to sent alerts to. */
+	channels: ChatChannel[];
+	/**
+	 * Alert if pod container restarts exceeds this value, set to `"0"` to disable.  This value will be parsed as a
+	 * base-10 integer and used to populate [[K8sPodCheckConfiguration.maxRestarts]].
+	 */
+	maxRestarts?: string;
+	/**
+	 * Alert when containers are not ready after this number of minutes, set to `"0"` to disable.  This value will be
+	 * parsed as a base-10 integer and used to populate [[K8sPodCheckConfiguration.notReadyDelaySeconds]].
+	 */
+	notReadyDelay?: string;
 }
 
 /** Kubernetes pod checker configuration parameters. */
 export interface K8sPodCheckParameters {
-    /** Whether to alert for containers in CrashLoopBackoff. */
-    crashLoopBackOff: boolean;
-    /** Whether to alert for containers in CreateContainerConfigError. */
-    createContainerConfigError: boolean;
-    /** Whether to alert for containers in ImagePullBackoff. */
-    imagePullBackOff: boolean;
-    /** Alert if pod container restarts exceeds this value, set to `0` to disable. */
-    maxRestarts: number;
-    /** Alert when pod has not completed creating after this number of seconds, set to `0` to disable. */
-    notCreatedSeconds: number;
-    /** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
-    notReadyDelaySeconds: number;
-    /** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
-    notScheduledDelaySeconds: number;
-    /** Alert when container has been OOMKilled. */
-    oomKilled: boolean;
-    /**
-     * Regular expression matching namespaces whose pods should be reported on.  If not provided, all namespaces not
-     * matching [[namespaceExcludeRegExp]] are reported on.
-     */
-    namespaceIncludeRegExp?: string;
-    /** Regular expression matching namespaces whose pods should _not_ be reported on. */
-    namespaceExcludeRegExp?: string;
+	/** Whether to alert for containers in CrashLoopBackoff. */
+	crashLoopBackOff: boolean;
+	/** Whether to alert for containers in CreateContainerConfigError. */
+	createContainerConfigError: boolean;
+	/** Whether to alert for containers in ImagePullBackoff. */
+	imagePullBackOff: boolean;
+	/** Alert if pod container restarts exceeds this value, set to `0` to disable. */
+	maxRestarts: number;
+	/** Alert when pod has not completed creating after this number of seconds, set to `0` to disable. */
+	notCreatedSeconds: number;
+	/** Alert when containers are not ready after this number of seconds, set to `0` to disable. */
+	notReadyDelaySeconds: number;
+	/** Alert when pod has not been scheduled after this number of seconds, set to `0` to disable. */
+	notScheduledDelaySeconds: number;
+	/** Alert when container has been OOMKilled. */
+	oomKilled: boolean;
+	/**
+	 * Regular expression matching namespaces whose pods should be reported on.  If not provided, all namespaces not
+	 * matching [[namespaceExcludeRegExp]] are reported on.
+	 */
+	namespaceIncludeRegExp?: string;
+	/** Regular expression matching namespaces whose pods should _not_ be reported on. */
+	namespaceExcludeRegExp?: string;
 }
 
 /**
@@ -82,18 +86,24 @@ export interface K8sPodCheckParameters {
  * @param params User-provided skill configuration parameters
  * @return Kubernetes pod checker configuration
  */
-export function configurationToParameters(params: Omit<K8sPodStateConfiguration, "channels">): K8sPodCheckParameters {
-    const maxRestarts = params.maxRestarts ? parseInt(params.maxRestarts, 10) : 10;
-    const notReadyDelaySeconds = params.notReadyDelay ? parseInt(params.notReadyDelay, 10) * 60 : 600;
-    return {
-        crashLoopBackOff: true,
-        createContainerConfigError: true,
-        imagePullBackOff: true,
-        maxRestarts,
-        namespaceExcludeRegExp: "^kube-",
-        notCreatedSeconds: 600,
-        notReadyDelaySeconds,
-        notScheduledDelaySeconds: 600,
-        oomKilled: true,
-    };
+export function configurationToParameters(
+	params: Omit<K8sPodStateConfiguration, "channels">,
+): K8sPodCheckParameters {
+	const maxRestarts = params.maxRestarts
+		? parseInt(params.maxRestarts, 10)
+		: 10;
+	const notReadyDelaySeconds = params.notReadyDelay
+		? parseInt(params.notReadyDelay, 10) * 60
+		: 600;
+	return {
+		crashLoopBackOff: true,
+		createContainerConfigError: true,
+		imagePullBackOff: true,
+		maxRestarts,
+		namespaceExcludeRegExp: "^kube-",
+		notCreatedSeconds: 600,
+		notReadyDelaySeconds,
+		notScheduledDelaySeconds: 600,
+		oomKilled: true,
+	};
 }

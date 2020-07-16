@@ -14,99 +14,107 @@
  * limitations under the License.
  */
 
-import { DispatchStyle, ParameterType, ParameterVisibility, resourceProvider, skill } from "@atomist/skill";
+import {
+	DispatchStyle,
+	ParameterType,
+	ParameterVisibility,
+	resourceProvider,
+	skill,
+} from "@atomist/skill";
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({
-    dispatchStyle: DispatchStyle.Single,
+	dispatchStyle: DispatchStyle.Single,
 
-    runtime: {
-        memory: 256,
-    },
+	runtime: {
+		memory: 256,
+	},
 
-    resourceProviders: {
-        k8s: resourceProvider.kubernetes({
-            description: "Kubernetes cluster to monitor",
-            minRequired: 1,
-        }),
-        chat: resourceProvider.chat({ maxAllowed: 1, minRequired: 1 }),
-    },
+	resourceProviders: {
+		k8s: resourceProvider.kubernetes({
+			description: "Kubernetes cluster to monitor",
+			minRequired: 1,
+		}),
+		chat: resourceProvider.chat({ maxAllowed: 1, minRequired: 1 }),
+	},
 
-    parameters: {
-        channels: {
-            type: ParameterType.ChatChannels,
-            displayName: "Chat channels to send alerts to",
-            description:
-                "Specify the chat channels where the alerts should be sent. You must specify at least one chat channel.",
-            required: true,
-            minRequired: 1,
-        },
-        maxRestarts: {
-            type: ParameterType.SingleChoice,
-            displayName: "Pod container restarts",
-            description: "Alert if the count of pod container restarts reaches this value or higher.",
-            defaultValue: "10",
-            options: [
-                {
-                    description: "Do not alert based on pod container restarts",
-                    text: "Disable",
-                    value: "0",
-                },
-                {
-                    description: "Alert after five restarts",
-                    text: "5 restarts",
-                    value: "5",
-                },
-                {
-                    description: "Alert after ten restarts",
-                    text: "10 restarts",
-                    value: "10",
-                },
-                {
-                    description: "Alert after 25 restarts",
-                    text: "25 restarts",
-                    value: "25",
-                },
-            ],
-            required: true,
-            visibility: ParameterVisibility.Normal,
-        },
-        notReadyDelay: {
-            type: ParameterType.SingleChoice,
-            displayName: "Pod container not ready",
-            description: "Alert if pod container is not ready after this amount of time.",
-            defaultValue: "10",
-            options: [
-                {
-                    description: "Do not alert based on pod container readiness",
-                    text: "Disable",
-                    value: "0",
-                },
-                {
-                    description: "Alert after five minutes",
-                    text: "5 minutes",
-                    value: "5",
-                },
-                {
-                    description: "Alert after ten minutes",
-                    text: "10 minutes",
-                    value: "10",
-                },
-                {
-                    description: "Alert after 30 minutes",
-                    text: "30 minutes",
-                    value: "30",
-                },
-                {
-                    description: "Alert after one hour",
-                    text: "1 hour",
-                    value: "60",
-                },
-            ],
-            required: true,
-            visibility: ParameterVisibility.Normal,
-        },
-    },
+	parameters: {
+		channels: {
+			type: ParameterType.ChatChannels,
+			displayName: "Chat channels to send alerts to",
+			description:
+				"Specify the chat channels where the alerts should be sent. You must specify at least one chat channel.",
+			required: true,
+			minRequired: 1,
+		},
+		maxRestarts: {
+			type: ParameterType.SingleChoice,
+			displayName: "Pod container restarts",
+			description:
+				"Alert if the count of pod container restarts reaches this value or higher.",
+			defaultValue: "10",
+			options: [
+				{
+					description: "Do not alert based on pod container restarts",
+					text: "Disable",
+					value: "0",
+				},
+				{
+					description: "Alert after five restarts",
+					text: "5 restarts",
+					value: "5",
+				},
+				{
+					description: "Alert after ten restarts",
+					text: "10 restarts",
+					value: "10",
+				},
+				{
+					description: "Alert after 25 restarts",
+					text: "25 restarts",
+					value: "25",
+				},
+			],
+			required: true,
+			visibility: ParameterVisibility.Normal,
+		},
+		notReadyDelay: {
+			type: ParameterType.SingleChoice,
+			displayName: "Pod container not ready",
+			description:
+				"Alert if pod container is not ready after this amount of time.",
+			defaultValue: "10",
+			options: [
+				{
+					description: "Do not alert based on pod container readiness",
+					text: "Disable",
+					value: "0",
+				},
+				{
+					description: "Alert after five minutes",
+					text: "5 minutes",
+					value: "5",
+				},
+				{
+					description: "Alert after ten minutes",
+					text: "10 minutes",
+					value: "10",
+				},
+				{
+					description: "Alert after 30 minutes",
+					text: "30 minutes",
+					value: "30",
+				},
+				{
+					description: "Alert after one hour",
+					text: "1 hour",
+					value: "60",
+				},
+			],
+			required: true,
+			visibility: ParameterVisibility.Normal,
+		},
+	},
 
-    subscriptions: ["file://**/subscription/*.graphql"],
+	subscriptions: ["file://**/subscription/*.graphql"],
 });
