@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Handle deleted pods. [90265cb](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/90265cb195cfc1cb828403f379a79c734a7854e1)
 
+### Changed
+
+-   Upgrade @atomist/skill. [1762a9f](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/1762a9f8862658b6ee87c84c2b896dbf9f4272fb)
+
 ## [0.3.0](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.2.0...0.3.0) - 2020-07-01
 
 ### Changed
