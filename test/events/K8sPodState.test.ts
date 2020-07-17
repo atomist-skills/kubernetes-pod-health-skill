@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import * as log from "@atomist/skill/lib/log";
 import * as assert from "power-assert";
 import { handler } from "../../lib/events/K8sPodState";
 import { dateString } from "../../lib/util";
 
 describe("K8sPodState", () => {
 	describe("handler", () => {
-		let originalLogInfo: any;
+		let originalConsoleInfo: any;
 		let today: string | undefined;
 		before(() => {
-			originalLogInfo = Object.getOwnPropertyDescriptor(log, "info");
-			Object.defineProperty(log, "info", {
+			originalConsoleInfo = Object.getOwnPropertyDescriptor(console, "info");
+			Object.defineProperty(console, "info", {
 				value: async () => {
 					return;
 				},
@@ -33,7 +32,7 @@ describe("K8sPodState", () => {
 			today = dateString(new Date());
 		});
 		after(() => {
-			Object.defineProperty(log, "info", originalLogInfo);
+			Object.defineProperty(console, "info", originalConsoleInfo);
 		});
 
 		interface Destination {
