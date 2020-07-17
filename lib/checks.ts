@@ -46,10 +46,12 @@ export async function checkCluster(args: CheckClusterArgs): Promise<boolean> {
 	const providers = args.resourceProviders;
 	const clusterProviderIds = Object.keys(providers)
 		.filter(
-			provider => providers[provider].typeName === "KubernetesClusterProvider",
+			provider =>
+				providers[provider].typeName === "KubernetesClusterProvider",
 		)
 		.map(
-			clustersProvider => providers[clustersProvider].selectedResourceProviders,
+			clustersProvider =>
+				providers[clustersProvider].selectedResourceProviders,
 		)
 		.map(clusters => clusters.map(c => c.id))
 		.reduce((acc, cur) => acc.concat(...cur), [])
@@ -176,7 +178,9 @@ function podUnscheduled(pa: PodArgs): PodContainer {
 	const podAgeSeconds = (pa.now - podCreationTime) / 1000;
 	if (podAgeSeconds > pa.parameters.notScheduledDelaySeconds) {
 		p.error = ucFirst(
-			`${podSlug(pa.pod)} has not been scheduled: \`${unscheduled.message}\``,
+			`${podSlug(pa.pod)} has not been scheduled: \`${
+				unscheduled.message
+			}\``,
 		);
 	}
 	return p;
@@ -387,7 +391,9 @@ export function checkPodState(pa: PodArgs): PodContainer[] {
 
 	if (pa.status.containerStatuses) {
 		for (const container of pa.status.containerStatuses) {
-			podContainers.push(checkContainerState({ ...pa, container, checks }));
+			podContainers.push(
+				checkContainerState({ ...pa, container, checks }),
+			);
 		}
 	}
 

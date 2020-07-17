@@ -86,7 +86,8 @@ export const Skill = skill<K8sPodStateConfiguration>({
 			defaultValue: "10",
 			options: [
 				{
-					description: "Do not alert based on pod container readiness",
+					description:
+						"Do not alert based on pod container readiness",
 					text: "Disable",
 					value: "0",
 				},

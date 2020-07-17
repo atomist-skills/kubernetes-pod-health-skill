@@ -28,6 +28,7 @@
       {
         "arrowParens": "avoid",
         "quoteProps": "consistent",
+        "tabWidth": 4,
         "trailingComma": "all",
         "useTabs": true
       }

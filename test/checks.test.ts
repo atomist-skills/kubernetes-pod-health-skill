@@ -32,12 +32,24 @@ describe("checks", () => {
 				graphql: {
 					query: async (f: string, o: { id: string }) => {
 						assert(f === "kubernetesClusterProvider.graphql");
-						if (o.id === "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999") {
-							return { KubernetesClusterProvider: [{ name: "staging" }] };
-						} else if (
-							o.id === "AW04K5PID_33333333-4444-cccc-dddd-888888888888"
+						if (
+							o.id ===
+							"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999"
 						) {
-							return { KubernetesClusterProvider: [{ name: "production" }] };
+							return {
+								KubernetesClusterProvider: [
+									{ name: "staging" },
+								],
+							};
+						} else if (
+							o.id ===
+							"AW04K5PID_33333333-4444-cccc-dddd-888888888888"
+						) {
+							return {
+								KubernetesClusterProvider: [
+									{ name: "production" },
+								],
+							};
 						} else {
 							return { KubernetesClusterProvider: [] };
 						}
@@ -47,8 +59,14 @@ describe("checks", () => {
 					gcp: {
 						typeName: "KubernetesClusterProvider",
 						selectedResourceProviders: [
-							{ id: "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999" },
-							{ id: "AW04K5PID_33333333-4444-cccc-dddd-888888888888" },
+							{
+								id:
+									"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
+							},
+							{
+								id:
+									"AW04K5PID_33333333-4444-cccc-dddd-888888888888",
+							},
 						],
 					},
 					slack: {
@@ -268,7 +286,8 @@ describe("checks", () => {
 				{
 					error:
 						'Container nothing (notanimage/thatexistsanywhere:badtag) of pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo is in ImagePullBackOff: `Back-off pulling image "notanimage/thatexistsanywhere:badtag"`',
-					id: "k8s-internal-demo:production:image-pull-backoff:nothing",
+					id:
+						"k8s-internal-demo:production:image-pull-backoff:nothing",
 					slug:
 						"container nothing (notanimage/thatexistsanywhere:badtag) of pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo",
 				},
@@ -524,7 +543,8 @@ describe("checks", () => {
 			const pc = checkPodState(pa);
 			const e = [
 				{
-					id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds",
+					id:
+						"k8s-internal-production:api-production:dood-7d4b7588bd-vptds",
 					slug:
 						"pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
 				},

@@ -23,7 +23,10 @@ describe("K8sPodState", () => {
 		let originalConsoleInfo: any;
 		let today: string | undefined;
 		before(() => {
-			originalConsoleInfo = Object.getOwnPropertyDescriptor(console, "info");
+			originalConsoleInfo = Object.getOwnPropertyDescriptor(
+				console,
+				"info",
+			);
 			Object.defineProperty(console, "info", {
 				value: async () => {
 					return;
@@ -83,8 +86,14 @@ describe("K8sPodState", () => {
 							gcp: {
 								typeName: "KubernetesClusterProvider",
 								selectedResourceProviders: [
-									{ id: "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999" },
-									{ id: "AW04K5PID_33333333-4444-cccc-dddd-888888888888" },
+									{
+										id:
+											"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
+									},
+									{
+										id:
+											"AW04K5PID_33333333-4444-cccc-dddd-888888888888",
+									},
 								],
 							},
 							slack: {
@@ -96,7 +105,10 @@ describe("K8sPodState", () => {
 				],
 				data,
 				graphql: {
-					query: async (q: string, p: Record<string, any>): Promise<any> => {
+					query: async (
+						q: string,
+						p: Record<string, any>,
+					): Promise<any> => {
 						if (q === "chatChannel.graphql") {
 							assert.deepStrictEqual(p, {
 								channels: ["prod-alerts", "managers", "devs"],
@@ -127,21 +139,31 @@ describe("K8sPodState", () => {
 								],
 							};
 						} else if (q === "kubernetesClusterProvider.graphql") {
-							if (p.id === "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999") {
-								return {
-									KubernetesClusterProvider: [{ name: "k8s-internal-staging" }],
-								};
-							} else if (
-								p.id === "AW04K5PID_33333333-4444-cccc-dddd-888888888888"
+							if (
+								p.id ===
+								"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999"
 							) {
 								return {
-									KubernetesClusterProvider: [{ name: "k8s-internal-demo" }],
+									KubernetesClusterProvider: [
+										{ name: "k8s-internal-staging" },
+									],
+								};
+							} else if (
+								p.id ===
+								"AW04K5PID_33333333-4444-cccc-dddd-888888888888"
+							) {
+								return {
+									KubernetesClusterProvider: [
+										{ name: "k8s-internal-demo" },
+									],
 								};
 							} else {
 								return { KubernetesClusterProvider: [] };
 							}
 						} else {
-							assert.fail(`unrecognized GraphQL query file: ${q}`);
+							assert.fail(
+								`unrecognized GraphQL query file: ${q}`,
+							);
 						}
 					},
 				},
@@ -314,7 +336,9 @@ describe("K8sPodState", () => {
 		});
 
 		it("detects when pod is not scheduled", async () => {
-			const age = ageString(new Date(new Date().getTime() - 20 * 60 * 1000));
+			const age = ageString(
+				new Date(new Date().getTime() - 20 * 60 * 1000),
+			);
 			const d = {
 				K8Pod: [
 					{
@@ -358,7 +382,9 @@ describe("K8sPodState", () => {
 		});
 
 		it("ignores when young pod is not scheduled", async () => {
-			const age = ageString(new Date(new Date().getTime() - 5 * 60 * 1000));
+			const age = ageString(
+				new Date(new Date().getTime() - 5 * 60 * 1000),
+			);
 			const d = {
 				K8Pod: [
 					{
@@ -902,7 +928,9 @@ describe("K8sPodState", () => {
 		});
 
 		it("ignores when young pod is not ready", async () => {
-			const age = ageString(new Date(new Date().getTime() - 5 * 60 * 1000));
+			const age = ageString(
+				new Date(new Date().getTime() - 5 * 60 * 1000),
+			);
 			const d = {
 				K8Pod: [
 					{

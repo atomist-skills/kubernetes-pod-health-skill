@@ -82,7 +82,12 @@ export const handler: EventHandler<
 				continue;
 			}
 
-			const podContainers = checkPodState({ now, parameters, pod, status });
+			const podContainers = checkPodState({
+				now,
+				parameters,
+				pod,
+				status,
+			});
 
 			for (const container of podContainers) {
 				const id = `${configuration.name}:${container.id}:${today}`;
