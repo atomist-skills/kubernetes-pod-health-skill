@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { HandlerStatus } from "@atomist/skill";
 import * as assert from "power-assert";
 import { handler } from "../../lib/events/K8sPodState";
 import { dateString } from "../../lib/util";
@@ -219,13 +220,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es = [
 				{
 					destination: {
@@ -288,13 +286,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es: Sent[] = [];
 			assert.deepStrictEqual(s, es);
 			const el = [
@@ -322,13 +317,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es: Sent[] = [];
 			assert.deepStrictEqual(s, es);
 			const el: string[] = [];
@@ -360,7 +352,7 @@ describe("K8sPodState", () => {
 			const em =
 				"Pod production/no-schedule in Kubernetes cluster k8s-internal-demo has not been scheduled: `0/1 nodes are available: 1 Insufficient cpu, 1 Insufficient memory.`";
 			const e = {
-				code: 1,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);
@@ -402,13 +394,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es = [
 				{
 					destination: {
@@ -451,7 +440,7 @@ describe("K8sPodState", () => {
 			const em =
 				"Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/crash-loop in Kubernetes cluster k8s-internal-demo is in CrashLoopBackOff: `Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)`";
 			const e = {
-				code: 1,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);
@@ -507,7 +496,7 @@ describe("K8sPodState", () => {
 			const em =
 				'Container nothing (notanimage/thatexistsanywhere:badtag) of pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo is in ImagePullBackOff: `Back-off pulling image "notanimage/thatexistsanywhere:badtag"`';
 			const e = {
-				code: 1,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);
@@ -562,7 +551,7 @@ describe("K8sPodState", () => {
 			const em =
 				"Container kaniko (gcr.io/kaniko-project/executor:v0.19.0) of pod production/oom-kill in Kubernetes cluster k8s-internal-demo has been OOMKilled: `1`";
 			const e = {
-				code: 1,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);
@@ -618,7 +607,7 @@ describe("K8sPodState", () => {
 			const em =
 				"Init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo has restarted too many times: `13 > 10`";
 			const e = {
-				code: 1,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);
@@ -670,13 +659,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es = [
 				{
 					destination: {
@@ -743,7 +729,7 @@ describe("K8sPodState", () => {
 			const em =
 				"Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo has restarted too many times: `12 > 10`";
 			const e = {
-				code: 1,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);
@@ -807,13 +793,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es = [
 				{
 					destination: {
@@ -882,7 +865,7 @@ describe("K8sPodState", () => {
 			const em =
 				"Container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo is not ready";
 			const e = {
-				code: 1,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);
@@ -948,13 +931,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es = [
 				{
 					destination: {
@@ -1019,13 +999,10 @@ describe("K8sPodState", () => {
 			const s: Sent[] = [];
 			const l: string[] = [];
 			const c = generateContext(d, s, l);
-			const r = await handler(c);
-			const e = {
-				code: 0,
-				reason: "All pods healthy",
-				visibility: "hidden",
-			};
-			assert.deepStrictEqual(r, e);
+			const r = (await handler(c)) as HandlerStatus;
+			assert(r.code === 0);
+			assert(r.reason === "All pods healthy");
+			assert(r.visibility === "hidden");
 			const es = [
 				{
 					destination: {
@@ -1081,7 +1058,7 @@ describe("K8sPodState", () => {
 				"Pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted; " +
 				"Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted";
 			const e = {
-				code: 2,
+				code: 0,
 				reason: em,
 			};
 			assert.deepStrictEqual(r, e);

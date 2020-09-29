@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-import { EventHandler, MessageOptions } from "@atomist/skill";
-import * as log from "@atomist/skill/lib/log";
+import {
+	EventHandler,
+	HandlerStatus,
+	log,
+	MessageOptions,
+	status,
+} from "@atomist/skill";
 import { checkCluster, checkPodState, podSlug } from "../checks";
 import {
 	chatChannelName,
@@ -37,7 +42,7 @@ export const handler: EventHandler<
 	const date = new Date();
 	const now = date.getTime();
 	const today = dateString(date);
-	const reasons: string[] = [];
+	const reasons: HandlerStatus[] = [];
 	for (const configuration of ctx.configuration) {
 		const parameterChannels = chatChannelName(
 			configuration.parameters.channels,
@@ -66,8 +71,9 @@ export const handler: EventHandler<
 				await ctx.audit.log(
 					`Cluster ${pod.clusterName} of ${podSlug(
 						pod,
-					)} does not match k8s integrations ` +
-						`in configuration ${configuration.name}`,
+					)} does not match k8s integrations in configuration ${
+						configuration.name
+					}`,
 				);
 				continue;
 			}
@@ -76,9 +82,11 @@ export const handler: EventHandler<
 			try {
 				status = parsePodStatus(pod);
 			} catch (e) {
-				await ctx.audit.log(
-					`Failed to parse status of ${podSlug(pod)}: ${e.message}`,
-				);
+				const reason = `Failed to parse status of ${podSlug(pod)}: ${
+					e.message
+				}`;
+				reasons.push({ code: 1, reason });
+				await ctx.audit.log(reason);
 				continue;
 			}
 
@@ -108,26 +116,27 @@ export const handler: EventHandler<
 						await ctx.audit.log(container.error);
 					}
 				} catch (e) {
-					await ctx.audit.log(
-						`Failed to send message ${options.id}: ${e.message}`,
-					);
+					const reason = `Failed to send message ${options.id}: ${e.message}`;
+					reasons.push({ code: 1, reason });
+					await ctx.audit.log(reason);
 				}
 			}
 
-			reasons.push(...podContainers.map(c => c.error).filter(m => !!m));
+			reasons.push(
+				...podContainers
+					.map(c => c.error)
+					.filter(m => !!m)
+					.map(m => ({ code: 0, reason: m })),
+			);
 		}
 	}
 
 	if (reasons.length > 0) {
 		return {
-			code: reasons.length,
-			reason: reasons.join("; "),
+			code: reasons.reduce((acc, val) => (acc += val.code), 0),
+			reason: reasons.map(r => r.reason).join("; "),
 		};
 	} else {
-		return {
-			code: 0,
-			reason: "All pods healthy",
-			visibility: "hidden",
-		};
+		return status.success("All pods healthy").hidden();
 	}
 };
