@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 -   Move to multiple-dispatch. [#22](https://github.com/atomist-skills/kubernetes-pod-health-skill/issues/22)
+-   Return success if successful. [38f9f85](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/38f9f854947a27886f8ce6889fb48081ea1fc698)
 
 ## [0.4.0](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.3.0...0.4.0) - 2020-07-28
 
