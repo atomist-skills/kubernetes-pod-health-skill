@@ -16,7 +16,6 @@
 
 import {
 	Category,
-	DispatchStyle,
 	ParameterType,
 	ParameterVisibility,
 	resourceProvider,
@@ -25,7 +24,6 @@ import {
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({
-	dispatchStyle: DispatchStyle.Single,
 	displayName: "Kubernetes Pod Health Monitor",
 	categories: [Category.Deploy, Category.DevOps],
 
