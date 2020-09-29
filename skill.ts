@@ -15,6 +15,7 @@
  */
 
 import {
+	Category,
 	DispatchStyle,
 	ParameterType,
 	ParameterVisibility,
@@ -25,10 +26,8 @@ import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({
 	dispatchStyle: DispatchStyle.Single,
-
-	runtime: {
-		memory: 256,
-	},
+	displayName: "Kubernetes Pod Health Monitor",
+	categories: [Category.Deploy, Category.DevOps],
 
 	resourceProviders: {
 		k8s: resourceProvider.kubernetes({
@@ -115,6 +114,10 @@ export const Skill = skill<K8sPodStateConfiguration>({
 			required: true,
 			visibility: ParameterVisibility.Normal,
 		},
+	},
+
+	runtime: {
+		memory: 256,
 	},
 
 	subscriptions: ["file://**/subscription/*.graphql"],
