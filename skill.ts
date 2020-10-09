@@ -25,7 +25,7 @@ import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({
 	displayName: "Kubernetes Pod Health Monitor",
-	categories: [Category.Deploy, Category.DevOps],
+	categories: [Category.DevOps],
 
 	resourceProviders: {
 		k8s: resourceProvider.kubernetes({
