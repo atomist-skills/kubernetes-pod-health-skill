@@ -56,54 +56,52 @@ describe("K8sPodState", () => {
 						logs.push(l);
 					},
 				},
-				configuration: [
-					{
-						name: "testing",
-						parameters: {
-							channels: [
+				configuration: {
+					name: "testing",
+					parameters: {
+						channels: [
+							{
+								channelName: "prod-alerts",
+								channelId: "CS23XNAGH",
+								chatTeamId: "T7GMF5USG",
+								resourceProviderId: "slack",
+							},
+							{
+								channelName: "managers",
+								channelId: "CQKPQV7U2",
+								chatTeamId: "T7GMF5USG",
+								resourceProviderId: "slack",
+							},
+							{
+								channelName: "devs",
+								channelId: "CDW6ZU86B",
+								chatTeamId: "T7GMF5USG",
+								resourceProviderId: "slack",
+							},
+						],
+						maxRestarts: "10",
+						notReadyDelay: "10",
+					},
+					resourceProviders: {
+						gcp: {
+							typeName: "KubernetesClusterProvider",
+							selectedResourceProviders: [
 								{
-									channelName: "prod-alerts",
-									channelId: "CS23XNAGH",
-									chatTeamId: "T7GMF5USG",
-									resourceProviderId: "slack",
+									id:
+										"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
 								},
 								{
-									channelName: "managers",
-									channelId: "CQKPQV7U2",
-									chatTeamId: "T7GMF5USG",
-									resourceProviderId: "slack",
-								},
-								{
-									channelName: "devs",
-									channelId: "CDW6ZU86B",
-									chatTeamId: "T7GMF5USG",
-									resourceProviderId: "slack",
+									id:
+										"AW04K5PID_33333333-4444-cccc-dddd-888888888888",
 								},
 							],
-							maxRestarts: "10",
-							notReadyDelay: "10",
 						},
-						resourceProviders: {
-							gcp: {
-								typeName: "KubernetesClusterProvider",
-								selectedResourceProviders: [
-									{
-										id:
-											"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
-									},
-									{
-										id:
-											"AW04K5PID_33333333-4444-cccc-dddd-888888888888",
-									},
-								],
-							},
-							slack: {
-								typeName: "SlackChatProvider",
-								selectedResourceProviders: [{ id: "T5L4CK1D" }],
-							},
+						slack: {
+							typeName: "SlackChatProvider",
+							selectedResourceProviders: [{ id: "T5L4CK1D" }],
 						},
 					},
-				],
+				},
 				data,
 				graphql: {
 					query: async (

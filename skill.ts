@@ -117,6 +117,4 @@ export const Skill = skill<K8sPodStateConfiguration>({
 	runtime: {
 		memory: 256,
 	},
-
-	subscriptions: ["file://**/subscription/*.graphql"],
 });
