@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.5.0...HEAD)
 
+### Changed
+
+-   Remove single dispatch. [#26](https://github.com/atomist-skills/kubernetes-pod-health-skill/issues/26)
+
 ## [0.5.0](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.4.0...0.5.0) - 2020-10-09
 
 ### Changed
