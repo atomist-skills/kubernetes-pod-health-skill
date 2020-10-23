@@ -24,6 +24,7 @@ import {
 import { K8sPodStateConfiguration } from "./lib/parameter";
 
 export const Skill = skill<K8sPodStateConfiguration>({
+	description: "Report when pods in a Kubernetes cluster are not healthy",
 	displayName: "Kubernetes Pod Health Monitor",
 	categories: [Category.DevOps],
 
