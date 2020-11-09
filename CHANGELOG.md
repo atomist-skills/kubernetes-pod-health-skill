@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.5.1...HEAD)
 
+### Fixed
+
+-   Memory limited Exceeded. [#38](https://github.com/atomist-skills/kubernetes-pod-health-skill/issues/38)
+
 ## [0.5.1](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.5.0...0.5.1) - 2020-10-14
 
 ### Changed
