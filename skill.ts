@@ -116,6 +116,6 @@ export const Skill = skill<K8sPodStateConfiguration>({
 	},
 
 	runtime: {
-		memory: 256,
+		memory: 512,
 	},
 });
