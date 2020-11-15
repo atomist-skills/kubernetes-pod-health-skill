@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.5.2...HEAD)
 
+### Changed
+
+-   Update icon. [f9a7493](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/f9a7493f0cf5b36a032fec120b330e4c61ca923f)
+
 ## [0.5.2](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.5.1...0.5.2) - 2020-11-09
 
 ### Fixed
