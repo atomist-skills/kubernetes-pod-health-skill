@@ -27,6 +27,8 @@ export const Skill = skill<K8sPodStateConfiguration>({
 	description: "Report when pods in a Kubernetes cluster are not healthy",
 	displayName: "Kubernetes Pod Health Monitor",
 	categories: [Category.DevOps],
+	iconUrl:
+		"https://raw.githubusercontent.com/atomist-skills/kubernetes-pod-health-skill/main/docs/images/icon.svg",
 
 	resourceProviders: {
 		k8s: resourceProvider.kubernetes({
