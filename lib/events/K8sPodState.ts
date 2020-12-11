@@ -21,6 +21,7 @@ import {
 	MessageOptions,
 	status,
 } from "@atomist/skill";
+
 import { checkCluster, checkPodState, podSlug } from "../checks";
 import {
 	chatChannelName,
@@ -29,7 +30,7 @@ import {
 } from "../parameter";
 import { parsePodStatus, PodStatus } from "../pod";
 import { ChatChannelQuery, K8sPodStateSubscription } from "../typings/types";
-import { ucFirst, dateString } from "../util";
+import { dateString, ucFirst } from "../util";
 
 /** Process K8Pod event and send alerts. */
 export const handler: EventHandler<

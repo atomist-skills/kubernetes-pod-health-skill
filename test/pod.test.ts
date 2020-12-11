@@ -15,6 +15,7 @@
  */
 
 import * as assert from "power-assert";
+
 import { parsePodStatus } from "../lib/pod";
 
 describe("pod", () => {
