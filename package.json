@@ -49,13 +49,10 @@
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\""
   },
   "dependencies": {
-    "@atomist/skill": "^0.7.1"
+    "@atomist/skill": "^0.8.1"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.7.1",
-    "@graphql-codegen/cli": "^1.20.0",
-    "@graphql-codegen/typescript": "^1.20.0",
-    "@graphql-codegen/typescript-operations": "^1.17.13",
     "@types/mocha": "^8.2.0",
     "@types/power-assert": "^1.5.3",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
@@ -65,7 +62,6 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "espower-typescript": "^9.0.2",
-    "graphql": "^15.4.0",
     "husky": "^4.3.5",
     "lint-staged": "^10.5.3",
     "mocha": "^8.2.1",
@@ -74,7 +70,6 @@
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "supervisor": "^0.12.0",
-    "ts-node": "^9.1.1",
     "typedoc": "^0.19.1",
     "typescript": "^4.1.3"
   },
