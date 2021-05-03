@@ -69,7 +69,7 @@ export const handler: EventHandler<
 				resourceProviders: configuration.resourceProviders,
 			}))
 		) {
-			await ctx.audit.log(
+			log.info(
 				`Cluster ${pod.clusterName} of ${podSlug(
 					pod,
 				)} does not match k8s integrations in configuration ${
@@ -87,7 +87,7 @@ export const handler: EventHandler<
 				e.message
 			}`;
 			reasons.push({ code: 1, reason });
-			await ctx.audit.log(reason);
+			log.info(reason);
 			continue;
 		}
 
@@ -114,12 +114,12 @@ export const handler: EventHandler<
 			try {
 				await ctx.message.send(message, destination, options);
 				if (container.error) {
-					await ctx.audit.log(container.error);
+					log.info(container.error);
 				}
 			} catch (e) {
 				const reason = `Failed to send message ${options.id}: ${e.message}`;
 				reasons.push({ code: 1, reason });
-				await ctx.audit.log(reason);
+				log.info(reason);
 			}
 		}
 
