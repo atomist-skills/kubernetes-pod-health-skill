@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { HandlerStatus } from "@atomist/skill";
+import { HandlerStatus, log } from "@atomist/skill";
 import * as assert from "power-assert";
 
 import { handler } from "../../lib/events/K8sPodState";
@@ -50,13 +50,21 @@ describe("K8sPodState", () => {
 			options: any;
 		}
 
+		const originalInfo = Object.getOwnPropertyDescriptor(log, "info");
+
+		after(() => {
+			Object.defineProperty(log, "info", {
+				value: originalInfo,
+			});
+		});
+
 		function generateContext(data: any, sent: Sent[], logs: string[]): any {
-			const r: any = {
-				audit: {
-					log: async (l: string): Promise<void> => {
-						logs.push(l);
-					},
+			Object.defineProperty(log, "info", {
+				value: (msg: string) => {
+					logs.push(msg);
 				},
+			});
+			const r: any = {
 				configuration: {
 					name: "testing",
 					parameters: {

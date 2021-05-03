@@ -38,7 +38,7 @@ export const handler: EventHandler<
 	K8sPodStateConfiguration
 > = async ctx => {
 	for (const pod of ctx.data.K8Pod) {
-		log.info(`${ucFirst(podSlug(pod))} status: ${pod.statusJSON}`);
+		log.debug(`${ucFirst(podSlug(pod))} status: ${pod.statusJSON}`);
 	}
 	const date = new Date();
 	const now = date.getTime();

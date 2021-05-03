@@ -135,15 +135,17 @@ function containerId(
 
 /** Detect if pod has failed. */
 export function podFailed(pa: Pick<PodArgs, "pod" | "status">): PodContainer[] {
-	if (pa.status.phase !== "Failed") {
-		return [];
+	if (pa.status.phase === "Failed" && !pa.status.containerStatuses) {
+		const p: PodContainer = {
+			id: podId(pa.pod),
+			slug: podSlug(pa.pod),
+			error: ucFirst(
+				`${podSlug(pa.pod)} has failed: ${pa.status.message}`,
+			),
+		};
+		return [p];
 	}
-	const p: PodContainer = {
-		id: podId(pa.pod),
-		slug: podSlug(pa.pod),
-		error: ucFirst(`${podSlug(pa.pod)} has failed: ${pa.status.message}`),
-	};
-	return [p];
+	return [];
 }
 
 /** Detect if pod was deleted. */
