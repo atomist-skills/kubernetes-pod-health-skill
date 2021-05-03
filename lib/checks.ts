@@ -133,6 +133,19 @@ function containerId(
 	return parts.join(":");
 }
 
+/** Detect if pod has failed. */
+export function podFailed(pa: Pick<PodArgs, "pod" | "status">): PodContainer[] {
+	if (pa.status.phase !== "Failed") {
+		return [];
+	}
+	const p: PodContainer = {
+		id: podId(pa.pod),
+		slug: podSlug(pa.pod),
+		error: ucFirst(`${podSlug(pa.pod)} has failed: ${pa.status.message}`),
+	};
+	return [p];
+}
+
 /** Detect if pod was deleted. */
 export function podDeleted(
 	pa: Pick<PodArgs, "pod" | "status">,
@@ -170,7 +183,7 @@ function podUnscheduled(pa: PodArgs): PodContainer {
 	if (!pa.pod.timestamp) {
 		return p;
 	}
-	const unscheduled = pa.status.conditions.find(
+	const unscheduled = pa.status.conditions?.find(
 		c => c.type === "PodScheduled" && c.reason === "Unschedulable",
 	);
 	if (!unscheduled) {
@@ -364,6 +377,10 @@ export function checkPodState(pa: PodArgs): PodContainer[] {
 	const deleted = podDeleted(pa);
 	if (deleted.length > 0) {
 		return deleted;
+	}
+	const failed = podFailed(pa);
+	if (failed.length > 0) {
+		return failed;
 	}
 	podContainers.push(podUnscheduled(pa));
 	if (foundError(podContainers)) {
