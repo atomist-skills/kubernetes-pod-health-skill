@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/1.0.2...HEAD)
 
+### Changed
+
+-   Disable bundling. [0ad1497](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/0ad1497bcf03fddd12e9e8a80258fab634eeec9f)
+
 ## [1.0.2](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/1.0.1...1.0.2) - 2021-05-03
 
 ### Added
