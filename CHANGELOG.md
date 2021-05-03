@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/1.0.1...HEAD)
 
+### Added
+
+-   Handle failed pods. [82545cc](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/82545cc5a2559e59642a39986afccd0b3c37dc88)
+
+### Changed
+
+-   Update to latest logging. [2b73d39](https://github.com/atomist-skills/kubernetes-pod-health-skill/commit/2b73d39b2569a3a1e4298532d7b55795cf04de9a)
+
 ## [1.0.1](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/1.0.0...1.0.1) - 2021-04-08
 
 ## [1.0.0](https://github.com/atomist-skills/kubernetes-pod-health-skill/compare/0.5.2...1.0.0) - 2020-11-15
