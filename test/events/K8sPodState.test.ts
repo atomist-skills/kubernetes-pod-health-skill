@@ -96,12 +96,10 @@ describe("K8sPodState", () => {
 							typeName: "KubernetesClusterProvider",
 							selectedResourceProviders: [
 								{
-									id:
-										"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
+									id: "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
 								},
 								{
-									id:
-										"AW04K5PID_33333333-4444-cccc-dddd-888888888888",
+									id: "AW04K5PID_33333333-4444-cccc-dddd-888888888888",
 								},
 							],
 						},
