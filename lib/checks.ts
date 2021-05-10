@@ -59,10 +59,11 @@ export async function checkCluster(args: CheckClusterArgs): Promise<boolean> {
 		.filter((value, index, self) => self.indexOf(value) === index);
 	const clusters: string[] = [];
 	for (const clusterProviderId of clusterProviderIds) {
-		const kubernetesClusterProviderResponse = await args.graphql.query<KubernetesClusterProviderQuery>(
-			"kubernetesClusterProvider.graphql",
-			{ id: clusterProviderId },
-		);
+		const kubernetesClusterProviderResponse =
+			await args.graphql.query<KubernetesClusterProviderQuery>(
+				"kubernetesClusterProvider.graphql",
+				{ id: clusterProviderId },
+			);
 		clusters.push(
 			...kubernetesClusterProviderResponse.KubernetesClusterProvider.map(
 				kcp => kcp.name,

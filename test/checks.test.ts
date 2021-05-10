@@ -28,7 +28,7 @@ import { K8sPodStateSubscription } from "../lib/typings/types";
 describe("checks", () => {
 	describe("checkCluster", () => {
 		function generateArgs(e: string): CheckClusterArgs {
-			return ({
+			return {
 				clusterName: e,
 				graphql: {
 					query: async (f: string, o: { id: string }) => {
@@ -61,12 +61,10 @@ describe("checks", () => {
 						typeName: "KubernetesClusterProvider",
 						selectedResourceProviders: [
 							{
-								id:
-									"AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
+								id: "AW04K5PID_11111111-2222-aaaa-bbbb-999999999999",
 							},
 							{
-								id:
-									"AW04K5PID_33333333-4444-cccc-dddd-888888888888",
+								id: "AW04K5PID_33333333-4444-cccc-dddd-888888888888",
 							},
 						],
 					},
@@ -75,7 +73,7 @@ describe("checks", () => {
 						selectedResourceProviders: [{ id: "T5L4CK1D" }],
 					},
 				},
-			} as unknown) as CheckClusterArgs;
+			} as unknown as CheckClusterArgs;
 		}
 
 		it("matches the cluster", async () => {
@@ -134,18 +132,15 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:init-sleep",
-					slug:
-						"pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:init-sleep:init:success",
-					slug:
-						"init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
+					slug: "init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:init-sleep:sleep",
-					slug:
-						"container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -200,11 +195,9 @@ describe("checks", () => {
 			const pc = checkPodState(pa);
 			const e = [
 				{
-					error:
-						"Pod production/no-schedule in Kubernetes cluster k8s-internal-demo has not been scheduled: `0/1 nodes are available: 1 Insufficient cpu, 1 Insufficient memory.`",
+					error: "Pod production/no-schedule in Kubernetes cluster k8s-internal-demo has not been scheduled: `0/1 nodes are available: 1 Insufficient cpu, 1 Insufficient memory.`",
 					id: "k8s-internal-demo:production:no-schedule",
-					slug:
-						"pod production/no-schedule in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/no-schedule in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -226,8 +219,7 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:no-schedule",
-					slug:
-						"pod production/no-schedule in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/no-schedule in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -250,15 +242,12 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:crash-loop",
-					slug:
-						"pod production/crash-loop in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/crash-loop in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						"Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/crash-loop in Kubernetes cluster k8s-internal-demo is in CrashLoopBackOff: `Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)`",
+					error: "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/crash-loop in Kubernetes cluster k8s-internal-demo is in CrashLoopBackOff: `Back-off 20s restarting failed container=sleep pod=crash-loop_production(a689804f-5628-4377-916d-c7889a5539cb)`",
 					id: "k8s-internal-demo:production:crash-loop:sleep",
-					slug:
-						"container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/crash-loop in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/crash-loop in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -281,16 +270,12 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:image-pull-backoff",
-					slug:
-						"pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						'Container nothing (notanimage/thatexistsanywhere:badtag) of pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo is in ImagePullBackOff: `Back-off pulling image "notanimage/thatexistsanywhere:badtag"`',
-					id:
-						"k8s-internal-demo:production:image-pull-backoff:nothing",
-					slug:
-						"container nothing (notanimage/thatexistsanywhere:badtag) of pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo",
+					error: 'Container nothing (notanimage/thatexistsanywhere:badtag) of pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo is in ImagePullBackOff: `Back-off pulling image "notanimage/thatexistsanywhere:badtag"`',
+					id: "k8s-internal-demo:production:image-pull-backoff:nothing",
+					slug: "container nothing (notanimage/thatexistsanywhere:badtag) of pod production/image-pull-backoff in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -312,15 +297,12 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:oom-kill",
-					slug:
-						"pod production/oom-kill in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/oom-kill in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						"Container kaniko (gcr.io/kaniko-project/executor:v0.19.0) of pod production/oom-kill in Kubernetes cluster k8s-internal-demo has been OOMKilled: `1`",
+					error: "Container kaniko (gcr.io/kaniko-project/executor:v0.19.0) of pod production/oom-kill in Kubernetes cluster k8s-internal-demo has been OOMKilled: `1`",
 					id: "k8s-internal-demo:production:oom-kill:kaniko",
-					slug:
-						"container kaniko (gcr.io/kaniko-project/executor:v0.19.0) of pod production/oom-kill in Kubernetes cluster k8s-internal-demo",
+					slug: "container kaniko (gcr.io/kaniko-project/executor:v0.19.0) of pod production/oom-kill in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -343,15 +325,12 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:init-fail",
-					slug:
-						"pod production/init-fail in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/init-fail in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						"Init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo has restarted too many times: `13 > 10`",
+					error: "Init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo has restarted too many times: `13 > 10`",
 					id: "k8s-internal-demo:production:init-fail:init:fail",
-					slug:
-						"init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo",
+					slug: "init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -374,18 +353,15 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:init-fail",
-					slug:
-						"pod production/init-fail in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/init-fail in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:init-fail:init:fail",
-					slug:
-						"init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo",
+					slug: "init container fail (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:init-fail:sleep",
-					slug:
-						"container sleep (busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (busybox:1.31.1-uclibc) of pod production/init-fail in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -407,21 +383,17 @@ describe("checks", () => {
 			const pc = checkPodState(pa);
 			const e = [
 				{
-					slug:
-						"pod production/restart in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/restart in Kubernetes cluster k8s-internal-demo",
 					id: "k8s-internal-demo:production:restart",
 				},
 				{
-					slug:
-						"init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
+					slug: "init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
 					id: "k8s-internal-demo:production:restart:init:success",
 				},
 				{
-					error:
-						"Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo has restarted too many times: `12 > 10`",
+					error: "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo has restarted too many times: `12 > 10`",
 					id: "k8s-internal-demo:production:restart:sleep",
-					slug:
-						"container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -444,18 +416,15 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:restart",
-					slug:
-						"pod production/restart in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/restart in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:restart:init:success",
-					slug:
-						"init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
+					slug: "init container success (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:restart:sleep",
-					slug:
-						"container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/restart in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -477,20 +446,16 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:unhealthy",
-					slug:
-						"pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:unhealthy:sleep",
-					slug:
-						"container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						"Container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo is not ready",
+					error: "Container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo is not ready",
 					id: "k8s-internal-demo:production:unhealthy:unhealthy",
-					slug:
-						"container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
+					slug: "container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -512,18 +477,15 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:unhealthy",
-					slug:
-						"pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:unhealthy:sleep",
-					slug:
-						"container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
 				},
 				{
 					id: "k8s-internal-demo:production:unhealthy:unhealthy",
-					slug:
-						"container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
+					slug: "container unhealthy (docker.io/library/busybox:1.31.1-uclibc) of pod production/unhealthy in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -544,16 +506,12 @@ describe("checks", () => {
 			const pc = checkPodState(pa);
 			const e = [
 				{
-					id:
-						"k8s-internal-production:api-production:dood-7d4b7588bd-vptds",
-					slug:
-						"pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
+					id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds",
+					slug: "pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
 				},
 				{
-					id:
-						"k8s-internal-production:api-production:dood-7d4b7588bd-vptds:dood",
-					slug:
-						"container dood (atomist/dood:0.1.3-20200323102421) of pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
+					id: "k8s-internal-production:api-production:dood-7d4b7588bd-vptds:dood",
+					slug: "container dood (atomist/dood:0.1.3-20200323102421) of pod api-production/dood-7d4b7588bd-vptds in Kubernetes cluster k8s-internal-production",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -575,15 +533,12 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:creating",
-					slug:
-						"pod production/creating in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/creating in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						"Container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo has been creating too long",
+					error: "Container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo has been creating too long",
 					id: "k8s-internal-demo:production:creating:sleep",
-					slug:
-						"container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -605,15 +560,12 @@ describe("checks", () => {
 			const e = [
 				{
 					id: "k8s-internal-demo:production:creating",
-					slug:
-						"pod production/creating in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/creating in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						'Container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo is in CreateContainerConfigError: `secret "missing" not found`',
+					error: 'Container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo is in CreateContainerConfigError: `secret "missing" not found`',
 					id: "k8s-internal-demo:production:creating:sleep",
-					slug:
-						"container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (busybox:1.31.1-uclibc) of pod production/creating in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
@@ -635,18 +587,14 @@ describe("checks", () => {
 			const pc = checkPodState(pa);
 			const e = [
 				{
-					error:
-						"Pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted",
+					error: "Pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted",
 					id: "k8s-internal-demo:production:init-sleep",
-					slug:
-						"pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
+					slug: "pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
 				},
 				{
-					error:
-						"Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted",
+					error: "Container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo was deleted",
 					id: "k8s-internal-demo:production:init-sleep:sleep",
-					slug:
-						"container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
+					slug: "container sleep (docker.io/library/busybox:1.31.1-uclibc) of pod production/init-sleep in Kubernetes cluster k8s-internal-demo",
 				},
 			];
 			assert.deepStrictEqual(pc, e);
