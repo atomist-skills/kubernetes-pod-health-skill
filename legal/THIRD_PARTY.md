@@ -41,8 +41,8 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 
 | Name                                  | Version          | Publisher             | Repository                                                                                                                       |
 | ------------------------------------- | ---------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `@atomist/skill-logging`              | `1.0.7-main.2`   | Atomist, Inc.         | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                               |
-| `@atomist/skill`                      | `0.11.1-main.52` | Atomist, Inc.         | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                               |
+| `@atomist/skill-logging`              | `1.0.7-main.3`   | Atomist, Inc.         | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                               |
+| `@atomist/skill`                      | `0.11.1-main.58` | Atomist, Inc.         | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                               |
 | `@atomist/slack-messages`             | `1.2.2`          | Atomist               | [https://github.com/atomist/slack-messages](https://github.com/atomist/slack-messages)                                           |
 | `@google-cloud/common`                | `3.6.0`          | Google Inc.           | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                       |
 | `@google-cloud/logging`               | `8.2.0`          | Google Inc.           | [https://github.com/googleapis/nodejs-logging](https://github.com/googleapis/nodejs-logging)                                     |
@@ -127,9 +127,9 @@ BSD 3-Clause "New" or "Revised" License - [https://opensource.org/licenses/BSD-3
 
 Creative Commons Attribution 4.0 International - [https://creativecommons.org/licenses/by/4.0/legalcode](https://creativecommons.org/licenses/by/4.0/legalcode)
 
-| Name           | Version        | Publisher  | Repository                                                                       |
-| -------------- | -------------- | ---------- | -------------------------------------------------------------------------------- |
-| `caniuse-lite` | `1.0.30001223` | Ben Briggs | [https://github.com/ben-eb/caniuse-lite](https://github.com/ben-eb/caniuse-lite) |
+| Name           | Version        | Publisher  | Repository                                                                                   |
+| -------------- | -------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| `caniuse-lite` | `1.0.30001228` | Ben Briggs | [https://github.com/browserslist/caniuse-lite](https://github.com/browserslist/caniuse-lite) |
 
 #### CC0-1.0
 
@@ -683,7 +683,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `picomatch`                                          | `2.2.2`        | Jon Schlinkert                 | [https://github.com/micromatch/picomatch](https://github.com/micromatch/picomatch)                                                                                                                   |
 | `pluralize`                                          | `8.0.0`        | Blake Embrey                   | [https://github.com/blakeembrey/pluralize](https://github.com/blakeembrey/pluralize)                                                                                                                 |
 | `prepend-http`                                       | `2.0.0`        | Sindre Sorhus                  | [https://github.com/sindresorhus/prepend-http](https://github.com/sindresorhus/prepend-http)                                                                                                         |
-| `prettier`                                           | `2.2.1`        | James Long                     | [https://github.com/prettier/prettier](https://github.com/prettier/prettier)                                                                                                                         |
+| `prettier`                                           | `2.3.0`        | James Long                     | [https://github.com/prettier/prettier](https://github.com/prettier/prettier)                                                                                                                         |
 | `process-nextick-args`                               | `2.0.1`        |                                | [https://github.com/calvinmetcalf/process-nextick-args](https://github.com/calvinmetcalf/process-nextick-args)                                                                                       |
 | `promise`                                            | `7.3.1`        | ForbesLindesay                 | [https://github.com/then/promise](https://github.com/then/promise)                                                                                                                                   |
 | `protocols`                                          | `1.4.8`        | Ionică Bizău                   | [https://github.com/IonicaBizau/protocols](https://github.com/IonicaBizau/protocols)                                                                                                                 |
