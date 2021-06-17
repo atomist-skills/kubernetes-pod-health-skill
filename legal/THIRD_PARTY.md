@@ -20,7 +20,7 @@ This page details all runtime dependencies of `@atomist/kubernetes-pod-health-sk
 | [GPL-3.0](#gpl-30)              | 1     |
 | [ISC](#isc)                     | 42    |
 | [MIT AND Zlib](#mit-and-zlib)   | 1     |
-| [MIT](#mit)                     | 588   |
+| [MIT](#mit)                     | 587   |
 | [Public Domain](#public-domain) | 1     |
 | [Python-2.0](#python-20)        | 1     |
 
@@ -42,7 +42,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | Name                                  | Version           | Publisher             | Repository                                                                                                                       |
 | ------------------------------------- | ----------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `@atomist/skill-logging`              | `1.0.8-main.7`    | Atomist, Inc.         | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                               |
-| `@atomist/skill`                      | `0.11.1-main.152` | Atomist, Inc.         | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                               |
+| `@atomist/skill`                      | `0.11.1-main.154` | Atomist, Inc.         | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                               |
 | `@atomist/slack-messages`             | `1.2.2`           | Atomist               | [https://github.com/atomist/slack-messages](https://github.com/atomist/slack-messages)                                           |
 | `@google-cloud/common`                | `3.6.0`           | Google Inc.           | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                       |
 | `@google-cloud/logging`               | `8.2.0`           | Google Inc.           | [https://github.com/googleapis/nodejs-logging](https://github.com/googleapis/nodejs-logging)                                     |
@@ -50,14 +50,14 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `@google-cloud/precise-date`          | `2.0.3`           | Google Inc.           | [https://github.com/googleapis/nodejs-precise-date](https://github.com/googleapis/nodejs-precise-date)                           |
 | `@google-cloud/projectify`            | `2.1.0`           | Google Inc.           | [https://github.com/googleapis/nodejs-projectify](https://github.com/googleapis/nodejs-projectify)                               |
 | `@google-cloud/promisify`             | `2.0.3`           | Google Inc.           | [https://github.com/googleapis/nodejs-promisify](https://github.com/googleapis/nodejs-promisify)                                 |
-| `@google-cloud/pubsub`                | `2.13.0`          | Google Inc.           | [https://github.com/googleapis/nodejs-pubsub](https://github.com/googleapis/nodejs-pubsub)                                       |
+| `@google-cloud/pubsub`                | `2.14.0`          | Google Inc.           | [https://github.com/googleapis/nodejs-pubsub](https://github.com/googleapis/nodejs-pubsub)                                       |
 | `@google-cloud/storage`               | `5.8.5`           | Google Inc.           | [https://github.com/googleapis/nodejs-storage](https://github.com/googleapis/nodejs-storage)                                     |
 | `@grpc/grpc-js`                       | `1.3.2`           | Google Inc.           | [https://github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) |
 | `@grpc/proto-loader`                  | `0.6.2`           | Google Inc.           | [https://github.com/grpc/grpc-node](https://github.com/grpc/grpc-node)                                                           |
 | `@opencensus/core`                    | `0.0.22`          | Google Inc.           | [https://github.com/census-instrumentation/opencensus-node](https://github.com/census-instrumentation/opencensus-node)           |
 | `@opencensus/propagation-stackdriver` | `0.0.22`          | OpenCensus Authors    | [https://github.com/census-instrumentation/opencensus-node](https://github.com/census-instrumentation/opencensus-node)           |
-| `@opentelemetry/api`                  | `0.18.1`          | OpenTelemetry Authors | [https://github.com/open-telemetry/opentelemetry-js-api](https://github.com/open-telemetry/opentelemetry-js-api)                 |
-| `@opentelemetry/semantic-conventions` | `0.18.2`          | OpenTelemetry Authors | [https://github.com/open-telemetry/opentelemetry-js](https://github.com/open-telemetry/opentelemetry-js)                         |
+| `@opentelemetry/api`                  | `0.20.0`          | OpenTelemetry Authors | [https://github.com/open-telemetry/opentelemetry-js-api](https://github.com/open-telemetry/opentelemetry-js-api)                 |
+| `@opentelemetry/semantic-conventions` | `0.20.0`          | OpenTelemetry Authors | [https://github.com/open-telemetry/opentelemetry-js](https://github.com/open-telemetry/opentelemetry-js)                         |
 | `before-after-hook`                   | `2.2.2`           | Gregor Martynus       | [https://github.com/gr2m/before-after-hook](https://github.com/gr2m/before-after-hook)                                           |
 | `bser`                                | `2.1.1`           | Wez Furlong           | [https://github.com/facebook/watchman](https://github.com/facebook/watchman)                                                     |
 | `ecdsa-sig-formatter`                 | `1.0.11`          | D2L Corporation       | [https://github.com/Brightspace/node-ecdsa-sig-formatter](https://github.com/Brightspace/node-ecdsa-sig-formatter)               |
@@ -92,7 +92,7 @@ BSD 2-Clause "Simplified" License - [https://opensource.org/licenses/BSD-2-Claus
 | `http-cache-semantics`       | `4.1.0`  | Kornel Lesiński   | [https://github.com/kornelski/http-cache-semantics](https://github.com/kornelski/http-cache-semantics)                     |
 | `rc`                         | `1.2.8`  | Dominic Tarr      | [https://github.com/dominictarr/rc](https://github.com/dominictarr/rc)                                                     |
 | `shimmer`                    | `1.2.1`  | Forrest L Norvell | [https://github.com/othiym23/shimmer](https://github.com/othiym23/shimmer)                                                 |
-| `uglify-js`                  | `3.13.2` | Mihai Bazon       | [https://github.com/mishoo/UglifyJS](https://github.com/mishoo/UglifyJS)                                                   |
+| `uglify-js`                  | `3.13.9` | Mihai Bazon       | [https://github.com/mishoo/UglifyJS](https://github.com/mishoo/UglifyJS)                                                   |
 
 #### BSD-3-Clause
 
@@ -792,7 +792,6 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `wrap-ansi`                                          | `6.2.0`        | Sindre Sorhus                  | [https://github.com/chalk/wrap-ansi](https://github.com/chalk/wrap-ansi)                                                                                                                             |
 | `wrap-ansi`                                          | `7.0.0`        | Sindre Sorhus                  | [https://github.com/chalk/wrap-ansi](https://github.com/chalk/wrap-ansi)                                                                                                                             |
 | `ws`                                                 | `7.4.5`        | Einar Otto Stangvik            | [https://github.com/websockets/ws](https://github.com/websockets/ws)                                                                                                                                 |
-| `ws`                                                 | `7.5.0`        | Einar Otto Stangvik            | [https://github.com/websockets/ws](https://github.com/websockets/ws)                                                                                                                                 |
 | `xdg-basedir`                                        | `4.0.0`        | Sindre Sorhus                  | [https://github.com/sindresorhus/xdg-basedir](https://github.com/sindresorhus/xdg-basedir)                                                                                                           |
 | `yargs`                                              | `15.4.1`       |                                | [https://github.com/yargs/yargs](https://github.com/yargs/yargs)                                                                                                                                     |
 | `yargs`                                              | `16.2.0`       |                                | [https://github.com/yargs/yargs](https://github.com/yargs/yargs)                                                                                                                                     |
