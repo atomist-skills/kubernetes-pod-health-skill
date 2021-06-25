@@ -49,7 +49,7 @@
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\""
   },
   "dependencies": {
-    "@atomist/skill": "^0.11.1-main.166"
+    "@atomist/skill": "^0.11.1-main.174"
   },
   "devDependencies": {
     "@atomist/npm-tools": "^0.1.1-main.0",
