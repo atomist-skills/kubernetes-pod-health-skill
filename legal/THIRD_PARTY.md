@@ -21,7 +21,7 @@ This page details all runtime dependencies of `@atomist/kubernetes-pod-health-sk
 | [GPL-3.0](#gpl-30)              | 1     |
 | [ISC](#isc)                     | 45    |
 | [MIT AND Zlib](#mit-and-zlib)   | 1     |
-| [MIT](#mit)                     | 640   |
+| [MIT](#mit)                     | 641   |
 | [Public Domain](#public-domain) | 1     |
 | [Python-2.0](#python-20)        | 1     |
 
@@ -193,7 +193,7 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `glob-parent`               | `5.1.2`   | Gulp Team          | [https://github.com/gulpjs/glob-parent](https://github.com/gulpjs/glob-parent)                               |
 | `glob`                      | `7.1.6`   | Isaac Z. Schlueter | [https://github.com/isaacs/node-glob](https://github.com/isaacs/node-glob)                                   |
 | `graceful-fs`               | `4.2.4`   |                    | [https://github.com/isaacs/node-graceful-fs](https://github.com/isaacs/node-graceful-fs)                     |
-| `hosted-git-info`           | `2.8.8`   | Rebecca Turner     | [https://github.com/npm/hosted-git-info](https://github.com/npm/hosted-git-info)                             |
+| `hosted-git-info`           | `2.8.9`   | Rebecca Turner     | [https://github.com/npm/hosted-git-info](https://github.com/npm/hosted-git-info)                             |
 | `inflight`                  | `1.0.6`   | Isaac Z. Schlueter | [https://github.com/npm/inflight](https://github.com/npm/inflight)                                           |
 | `inherits`                  | `2.0.3`   |                    | [https://github.com/isaacs/inherits](https://github.com/isaacs/inherits)                                     |
 | `inherits`                  | `2.0.4`   |                    | [https://github.com/isaacs/inherits](https://github.com/isaacs/inherits)                                     |
@@ -866,6 +866,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `wrap-ansi`                                          | `6.2.0`        | Sindre Sorhus                  | [https://github.com/chalk/wrap-ansi](https://github.com/chalk/wrap-ansi)                                                                                                                             |
 | `wrap-ansi`                                          | `7.0.0`        | Sindre Sorhus                  | [https://github.com/chalk/wrap-ansi](https://github.com/chalk/wrap-ansi)                                                                                                                             |
 | `ws`                                                 | `7.4.5`        | Einar Otto Stangvik            | [https://github.com/websockets/ws](https://github.com/websockets/ws)                                                                                                                                 |
+| `ws`                                                 | `7.5.2`        | Einar Otto Stangvik            | [https://github.com/websockets/ws](https://github.com/websockets/ws)                                                                                                                                 |
 | `xdg-basedir`                                        | `4.0.0`        | Sindre Sorhus                  | [https://github.com/sindresorhus/xdg-basedir](https://github.com/sindresorhus/xdg-basedir)                                                                                                           |
 | `yargs`                                              | `15.4.1`       |                                | [https://github.com/yargs/yargs](https://github.com/yargs/yargs)                                                                                                                                     |
 | `yargs`                                              | `16.2.0`       |                                | [https://github.com/yargs/yargs](https://github.com/yargs/yargs)                                                                                                                                     |
