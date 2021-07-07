@@ -49,12 +49,12 @@
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\""
   },
   "dependencies": {
-    "@atomist/skill": "^0.11.1-main.193"
+    "@atomist/skill": "^0.11.1-main.197"
   },
   "devDependencies": {
     "@atomist/npm-tools": "^0.1.1-main.0",
     "@google-cloud/functions-framework": "^1.9.0",
-    "@types/mocha": "^8.2.2",
+    "@types/mocha": "^8.2.3",
     "@types/power-assert": "^1.5.3",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
