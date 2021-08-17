@@ -21,7 +21,7 @@ This page details all runtime dependencies of `@atomist/kubernetes-pod-health-sk
 | [GPL-3.0-or-later](#gpl-30-or-later) | 1     |
 | [ISC](#isc)                          | 45    |
 | [MIT AND Zlib](#mit-and-zlib)        | 1     |
-| [MIT](#mit)                          | 653   |
+| [MIT](#mit)                          | 652   |
 | [Public Domain](#public-domain)      | 1     |
 | [Python-2.0](#python-20)             | 1     |
 
@@ -42,8 +42,8 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 
 | Name                                  | Version           | Publisher             | Repository                                                                                                                             |
 | ------------------------------------- | ----------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `@atomist/skill-logging`              | `1.0.8-main.20`   | Atomist, Inc.         | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                                     |
-| `@atomist/skill`                      | `0.11.1-main.317` | Atomist, Inc.         | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
+| `@atomist/skill-logging`              | `1.0.8-main.21`   | Atomist, Inc.         | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                                     |
+| `@atomist/skill`                      | `0.11.1-main.323` | Atomist, Inc.         | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
 | `@atomist/slack-messages`             | `1.2.2`           | Atomist               | [https://github.com/atomist/slack-messages](https://github.com/atomist/slack-messages)                                                 |
 | `@google-cloud/common`                | `3.7.1`           | Google Inc.           | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                             |
 | `@google-cloud/functions-framework`   | `1.9.0`           | Google Inc.           | [https://github.com/GoogleCloudPlatform/functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) |
@@ -52,7 +52,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `@google-cloud/precise-date`          | `2.0.3`           | Google Inc.           | [https://github.com/googleapis/nodejs-precise-date](https://github.com/googleapis/nodejs-precise-date)                                 |
 | `@google-cloud/projectify`            | `2.1.0`           | Google Inc.           | [https://github.com/googleapis/nodejs-projectify](https://github.com/googleapis/nodejs-projectify)                                     |
 | `@google-cloud/promisify`             | `2.0.3`           | Google Inc.           | [https://github.com/googleapis/nodejs-promisify](https://github.com/googleapis/nodejs-promisify)                                       |
-| `@google-cloud/pubsub`                | `2.16.3`          | Google Inc.           | [https://github.com/googleapis/nodejs-pubsub](https://github.com/googleapis/nodejs-pubsub)                                             |
+| `@google-cloud/pubsub`                | `2.16.4`          | Google Inc.           | [https://github.com/googleapis/nodejs-pubsub](https://github.com/googleapis/nodejs-pubsub)                                             |
 | `@google-cloud/storage`               | `5.13.0`          | Google Inc.           | [https://github.com/googleapis/nodejs-storage](https://github.com/googleapis/nodejs-storage)                                           |
 | `@grpc/grpc-js`                       | `1.3.7`           | Google Inc.           | [https://github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js)       |
 | `@grpc/proto-loader`                  | `0.6.4`           | Google Inc.           | [https://github.com/grpc/grpc-node](https://github.com/grpc/grpc-node)                                                                 |
@@ -70,7 +70,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `gcp-metadata`                        | `4.3.0`           | Stephen Sawchuk       | [https://github.com/googleapis/gcp-metadata](https://github.com/googleapis/gcp-metadata)                                               |
 | `google-auth-library`                 | `6.1.6`           | Google Inc.           | [https://github.com/googleapis/google-auth-library-nodejs](https://github.com/googleapis/google-auth-library-nodejs)                   |
 | `google-auth-library`                 | `7.6.1`           | Google Inc.           | [https://github.com/googleapis/google-auth-library-nodejs](https://github.com/googleapis/google-auth-library-nodejs)                   |
-| `google-gax`                          | `2.24.0`          | Google API Authors    | [https://github.com/googleapis/gax-nodejs](https://github.com/googleapis/gax-nodejs)                                                   |
+| `google-gax`                          | `2.24.1`          | Google API Authors    | [https://github.com/googleapis/gax-nodejs](https://github.com/googleapis/gax-nodejs)                                                   |
 | `hex2dec`                             | `1.1.2`           |                       | [https://github.com/donmccurdy/hex2dec](https://github.com/donmccurdy/hex2dec)                                                         |
 | `json-to-pretty-yaml`                 | `1.2.2`           |                       | [https://github.com/alexcrist/json-to-pretty-yaml](https://github.com/alexcrist/json-to-pretty-yaml)                                   |
 | `long`                                | `4.0.0`           | Daniel Wirtz          | [https://github.com/dcodeIO/long.js](https://github.com/dcodeIO/long.js)                                                               |
@@ -186,7 +186,7 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `cliui`                     | `6.0.0`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `cliui`                     | `7.0.4`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `deprecation`               | `2.3.1`   |                    | [https://github.com/gr2m/deprecation](https://github.com/gr2m/deprecation)                                   |
-| `electron-to-chromium`      | `1.3.806` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
+| `electron-to-chromium`      | `1.3.808` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
 | `fastq`                     | `1.8.0`   | Matteo Collina     | [https://github.com/mcollina/fastq](https://github.com/mcollina/fastq)                                       |
 | `fs.realpath`               | `1.0.0`   | Isaac Z. Schlueter | [https://github.com/isaacs/fs.realpath](https://github.com/isaacs/fs.realpath)                               |
 | `get-caller-file`           | `2.0.5`   | Stefan Penner      | [https://github.com/stefanpenner/get-caller-file](https://github.com/stefanpenner/get-caller-file)           |
@@ -404,7 +404,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `array.prototype.flatmap`                            | `1.2.4`        | Jordan Harband                 | [https://github.com/es-shims/Array.prototype.flatMap](https://github.com/es-shims/Array.prototype.flatMap)                                                                                           |
 | `arrify`                                             | `2.0.1`        | Sindre Sorhus                  | [https://github.com/sindresorhus/arrify](https://github.com/sindresorhus/arrify)                                                                                                                     |
 | `asap`                                               | `2.0.6`        |                                | [https://github.com/kriskowal/asap](https://github.com/kriskowal/asap)                                                                                                                               |
-| `async-retry`                                        | `1.3.1`        |                                | [https://github.com/zeit/async-retry](https://github.com/zeit/async-retry)                                                                                                                           |
+| `async-retry`                                        | `1.3.3`        |                                | [https://github.com/vercel/async-retry](https://github.com/vercel/async-retry)                                                                                                                       |
 | `asynckit`                                           | `0.4.0`        | Alex Indigo                    | [https://github.com/alexindigo/asynckit](https://github.com/alexindigo/asynckit)                                                                                                                     |
 | `auto-bind`                                          | `4.0.0`        | Sindre Sorhus                  | [https://github.com/sindresorhus/auto-bind](https://github.com/sindresorhus/auto-bind)                                                                                                               |
 | `babel-plugin-dynamic-import-node`                   | `2.3.3`        | Jordan Gensler                 | [https://github.com/airbnb/babel-plugin-dynamic-import-node](https://github.com/airbnb/babel-plugin-dynamic-import-node)                                                                             |
@@ -779,7 +779,6 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `restore-cursor`                                     | `2.0.0`        | Sindre Sorhus                  | [https://github.com/sindresorhus/restore-cursor](https://github.com/sindresorhus/restore-cursor)                                                                                                     |
 | `restore-cursor`                                     | `3.1.0`        | Sindre Sorhus                  | [https://github.com/sindresorhus/restore-cursor](https://github.com/sindresorhus/restore-cursor)                                                                                                     |
 | `retry-request`                                      | `4.2.2`        | Stephen Sawchuk                | [https://github.com/stephenplusplus/retry-request](https://github.com/stephenplusplus/retry-request)                                                                                                 |
-| `retry`                                              | `0.12.0`       | Tim Koschützki                 | [https://github.com/tim-kos/node-retry](https://github.com/tim-kos/node-retry)                                                                                                                       |
 | `retry`                                              | `0.13.1`       | Tim Koschützki                 | [https://github.com/tim-kos/node-retry](https://github.com/tim-kos/node-retry)                                                                                                                       |
 | `reusify`                                            | `1.0.4`        | Matteo Collina                 | [https://github.com/mcollina/reusify](https://github.com/mcollina/reusify)                                                                                                                           |
 | `run-async`                                          | `2.4.1`        | Simon Boudrias                 | [https://github.com/SBoudrias/run-async](https://github.com/SBoudrias/run-async)                                                                                                                     |
